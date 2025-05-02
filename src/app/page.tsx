@@ -2,102 +2,145 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <>
+      <section className="flex-grow">
+        <div className="bg-[#002A5C] text-white px-6 md:px-12 py-16">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">Tentang Apotek Pelangi</h1>
+          <p className="text-lg font-semibold mb-4">
+            Apotek Pelangi adalah solusi terlengkap untuk kebutuhan Kesehatan harian Anda
+          </p>
+          <p className="max-w-2xl text-sm md:text-base leading-relaxed">
+            Dapatkan semua kebutuhan Kesehatan Anda dengan mudah melalui ekosistem kami.
+            Kami bermitra dengan 7.000+ Mitra Apotek Pelangi yang menyediakan 50.000+ produk
+            dan menjangkau 480+ kota di seluruh Indonesia.
+          </p>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          <div className="grid grid-cols-1 md:grid-cols-3 mt-10 text-center">
+            <div className="rounded-xl py-4">
+              <p className="text-2xl font-bold">7,000+</p>
+              <p className="text-sm mb-4">Mitra Apotek Pelangi</p>
+              <button className="text-yellow-400 font-semibold border border-yellow-400 rounded-full px-4 py-2 hover:bg-yellow-400 hover:text-[#002A5C] transition">
+                Belanja Produk
+              </button>
+            </div>
+            <div className="rounded-xl py-4">
+              <p className="text-2xl font-bold">50,000+</p>
+              <p className="text-sm mb-4">Produk Tersedia</p>
+              <button className="text-yellow-400 font-semibold border border-yellow-400 rounded-full px-4 py-2 hover:bg-yellow-400 hover:text-[#002A5C] transition">
+                Menjadi Mitra Apotik
+              </button>
+            </div>
+            <div className="rounded-xl py-4">
+              <p className="text-2xl font-bold">480+</p>
+              <p className="text-sm mb-4">Jangkauan Kota</p>
+              <button className="text-yellow-400 font-semibold border border-yellow-400 rounded-full px-4 py-2 hover:bg-yellow-400 hover:text-[#002A5C] transition">
+                Layanan untuk Brand
+              </button>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+
+      <section className="px-6 md:px-12 py-16 bg-white">
+        <div className="flex flex-col md:flex-row gap-10 items-start">
+          <div className="md:w-1/2">
+            <h2 className="text-xl font-semibold mb-2">Belanja Produk</h2>
+            <h3 className="text-2xl md:text-3xl font-bold italic mb-6">
+              <span className="not-italic font-bold">Marketplace </span>
+              Khusus Untuk Produk Kesehatan
+            </h3>
+            <p className="text-sm md:text-base leading-relaxed">
+              Unduh aplikasi gapotik dan temukan kemudahan akses ke lebih dari 50.000 produk kesehatan,
+              mulai dari obat-obatan, vitamin, suplemen, hingga peralatan medis. Nikmati fitur-fitur
+              unggulan seperti konsultasi online dengan apoteker, konsultasi dengan dokter, dan layanan
+              antar cepat langsung ke rumah Anda.
+            </p>
+          </div>
+
+          <div className="md:w-1/2 flex justify-center">
+            <div className="w-full h-full rounded-xl flex justify-center">
+              <Image src="/img/gambarobat.png" alt="Kategori Produk" width={400} height={400} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 md:px-12 py-16 bg-white">
+        <h2 className="text-xl font-semibold mb-2">Kategori Produk</h2>
+        <h3 className="text-2xl md:text-3xl font-bold italic mb-10">
+          <span className="not-italic font-bold">Temukan </span>
+          Produk Sesuai Kebutuhan Anda
+        </h3>
+
+        <div className="flex flex-col md:flex-row gap-10">
+          <div className="md:w-1/2 flex justify-center">
+            <div className="w-full rounded-xl flex items-center justify-center">
+              <Image src="/img/gambarobat.png" alt="Kategori Produk" width={400} height={400} />
+            </div>
+          </div>
+
+          {/* Grid Kategori */}
+          <div className="md:w-1/2 grid grid-cols-2 sm:grid-cols-3 gap-6">
+            {[
+              "Obat Bebas",
+              "Obat Resep",
+              "Suplemen",
+              "Vitamin",
+              "Alat Kesehatan",
+              "Ibu & Anak",
+            ].map((label, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow-sm hover:shadow-md transition p-4 flex flex-col items-center text-center"
+              >
+                <div className="w-12 h-12 bg-[#002A5C] rounded-full flex items-center justify-center mb-3">
+                  <span className="text-white text-xl">💊</span>
+                </div>
+                <span className="text-sm font-medium">{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-16 px-6 md:px-12">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">
+          Tersedia produk berdasarkan <span className="bg-yellow-400 px-2">kondisi kesehatanmu</span>
+        </h2>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-6 gap-y-8 justify-items-center">
+          {[
+            { label: 'Batuk & Flu', icon: '/img/logosementara.png' },
+            { label: 'Diabetes', icon: '/img/logosementara.png' },
+            { label: 'Antibiotik', icon: '/img/logosementara.png' },
+            { label: 'Anti Nyeri', icon: '/img/logosementara.png' },
+            { label: 'Jantung', icon: '/img/logosementara.png' },
+            { label: 'Demam', icon: '/img/logosementara.png' },
+            { label: 'Diare', icon: '/img/logosementara.png' },
+            { label: 'Hipertensi', icon: '/img/logosementara.png' },
+            { label: 'Antiseptik', icon: '/img/logosementara.png' },
+            { label: 'Lambung', icon: '/img/logosementara.png' },
+            { label: 'Vertigo', icon: '/img/logosementara.png' },
+            { label: 'Diet', icon: '/img/logosementara.png' },
+            { label: 'Consumer Goods', icon: '/img/logosementara.png' },
+            { label: 'Asma', icon: '/img/logosementara.png' },
+          ].map((item, i) => (
+            <div key={i} className="flex flex-col items-center text-center space-y-2">
+              <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
+                <img src={item.icon} alt={item.label} className="w-8 h-8" />
+              </div>
+              <span className="text-sm font-medium">{item.label}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex justify-center mt-10">
+          <button className="bg-[#0050B3] text-white font-semibold px-6 py-3 rounded-full hover:bg-[#003f8c] transition">
+            Lihat Katalog Produk
+          </button>
+        </div>
+      </section>
+
+    </>
   );
 }
