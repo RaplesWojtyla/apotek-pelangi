@@ -12,8 +12,6 @@ import {
   Layers,
   Book,
   Settings,
-  User2,
-  ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
