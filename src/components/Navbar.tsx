@@ -4,7 +4,7 @@ import { ShoppingCart, Bell, User, Search } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export const Navbar = () => {
+export default function Navbar() {
   const pathname = usePathname();
 
   // Jika bukan halaman landing, kita anggap user sudah "login"
