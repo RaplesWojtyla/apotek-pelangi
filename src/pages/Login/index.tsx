@@ -1,7 +1,7 @@
 import "../../app/globals.css";
 import { Eye, EyeClosed } from "lucide-react";
 import Link from "next/link";
-import { Logo } from "@/components/logo";
+import Logo from "@/components/logo";
 
 export default function SignIn() {
   return (

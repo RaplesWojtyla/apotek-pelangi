@@ -8,7 +8,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-export const ProductPagination = () => {
+export default function ProductPagination() {
   return (
     <Pagination className="mt-4">
       <PaginationContent>

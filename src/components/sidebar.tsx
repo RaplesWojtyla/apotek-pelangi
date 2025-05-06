@@ -16,7 +16,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 
-export function AppSidebar() {
+export default function AppSidebar() {
   const [open, setOpen] = useState(false);
 
   return (

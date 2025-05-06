@@ -1,10 +1,10 @@
 import React from "react";
 import "../../app/globals.css";
 import  Navbar  from "@/components/Navbar";
-import { AppSidebar } from "@/components/sidebar"; 
+import AppSidebar from "@/components/sidebar"; 
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { ProductPagination } from "@/components/pagination";
+import ProductPagination from "@/components/pagination";
 
 const products = [
   {

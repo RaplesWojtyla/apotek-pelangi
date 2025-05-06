@@ -1,4 +1,4 @@
-export const Logo = () => {
+export default function Logo() {
     return(
         <div className="w-full lg:w-1/2 bg-cyan-100 lg:bg-white flex items-center justify-center p-6">
         <div className="text-center">
