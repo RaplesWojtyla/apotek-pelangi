@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <>
       <section className="flex-grow">
-        <div className="bg-[#002A5C] text-white px-6 md:px-12 py-16">
+        <div className="bg-cyan-600 text-white px-6 md:px-12 py-16">
           <h1 className="text-3xl md:text-4xl font-bold mb-4">Tentang Apotek Pelangi</h1>
           <p className="text-lg font-semibold mb-4">
             Apotek Pelangi adalah solusi terlengkap untuk kebutuhan Kesehatan harian Anda
