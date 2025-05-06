@@ -90,7 +90,7 @@ const products = [
 ];
 
 
-export default function CustDashboard() {
+export default function Catalog() {
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Navbar */}
@@ -111,6 +111,7 @@ export default function CustDashboard() {
           </div>
           <ProductPagination/>
         </main>
+
         {/* Footer */}
         <Footer />
       </div>

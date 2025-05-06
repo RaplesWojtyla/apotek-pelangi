@@ -71,7 +71,7 @@ export default function SignIn() {
           <div className="text-center text-sm">
             <span className="text-gray-600">Belum punya akun?</span>{" "}
             <Link
-              href="/Register"
+              href="/CustDashboard"
               className="text-cyan-600 font-medium hover:underline"
             >
               Daftar
