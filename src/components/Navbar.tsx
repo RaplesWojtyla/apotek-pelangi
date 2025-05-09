@@ -8,7 +8,8 @@ export default function Navbar() {
   const pathname = usePathname();
 
   // Jika bukan halaman landing, kita anggap user sudah "login"
-  const isDashboard = pathname === '/CustDashboard';
+  const isDashboard = pathname === '/CustDashboard' || pathname === '/DetailObat' || pathname === '/Checkout' || pathname === '/Cart';
+
 
   return (
     <>
