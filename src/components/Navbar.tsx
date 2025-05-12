@@ -16,16 +16,18 @@ export default function Navbar() {
       {/* Navbar Fixed */}
       <header className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-3 bg-white shadow">
         <div className="flex items-center space-x-6">
+          <Link href="/">
           <div className="flex items-center space-x-2">
             <img
               src="/logo.png"
               alt="Logo"
               className="h-8 w-8"
-            />
+              />
             <span className="text-xl font-bold text-orange-500">
               Apotek<span className="text-cyan-500">Pelangi</span>
             </span>
           </div>
+          </Link>
         </div>
 
         {isDashboard ? (
@@ -64,12 +66,12 @@ export default function Navbar() {
           ) : (
             <>
               <nav className="hidden md:flex space-x-4 text-sm text-gray-600">
-                <a href="#" className="hover:text-cyan-500">
+                <a href="/Catalog" className="hover:text-cyan-500">
                   Katalog Produk
                 </a>
               </nav>
               <Link
-                href="/Login"
+                href="/CustDashboard"
                 className="text-sm text-cyan-500 font-medium hover:underline"
               >
                 Masuk

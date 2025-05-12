@@ -28,9 +28,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <span className="text-xs text-gray-500 mb-1">Untuk: Batuk</span>
 
       {/* Nama */}
-      <h3 className="text-sm font-medium text-center mb-1">
-        {product.name}
-      </h3>
+      <h3 className="text-sm font-medium text-center mb-1">{product.name}</h3>
 
       {/* Harga */}
       <p className="text-sm text-gray-700 mb-3">{product.price}</p>
