@@ -1,6 +1,6 @@
 import { syncUser } from '@/action/user.action'
 
-export const page = async () => {
+export default async function Dashboard () {
 	const currUser = await syncUser()
 	console.log(currUser);
 
@@ -8,5 +8,3 @@ export const page = async () => {
 		<div>Dashboard</div>
 	)
 }
-
-export default page
