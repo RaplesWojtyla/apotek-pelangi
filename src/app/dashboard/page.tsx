@@ -1,7 +1,6 @@
 import { syncUser } from '@/action/user.action'
-import React from 'react'
 
-const page = async () => {
+export const page = async () => {
 	const currUser = await syncUser()
 	console.log(currUser);
 
