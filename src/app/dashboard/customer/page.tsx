@@ -46,7 +46,7 @@ const products = [
 	},
 ];
 
-export const CustDashboard = () => {
+export const page = () => {
 	return (
 		<div className="flex flex-col">
 			<Banner />
@@ -65,4 +65,4 @@ export const CustDashboard = () => {
 	);
 }
 
-export default CustDashboard
+export default page

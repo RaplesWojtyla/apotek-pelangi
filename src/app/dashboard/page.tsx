@@ -1,7 +1,7 @@
 import { syncUser } from '@/action/user.action'
 import React from 'react'
 
-const Dashboard = async () => {
+const page = async () => {
 	const currUser = await syncUser()
 	console.log(currUser);
 
@@ -10,4 +10,4 @@ const Dashboard = async () => {
 	)
 }
 
-export default Dashboard
+export default page
