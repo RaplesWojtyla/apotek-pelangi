@@ -3,7 +3,7 @@ import Kategori from "@/components/Kategori";
 import ProductCard from "@/components/ProductCard";
 import TebusResep from "@/components/TebusResep";
 
-export const page = () => {
+export default function CustomerPage () {
 	const products = [
 		{
 			name: "Rhinus SR 60 Kapsul",
@@ -65,4 +65,3 @@ export const page = () => {
 	);
 }
 
-export default page
