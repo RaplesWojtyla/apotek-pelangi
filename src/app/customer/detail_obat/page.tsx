@@ -1,5 +1,3 @@
-import React from 'react'
-import "../../app/globals.css";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart } from "lucide-react";
 import Navbar from '@/components/Navbar';
@@ -66,5 +64,5 @@ export default function ProductDetailPage() {
                 </div>
             </div>
         </div>
-            );
+    );
 }

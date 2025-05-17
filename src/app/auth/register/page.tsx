@@ -1,9 +1,8 @@
-import "../../app/globals.css";
 import { Eye, EyeClosed } from "lucide-react";
 import Link from "next/link";
 import Logo from "@/components/Logo";
 
-export default function SignIn() {
+export default function SignUp() {
   return (
     <div className="min-h-screen bg-cyan-100 flex flex-col lg:flex-row">
       {/* Left Side - Logo */}
@@ -13,10 +12,15 @@ export default function SignIn() {
       <div className="w-full lg:w-1/2 bg-cyan-100 flex items-center justify-center p-6">
         <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
           <h2 className="text-2xl text-center font-semibold text-cyan-700 mb-6">
-            Masuk
+            Daftar
           </h2>
 
           <form className="space-y-4">
+            <input
+              type="text"
+              placeholder="Masukkan nama Anda"
+              className="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            />
             <input
               type="email"
               placeholder="Masukkan No. HP atau Email"
@@ -34,25 +38,17 @@ export default function SignIn() {
                 <EyeClosed className="hidden" />
               </span>
             </div>
-            <div className="text-right text-sm mt-1">
-              <Link
-                href="/ForgotPassword"
-                className="text-cyan-600 hover:underline"
-              >
-                Lupa kata sandi?
-              </Link>
-            </div>
 
             <button
               type="submit"
               className="w-full bg-cyan-600 font-semibold text-white rounded py-2 hover:bg-cyan-700 transition-colors"
             >
-              Masuk
+              Daftar
             </button>
           </form>
 
           <div className="text-center my-4 text-sm text-gray-500">
-            atau masuk dengan
+            atau daftar dengan
           </div>
 
           <div className="flex justify-center space-x-4 mb-4">
@@ -69,12 +65,12 @@ export default function SignIn() {
           </div>
 
           <div className="text-center text-sm">
-            <span className="text-gray-600">Belum punya akun?</span>{" "}
+            <span className="text-gray-600">Sudah punya akun?</span>{" "}
             <Link
-              href="/CustDashboard"
+              href="/Login"
               className="text-cyan-600 font-medium hover:underline"
             >
-              Daftar
+              Masuk
             </Link>
           </div>
         </div>
