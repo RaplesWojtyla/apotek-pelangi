@@ -107,7 +107,7 @@ model Barang {
   foto_barang String @default("Barang.png")
   createdAt DateTime @default(now())
 
-  detail_obat Detail_barang?
+  detail_barang Detail_barang?
   stok_barang Stok_barang[]
   cart Cart[]
   detail_faktur_penjualan Detail_faktur_penjualan[]
