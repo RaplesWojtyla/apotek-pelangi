@@ -34,3 +34,19 @@ export const syncUser = async () => {
 		throw new Error("Terjadi kesalahan saat membaca akun user.")
 	}
 }
+
+export const getUserDb = async ( clerkId: string ) => {
+	try {
+		const user = await prisma.user.findUnique({
+			where: {
+				clerkId
+			}
+		})
+
+		return user
+	} catch (error) {
+		console.error(error);
+
+		throw new Error('Terjadi kesalahan saat mengambil data user.')
+	}
+}

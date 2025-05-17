@@ -1,18 +1,20 @@
-'use client'
-
-import { SignInButton, SignUpButton, useAuth, UserButton } from '@clerk/nextjs';
-import { ShoppingCart, Bell, User, Search } from 'lucide-react';
+import { SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
+import { ShoppingCart, Bell, Search } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { Button } from './ui/button';
+import { auth } from '@clerk/nextjs/server';
+import { syncUser } from '@/action/user.action';
 
-export const Navbar = () => {
-	const pathname = usePathname();
-	const auth = useAuth()
+export const Navbar = async () => {
+	const user = await auth()
 
-	// Jika bukan halaman landing, kita anggap user sudah "login"
-	const isDashboard = pathname === '/customer' || pathname === '/detail_obat' || pathname === '/checkout' || pathname === '/cart';
-
+	if (user) {
+		try {
+			await syncUser()
+		} catch (e) {
+			console.error(e)
+		}
+	}
 
 	return (
 		<>
@@ -33,7 +35,7 @@ export const Navbar = () => {
 					</Link>
 				</div>
 
-				{auth.isSignedIn ? (
+				{user ? (
 					<div className="flex-1 mx-6 max-w-xl">
 						<div className="relative">
 							<input
@@ -54,7 +56,7 @@ export const Navbar = () => {
 				)}
 
 				<div className="flex items-center space-x-4">
-					{auth.isSignedIn ? (
+					{user ? (
 						<>
 							<Link href="/CustDashboard" aria-label="Keranjang">
 								<ShoppingCart className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
@@ -76,7 +78,7 @@ export const Navbar = () => {
 								variant={'link'}
 								asChild
 							>
-								<SignInButton mode='modal' fallbackRedirectUrl={'/dashboard'}>
+								<SignInButton mode='modal' fallbackRedirectUrl={'/dashboard/customer'}>
 									Masuk
 								</SignInButton>
 							</Button>
@@ -84,7 +86,7 @@ export const Navbar = () => {
 							<Button
 								className='text-sm bg-cyan-500 text-white rounded-full hover:bg-cyan-600 transition cursor-pointer'
 							>
-								<SignUpButton mode='modal'>
+								<SignUpButton mode='modal' fallbackRedirectUrl={'/dashboard/customer'}>
 									<span>Daftar</span>
 								</SignUpButton>
 							</Button>

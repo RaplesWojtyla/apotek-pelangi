@@ -14,4 +14,8 @@ declare global {
 			role?: Roles
 		}
 	}
+
+	interface Window {
+		Clerk: any
+	}
 }

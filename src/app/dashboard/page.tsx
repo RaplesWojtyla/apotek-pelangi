@@ -1,10 +1,8 @@
-import { syncUser } from '@/action/user.action'
 
-export default async function Dashboard () {
-	const currUser = await syncUser()
-	console.log(currUser);
-
+export const Dashboard = () => {
 	return (
 		<div>Dashboard</div>
 	)
 }
+
+export default Dashboard
