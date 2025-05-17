@@ -2,11 +2,11 @@ import { SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
 import { ShoppingCart, Bell, Search } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
-import { auth } from '@clerk/nextjs/server';
+import { currentUser } from '@clerk/nextjs/server';
 import { syncUser } from '@/action/user.action';
 
 export const Navbar = async () => {
-	const user = await auth()
+	const user = await currentUser()
 
 	if (user) {
 		try {
