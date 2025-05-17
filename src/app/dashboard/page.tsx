@@ -1,8 +1,8 @@
 
-export const Dashboard = () => {
+export const page = () => {
 	return (
 		<div>Dashboard</div>
 	)
 }
 
-export default Dashboard
+export default page
