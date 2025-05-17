@@ -1,4 +1,3 @@
-import React from 'react'
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart } from "lucide-react";
 import Navbar from '@/components/Navbar';
