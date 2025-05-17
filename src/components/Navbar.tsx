@@ -78,7 +78,7 @@ export const Navbar = async () => {
 								variant={'link'}
 								asChild
 							>
-								<SignInButton mode='modal' fallbackRedirectUrl={'/dashboard/customer'}>
+								<SignInButton mode='modal' fallbackRedirectUrl={'/customer'}>
 									Masuk
 								</SignInButton>
 							</Button>
@@ -86,7 +86,7 @@ export const Navbar = async () => {
 							<Button
 								className='text-sm bg-cyan-500 text-white rounded-full hover:bg-cyan-600 transition cursor-pointer'
 							>
-								<SignUpButton mode='modal' fallbackRedirectUrl={'/dashboard/customer'}>
+								<SignUpButton mode='modal' fallbackRedirectUrl={'/customer'}>
 									<span>Daftar</span>
 								</SignUpButton>
 							</Button>
