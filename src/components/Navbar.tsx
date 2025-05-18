@@ -1,20 +1,12 @@
-import { SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
+'use client'
+
+import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
 import { ShoppingCart, Bell, Search } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
-import { currentUser } from '@clerk/nextjs/server';
-import { syncUser } from '@/action/user.action';
 
-export const Navbar = async () => {
-	const user = await currentUser()
-
-	if (user) {
-		try {
-			await syncUser()
-		} catch (e) {
-			console.error(e)
-		}
-	}
+export const Navbar =  () => {
+	const { isSignedIn } = useUser()
 
 	return (
 		<>
@@ -35,7 +27,7 @@ export const Navbar = async () => {
 					</Link>
 				</div>
 
-				{user ? (
+				{isSignedIn ? (
 					<div className="flex-1 mx-6 max-w-xl">
 						<div className="relative">
 							<input
@@ -56,7 +48,7 @@ export const Navbar = async () => {
 				)}
 
 				<div className="flex items-center space-x-4">
-					{user ? (
+					{isSignedIn ? (
 						<>
 							<Link href="/CustDashboard" aria-label="Keranjang">
 								<ShoppingCart className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
@@ -78,7 +70,7 @@ export const Navbar = async () => {
 								variant={'link'}
 								asChild
 							>
-								<SignInButton mode='modal' fallbackRedirectUrl={'/customer'}>
+								<SignInButton mode='modal' fallbackRedirectUrl={'/sign-in/callback'}>
 									Masuk
 								</SignInButton>
 							</Button>
@@ -86,7 +78,7 @@ export const Navbar = async () => {
 							<Button
 								className='text-sm bg-cyan-500 text-white rounded-full hover:bg-cyan-600 transition cursor-pointer'
 							>
-								<SignUpButton mode='modal' fallbackRedirectUrl={'/customer'}>
+								<SignUpButton mode='modal' fallbackRedirectUrl={'/sign-in/callback'}>
 									<span>Daftar</span>
 								</SignUpButton>
 							</Button>

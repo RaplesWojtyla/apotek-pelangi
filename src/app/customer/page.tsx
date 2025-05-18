@@ -3,7 +3,7 @@ import Kategori from "@/components/Kategori";
 import ProductCard from "@/components/ProductCard";
 import TebusResep from "@/components/TebusResep";
 
-export default function CustomerPage () {
+export default function CustomerPage() {
 	const products = [
 		{
 			name: "Rhinus SR 60 Kapsul",
@@ -13,37 +13,37 @@ export default function CustomerPage () {
 		{
 			name: "Rhinofed 4.5mg/60ml",
 			price: "Rp21.500/botol",
-			image: "/images/product2.png",
+			image: "/logo.png",
 		},
 		{
 			name: "Termorex Sirup 60 ml",
 			price: "Rp8.000/botol",
-			image: "/images/product3.png",
+			image: "/logo.png",
 		},
 		{
 			name: "Termorex Sirup 60 ml",
 			price: "Rp8.000/botol",
-			image: "/images/product3.png",
+			image: "/logo.png",
 		},
 		{
 			name: "Rhinus SR 60 Kapsul",
 			price: "Rp21.000/strip",
-			image: "/images/product1.png",
+			image: "/logo.png",
 		},
 		{
 			name: "Rhinofed 4.5mg/60ml",
 			price: "Rp21.500/botol",
-			image: "/images/product2.png",
+			image: "/logo.png",
 		},
 		{
 			name: "Termorex Sirup 60 ml",
 			price: "Rp8.000/botol",
-			image: "/images/product3.png",
+			image: "/logo.png",
 		},
 		{
 			name: "Termorex Sirup 60 ml",
 			price: "Rp8.000/botol",
-			image: "/images/product3.png",
+			image: "/logo.png",
 		},
 	];
 
