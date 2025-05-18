@@ -7,8 +7,15 @@ import {
 } from "lucide-react";
 import AdminSidebar from "@/components/SidebarAdmin"; // sesuaikan path-nya
 import StatCard from "@/components/StatCard";
+import { checkRole } from "@/lib/clerk";
+import { redirect } from "next/navigation";
 
-export default function DashboardAdmin() {
+export default async function DashboardAdmin() {
+
+	if (!await checkRole('ADMIN')) {
+		return redirect('/unauthorized')
+	}
+
 	return (
 		<AdminSidebar>
 			<h1 className="text-2xl font-bold mb-6">Dashboard Admin</h1>
