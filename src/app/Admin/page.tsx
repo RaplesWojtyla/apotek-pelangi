@@ -6,7 +6,7 @@ import {
   ShoppingCart,
   ClipboardList,
 } from "lucide-react";
-import AdminSidebar from "@/components/SidebarAdmin"; // sesuaikan path-nya
+import AdminSidebar from "@/components/SidebarAdmin"; 
 
 export default function DashboardAdmin() {
   return (
@@ -51,7 +51,7 @@ function StatCard({
   return (
     <Card className="flex items-center gap-4 p-4">
       <div className="text-3xl">{icon}</div>
-      <div>
+      <div className="flex flex-col items-center justify-center text-center">
         <h2 className="text-sm text-gray-500">{title}</h2>
         <p className="text-xl font-semibold">{value}</p>
       </div>
