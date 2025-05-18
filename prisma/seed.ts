@@ -4,45 +4,45 @@ const prisma = new PrismaClient();
 
 async function main() {
   // KATEGORI
-  const kategori1 = await prisma.kategori_barang.create({
+  const kategori1 = await prisma.kategoriBarang.create({
     data: { nama_kategori: "Obat dan Perawatan" },
   });
-  const kategori2 = await prisma.kategori_barang.create({
+  const kategori2 = await prisma.kategoriBarang.create({
     data: { nama_kategori: "Perangkat dan Peralatan" },
   });
 
   // JENIS BARANG untuk kategori1 (Obat dan Perawatan)
-  const jenis1 = await prisma.jenis_barang.create({
+  const jenis1 = await prisma.jenisBarang.create({
     data: {
       nama_jenis: "Batuk, pilek dan flu",
       id_kategori_barang: kategori1.id,
     },
   });
-  const jenis2 = await prisma.jenis_barang.create({
+  const jenis2 = await prisma.jenisBarang.create({
     data: {
       nama_jenis: "Demam dan nyeri",
       id_kategori_barang: kategori1.id,
     },
   });
-  const jenis3 = await prisma.jenis_barang.create({
+  const jenis3 = await prisma.jenisBarang.create({
     data: {
       nama_jenis: "Alergi",
       id_kategori_barang: kategori1.id,
     },
   });
-  const jenis4 = await prisma.jenis_barang.create({
+  const jenis4 = await prisma.jenisBarang.create({
     data: {
       nama_jenis: "Masalah pencernaan",
       id_kategori_barang: kategori1.id,
     },
   });
-  const jenis5 = await prisma.jenis_barang.create({
+  const jenis5 = await prisma.jenisBarang.create({
     data: {
       nama_jenis: "Tulang dan sendi",
       id_kategori_barang: kategori1.id,
     },
   });
-  const jenis6 = await prisma.jenis_barang.create({
+  const jenis6 = await prisma.jenisBarang.create({
     data: {
       nama_jenis: "Lainnya",
       id_kategori_barang: kategori1.id,
@@ -50,25 +50,25 @@ async function main() {
   });
 
   // JENIS BARANG untuk kategori2 (Perangkat dan Peralatan)
-  const jenis7 = await prisma.jenis_barang.create({
+  const jenis7 = await prisma.jenisBarang.create({
     data: {
       nama_jenis: "Untuk sehari-hari",
       id_kategori_barang: kategori2.id,
     },
   });
-  const jenis8 = await prisma.jenis_barang.create({
+  const jenis8 = await prisma.jenisBarang.create({
     data: {
       nama_jenis: "P3K",
       id_kategori_barang: kategori2.id,
     },
   });
-  const jenis9 = await prisma.jenis_barang.create({
+  const jenis9 = await prisma.jenisBarang.create({
     data: {
       nama_jenis: "Tisu, alkohol dan jarum",
       id_kategori_barang: kategori2.id,
     },
   });
-  const jenis10 = await prisma.jenis_barang.create({
+  const jenis10 = await prisma.jenisBarang.create({
     data: {
       nama_jenis: "Lainnya",
       id_kategori_barang: kategori2.id,
@@ -83,7 +83,7 @@ async function main() {
       harga_jual: 26000,
     },
   });
-  await prisma.detail_barang.create({
+  await prisma.detailBarang.create({
     data: {
       id_barang: barang1.id,
       deskripsi: "Obat batuk hitam",
@@ -108,7 +108,7 @@ async function main() {
       harga_jual: 5000,
     },
   });
-  await prisma.detail_barang.create({
+  await prisma.detailBarang.create({
     data: {
       id_barang: barang2.id,
       deskripsi: "Obat pereda demam dan nyeri",
@@ -134,7 +134,7 @@ async function main() {
       harga_jual: 12000,
     },
   });
-  await prisma.detail_barang.create({
+  await prisma.detailBarang.create({
     data: {
       id_barang: barang3.id,
       deskripsi: "Tisu pembersih antiseptik",
@@ -159,7 +159,7 @@ async function main() {
       harga_jual: 6000,
     },
   });
-  await prisma.detail_barang.create({
+  await prisma.detailBarang.create({
     data: {
       id_barang: barang6.id,
       deskripsi: "Antasida untuk lambung",
@@ -185,7 +185,7 @@ async function main() {
       harga_jual: 23000,
     },
   });
-  await prisma.detail_barang.create({
+  await prisma.detailBarang.create({
     data: {
       id_barang: barang7.id,
       deskripsi: "Vitamin untuk saraf dan otot",
@@ -211,7 +211,7 @@ async function main() {
       harga_jual: 11000,
     },
   });
-  await prisma.detail_barang.create({
+  await prisma.detailBarang.create({
     data: {
       id_barang: barang8.id,
       deskripsi: "Minyak aromaterapi penghangat",
@@ -237,7 +237,7 @@ async function main() {
       harga_jual: 25000,
     },
   });
-  await prisma.detail_barang.create({
+  await prisma.detailBarang.create({
     data: {
       id_barang: barang9.id,
       deskripsi: "Masker pelindung 3 lapis",
@@ -263,7 +263,7 @@ async function main() {
       harga_jual: 5000,
     },
   });
-  await prisma.detail_barang.create({
+  await prisma.detailBarang.create({
     data: {
       id_barang: barang10.id,
       deskripsi: "Plester steril untuk luka ringan",
@@ -282,7 +282,7 @@ async function main() {
   });
 
   // Stok untuk barang1 - OBH Combi
-  await prisma.stok_barang.create({
+  await prisma.stokBarang.create({
     data: {
       id_barang: barang1.id,
       kode_batch: "OBH-202501",
@@ -293,7 +293,7 @@ async function main() {
   });
 
   // Stok untuk barang2 - Paracetamol
-  await prisma.stok_barang.create({
+  await prisma.stokBarang.create({
     data: {
       id_barang: barang2.id,
       kode_batch: "PCM-202501",
@@ -304,7 +304,7 @@ async function main() {
   });
 
   // Stok untuk barang3 - Tisu Alkohol
-  await prisma.stok_barang.create({
+  await prisma.stokBarang.create({
     data: {
       id_barang: barang3.id,
       kode_batch: "ALC-202501",
@@ -315,7 +315,7 @@ async function main() {
   });
 
   // Stok untuk barang6 - Promag
-  await prisma.stok_barang.create({
+  await prisma.stokBarang.create({
     data: {
       id_barang: barang6.id,
       kode_batch: "PMG-202504",
@@ -326,7 +326,7 @@ async function main() {
   });
 
   // Stok untuk barang7 - Neurobion
-  await prisma.stok_barang.create({
+  await prisma.stokBarang.create({
     data: {
       id_barang: barang7.id,
       kode_batch: "NRB-202504",
@@ -337,7 +337,7 @@ async function main() {
   });
 
   // Stok untuk barang8 - Minyak Kayu Putih
-  await prisma.stok_barang.create({
+  await prisma.stokBarang.create({
     data: {
       id_barang: barang8.id,
       kode_batch: "MKP-202503",
@@ -348,7 +348,7 @@ async function main() {
   });
 
   // Stok untuk barang9 - Masker Medis
-  await prisma.stok_barang.create({
+  await prisma.stokBarang.create({
     data: {
       id_barang: barang9.id,
       kode_batch: "MSK-202505",
@@ -359,7 +359,7 @@ async function main() {
   });
 
   // Stok untuk barang10 - Plester Luka
-  await prisma.stok_barang.create({
+  await prisma.stokBarang.create({
     data: {
       id_barang: barang10.id,
       kode_batch: "PLS-202504",
