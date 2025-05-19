@@ -4,6 +4,7 @@ import ProductCard from "@/components/ProductCard";
 import ProductPagination from "@/components/Pagination";
 import KatalogSidebar from "@/components/SidebarKasir";
 import SearchBar from "@/components/SearchBar";
+import { useEffect, useState } from "react";
 
 export default function Catalog() {
   const [page, setPage] = useState<number>(1)
