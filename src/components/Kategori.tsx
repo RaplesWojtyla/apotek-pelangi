@@ -1,22 +1,13 @@
-import {
-  Hand,
-  Thermometer,
-  Droplet,
-  Mic,
-  Pill,
-  Activity,
-  Baby,
-} from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 const categories = [
-  { name: "Alergi", icon: Hand },
-  { name: "Demam", icon: Thermometer },
-  { name: "Diabetes", icon: Droplet },
-  { name: "Mulut & THT", icon: Mic },
-  { name: "Vitamin & Suplemen", icon: Pill },
-  { name: "Hipertensi", icon: Activity },
-  { name: "Kesehatan Ibu/Anak", icon: Baby },
+  { name: "Alergi", image: "/icons/alergi.png" },
+  { name: "Demam", image: "/icons/demam.png" },
+  { name: "Diabetes", image: "/icons/diabetes.png" },
+  { name: "Mulut & THT", image: "/icons/mulut.png" },
+  { name: "Vitamin & Suplemen", image: "/icons/vitamin.png" },
+  { name: "Hipertensi", image: "/icons/hipertensi.png" },
+  { name: "Kesehatan Ibu/Anak", image: "/icons/ibu-anak.png" },
 ];
 
 export default function Kategori() {
@@ -30,22 +21,23 @@ export default function Kategori() {
           </a>
         </div>
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-4">
-          {categories.map((category, index) => {
-            const Icon = category.icon;
-            return (
-              <Card
-                key={index}
-                className="h-32 flex flex-col items-center justify-center p-4 cursor-pointer hover:shadow-md transition"
-              >
-                <CardContent className="flex flex-col items-center justify-center gap-2 p-0">
-                  <Icon className="w-12 h-12 text-cyan-700" />
-                  <span className="text-xs text-gray-700 text-center">
-                    {category.name}
-                  </span>
-                </CardContent>
-              </Card>
-            );
-          })}
+          {categories.map((category, index) => (
+            <Card
+              key={index}
+              className="h-32 flex flex-col items-center justify-center p-4 cursor-pointer hover:shadow-md transition"
+            >
+              <CardContent className="flex flex-col items-center justify-center gap-2 p-0">
+                <img
+                  src={category.image}
+                  alt={category.name}
+                  className="w-12 h-12 object-contain"
+                />
+                <span className="text-xs text-gray-700 text-center">
+                  {category.name}
+                </span>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </section>
