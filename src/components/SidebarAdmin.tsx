@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import SidebarLink from "./SidebarLink";
 
-export default function AdminSidebar({ children }: { children: React.ReactNode }) {
+export default function AdminSidebar({ children }: { children?: React.ReactNode }) {
 	const [isOpen, setIsOpen] = useState(true); // Start opened by default
 
 	const toggleSidebar = () => {
@@ -29,8 +29,8 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
 				<nav className="flex flex-col gap-4">
 					<SidebarLink href="/admin/dashboard" icon={<Home className="w-5 h-5" />} label="Dashboard" />
 					<SidebarLink href="/admin/transaksi" icon={<ShoppingCart className="w-5 h-5" />} label="Transaksi" />
-					<SidebarLink href="/admin/produk" icon={<ListOrdered className="w-5 h-5" />} label="Produk" />
-					<SidebarLink href="/admin/users" icon={<Users className="w-5 h-5" />} label="Pengguna" />
+					<SidebarLink href="/admin/jenisobat" icon={<ListOrdered className="w-5 h-5" />} label="Produk" />
+					<SidebarLink href="/admin/daftaruser" icon={<Users className="w-5 h-5" />} label="Pengguna" />
 					<SidebarLink href="/logout" icon={<LogOut className="w-5 h-5" />} label="Keluar" />
 				</nav>
 			</aside>
@@ -47,7 +47,7 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
 			{/* Overlay (only on small screens) */}
 			{isOpen && (
 				<div
-					className="fixed inset-0 bg-black bg-opacity-30 z-30 md:hidden"
+					className="fixed inset-0 bg-transparent z-30 md:hidden"
 					onClick={toggleSidebar}
 					aria-hidden="true"
 				/>
