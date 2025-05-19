@@ -1,0 +1,18 @@
+import { getProducts } from "@/action/product.action";
+import { NextResponse } from "next/server";
+
+export async function GET(req: Request) {
+	try {
+		const { searchParams } = new URL(req.url)
+		const page = Number(searchParams.get('page')?? 1) 
+		const search = String(searchParams.get('search') ?? "") 
+		const products = await getProducts(page, search)
+
+		return NextResponse.json(products)
+	} catch (error: any) {
+		return NextResponse.json(
+			{ error: error.message ?? "Internal server error." },
+			{ status: 500 }
+		)
+	}
+}
