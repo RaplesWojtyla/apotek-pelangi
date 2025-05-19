@@ -5,254 +5,253 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  // output   = "../src/generated/prisma"
+    provider = "prisma-client-js"
+    // output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 enum LevelUser {
-  ADMIN
-  KASIR
-  CUSTOMER
+    ADMIN
+    KASIR
+    CUSTOMER
 }
 
 enum StatusUser {
-  AKTIF
-  BANNED
-  NONAKTIF
+    AKTIF
+    BANNED
+    NONAKTIF
 }
 
 enum StatusResep {
-  DRAFT
-  MENGAJUKAN
-  DITERIMA
-  DITOLAK
+    DRAFT
+    MENGAJUKAN
+    DITERIMA
+    DITOLAK
 }
 
 enum SumberCart {
-  RESEP
-  MANUAL
+    RESEP
+    MANUAL
 }
 
 enum StatusFaktur {
-  DRAFT
-  MENUNGGU_PEMBAYARAN
-  JATUH_TEMPO
-  DIBATALKAN
-  DIKIRIM
-  SELESAI
+    DRAFT
+    MENUNGGU_PEMBAYARAN
+    JATUH_TEMPO
+    DIBATALKAN
+    DIKIRIM
+    SELESAI
 }
 
 model User {
-  id            String     @id @default(cuid())
-  clerkId       String     @unique
-  nama          String?
-  email         String     @unique
-  emailVerified DateTime?
-  password      String?
-  role          LevelUser  @default(CUSTOMER)
-  alamat        String?
-  no_hp         String?
-  status        StatusUser @default(AKTIF)
-  foto_profil   String     @default("avatar.png")
+    id            String     @id @default(cuid())
+    clerkId       String     @unique
+    nama          String?
+    email         String     @unique
+    emailVerified DateTime?
+    password      String?
+    role          LevelUser  @default(CUSTOMER)
+    alamat        String?
+    no_hp         String?
+    status        StatusUser @default(AKTIF)
+    foto_profil   String     @default("avatar.png")
 
-  pengajuan_resep  PengajuanResep[]
-  cart             Cart[]
-  faktur_penjualan FakturPenjualan[]
-  faktur_pembelian FakturPembelian[]
-  ulasan           Ulasan[]
-  log_aktivitas    LogAktivitas[]
+    pengajuan_resep  PengajuanResep[]
+    cart             Cart[]
+    faktur_penjualan FakturPenjualan[]
+    faktur_pembelian FakturPembelian[]
+    ulasan           Ulasan[]
+    log_aktivitas    LogAktivitas[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Vendor {
-  id          String   @id @default(cuid())
-  kode_vendor String   @unique
-  nama_vendor String
-  alamat      String?
-  no_hp       String?
-  createdAt   DateTime @default(now())
+    id          String   @id @default(cuid())
+    kode_vendor String   @unique
+    nama_vendor String
+    alamat      String?
+    no_hp       String?
+    createdAt   DateTime @default(now())
 
-  faktur_pembelian FakturPembelian[]
+    faktur_pembelian FakturPembelian[]
 }
 
 model KategoriBarang {
-  id            String @id @default(cuid())
-  nama_kategori String 
-  foto_kategori String @default("kategori.png")
-  createdAt     DateTime @default(now())
+    id            String   @id @default(cuid())
+    nama_kategori String
+    foto_kategori String   @default("kategori.png")
+    createdAt     DateTime @default(now())
 
-  jenis_barang JenisBarang[]
-
+    jenis_barang JenisBarang[]
 }
 
 model JenisBarang {
-  id                 String   @id @default(cuid())
-  id_kategori_barang String 
-  nama_jenis         String
-  createdAt          DateTime @default(now())
+    id                 String   @id @default(cuid())
+    id_kategori_barang String
+    nama_jenis         String
+    createdAt          DateTime @default(now())
 
-  barang Barang[]
+    barang Barang[]
 
-  kategori_barang KategoriBarang @relation(fields: [id_kategori_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    kategori_barang KategoriBarang @relation(fields: [id_kategori_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
 }
 
 model Barang {
-  id              String   @id @default(cuid())
-  id_jenis_barang String
-  nama_barang     String
-  harga_jual      Int
-  foto_barang     String   @default("Barang.png")
-  createdAt       DateTime @default(now())
+    id              String   @id @default(cuid())
+    id_jenis_barang String
+    nama_barang     String
+    harga_jual      Int
+    foto_barang     String   @default("Barang.png")
+    createdAt       DateTime @default(now())
 
-  detail_barang           DetailBarang?
-  stok_barang             StokBarang[]
-  cart                    Cart[]
-  detail_faktur_penjualan DetailFakturPenjualan[]
-  detail_faktur_pembelian DetailFakturPembelian[]
-  ulasan                  Ulasan[]
+    detail_barang           DetailBarang?
+    stok_barang             StokBarang[]
+    cart                    Cart[]
+    detail_faktur_penjualan DetailFakturPenjualan[]
+    detail_faktur_pembelian DetailFakturPembelian[]
+    ulasan                  Ulasan[]
 
-  jenis_barang JenisBarang @relation(fields: [id_jenis_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    jenis_barang JenisBarang @relation(fields: [id_jenis_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
 }
 
 model DetailBarang {
-  id              String   @id @default(cuid())
-  id_barang       String   @unique
-  deskripsi       String?
-  indikasi_umum   String?
-  komposisi       String?
-  dosis           String?
-  aturan_pakai    String?
-  perhatian       String?
-  kontra_indikasi String?
-  efek_samping    String?
-  golongan        String?
-  kemasan         String?
-  manufaktur      String?
-  no_bpom         String?
-  createdAt       DateTime @default(now())
+    id              String   @id @default(cuid())
+    id_barang       String   @unique
+    deskripsi       String?
+    indikasi_umum   String?
+    komposisi       String?
+    dosis           String?
+    aturan_pakai    String?
+    perhatian       String?
+    kontra_indikasi String?
+    efek_samping    String?
+    golongan        String?
+    kemasan         String?
+    manufaktur      String?
+    no_bpom         String?
+    createdAt       DateTime @default(now())
 
-  barang Barang @relation(fields: [id_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    barang Barang @relation(fields: [id_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
 }
 
 model StokBarang {
-  id                 String   @id @default(cuid())
-  id_barang          String
-  kode_batch         String?
-  tanggal_masuk      DateTime @default(now())
-  tanggal_kadaluarsa DateTime?
-  jumlah             Int
-  createdAt          DateTime @default(now())
+    id                 String    @id @default(cuid())
+    id_barang          String
+    kode_batch         String?
+    tanggal_masuk      DateTime  @default(now())
+    tanggal_kadaluarsa DateTime?
+    jumlah             Int
+    createdAt          DateTime  @default(now())
 
-  barang Barang @relation(fields: [id_barang], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    barang Barang @relation(fields: [id_barang], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model PengajuanResep {
-  id                String      @id @default(cuid())
-  id_user           String
-  tanggal_pengajuan DateTime    @default(now())
-  status            StatusResep @default(MENGAJUKAN)
-  catatan           String?
-  foto_resep        String
-  createdAt         DateTime    @default(now())
+    id                String      @id @default(cuid())
+    id_user           String
+    tanggal_pengajuan DateTime    @default(now())
+    status            StatusResep @default(MENGAJUKAN)
+    catatan           String?
+    foto_resep        String
+    createdAt         DateTime    @default(now())
 
-  cart                    Cart[]
-  detail_faktur_penjualan DetailFakturPenjualan[]
+    cart                    Cart[]
+    detail_faktur_penjualan DetailFakturPenjualan[]
 
-  user User @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    user User @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Cart {
-  id        String     @id @default(cuid())
-  id_user   String
-  id_barang String
-  id_resep  String?
-  jumlah    Int
-  sumber    SumberCart
+    id        String     @id @default(cuid())
+    id_user   String
+    id_barang String
+    id_resep  String?
+    jumlah    Int
+    sumber    SumberCart
 
-  user            User            @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  barang          Barang          @relation(fields: [id_barang], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  pengajuan_resep PengajuanResep? @relation(fields: [id_resep], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    user            User            @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    barang          Barang          @relation(fields: [id_barang], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    pengajuan_resep PengajuanResep? @relation(fields: [id_resep], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model FakturPenjualan {
-  id             String       @id @default(cuid())
-  id_user        String
-  tanggal_faktur DateTime     @default(now())
-  alamat         String
-  status         StatusFaktur
-  total          Int
-  keterangan     String?
-  createdAt      DateTime     @default(now())
+    id             String       @id @default(cuid())
+    id_user        String
+    tanggal_faktur DateTime     @default(now())
+    alamat         String
+    status         StatusFaktur
+    total          Int
+    keterangan     String?
+    createdAt      DateTime     @default(now())
 
-  detail_faktur_penjualan DetailFakturPenjualan[]
+    detail_faktur_penjualan DetailFakturPenjualan[]
 
-  user User @relation(fields: [id_user], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    user User @relation(fields: [id_user], references: [id], onDelete: Restrict, onUpdate: Cascade)
 }
 
 model DetailFakturPenjualan {
-  id                  String  @id @default(cuid())
-  id_faktur_penjualan String
-  id_barang           String
-  id_resep            String?
-  jumlah              Int
+    id                  String  @id @default(cuid())
+    id_faktur_penjualan String
+    id_barang           String
+    id_resep            String?
+    jumlah              Int
 
-  faktur_penjualan FakturPenjualan @relation(fields: [id_faktur_penjualan], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  barang           Barang          @relation(fields: [id_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  pengajuan_resep  PengajuanResep? @relation(fields: [id_resep], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    faktur_penjualan FakturPenjualan @relation(fields: [id_faktur_penjualan], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    barang           Barang          @relation(fields: [id_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    pengajuan_resep  PengajuanResep? @relation(fields: [id_resep], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model FakturPembelian {
-  id             String   @id @default(cuid())
-  id_user        String
-  id_vendor      String
-  tanggal_faktur DateTime @default(now())
-  pajak          Int?
-  total          Int
-  keterangan     String?
-  createdAt      DateTime @default(now())
+    id             String   @id @default(cuid())
+    id_user        String
+    id_vendor      String
+    tanggal_faktur DateTime @default(now())
+    pajak          Int?
+    total          Int
+    keterangan     String?
+    createdAt      DateTime @default(now())
 
-  detail_faktur_pembelian DetailFakturPembelian[]
+    detail_faktur_pembelian DetailFakturPembelian[]
 
-  user   User   @relation(fields: [id_user], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  vendor Vendor @relation(fields: [id_vendor], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    user   User   @relation(fields: [id_user], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    vendor Vendor @relation(fields: [id_vendor], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model DetailFakturPembelian {
-  id                  String @id @default(cuid())
-  id_faktur_pembelian String
-  id_barang           String
-  jumlah              Int
-  harga_beli          Int
+    id                  String @id @default(cuid())
+    id_faktur_pembelian String
+    id_barang           String
+    jumlah              Int
+    harga_beli          Int
 
-  faktur_pembelian FakturPembelian @relation(fields: [id_faktur_pembelian], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  barang           Barang          @relation(fields: [id_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    faktur_pembelian FakturPembelian @relation(fields: [id_faktur_pembelian], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    barang           Barang          @relation(fields: [id_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
 }
 
 model Ulasan {
-  id         String   @id @default(cuid())
-  id_user    String
-  id_barang  String
-  isi_ulasan String?
-  rating     Int
-  createdAt  DateTime @default(now())
+    id         String   @id @default(cuid())
+    id_user    String
+    id_barang  String
+    isi_ulasan String?
+    rating     Int
+    createdAt  DateTime @default(now())
 
-  user   User   @relation(fields: [id_user], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  barang Barang @relation(fields: [id_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    user   User   @relation(fields: [id_user], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    barang Barang @relation(fields: [id_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
 }
 
 model LogAktivitas {
-  id         String   @id @default(cuid())
-  id_user    String
-  aksi       String?
-  keterangan String?
-  createdAt  DateTime @default(now())
+    id         String   @id @default(cuid())
+    id_user    String
+    aksi       String?
+    keterangan String?
+    createdAt  DateTime @default(now())
 
-  user User @relation(fields: [id_user], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    user User @relation(fields: [id_user], references: [id], onDelete: Restrict, onUpdate: Cascade)
 }

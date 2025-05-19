@@ -1,51 +1,28 @@
+'use client'
+
 import Banner from "@/components/Banner";
 import Kategori from "@/components/Kategori";
 import ProductCard from "@/components/ProductCard";
 import TebusResep from "@/components/TebusResep";
+import { ProductDetail } from "@/action/product.action";
+import { useEffect, useState } from "react";
 
 export default function CustomerPage() {
-	const products = [
-		{
-			name: "Rhinus SR 60 Kapsul",
-			price: "Rp21.000/strip",
-			image: "/logo.png",
-		},
-		{
-			name: "Rhinofed 4.5mg/60ml",
-			price: "Rp21.500/botol",
-			image: "/logo.png",
-		},
-		{
-			name: "Termorex Sirup 60 ml",
-			price: "Rp8.000/botol",
-			image: "/logo.png",
-		},
-		{
-			name: "Termorex Sirup 60 ml",
-			price: "Rp8.000/botol",
-			image: "/logo.png",
-		},
-		{
-			name: "Rhinus SR 60 Kapsul",
-			price: "Rp21.000/strip",
-			image: "/logo.png",
-		},
-		{
-			name: "Rhinofed 4.5mg/60ml",
-			price: "Rp21.500/botol",
-			image: "/logo.png",
-		},
-		{
-			name: "Termorex Sirup 60 ml",
-			price: "Rp8.000/botol",
-			image: "/logo.png",
-		},
-		{
-			name: "Termorex Sirup 60 ml",
-			price: "Rp8.000/botol",
-			image: "/logo.png",
-		},
-	];
+	const [products, setProducts] = useState<ProductDetail[]>([])
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const res = await fetch('/api/product')
+
+			if (!res.ok) throw new Error("Gagal mengambil data obat")
+
+			const data: ProductDetail[] = await res.json()
+
+			setProducts(data)
+		}
+
+		fetchData()
+	}, [])
 
 	return (
 		<div className="flex flex-col">
