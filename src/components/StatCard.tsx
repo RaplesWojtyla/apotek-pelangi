@@ -1,14 +1,12 @@
 import React from "react"
 import { Card } from "./ui/card"
 
-const StatCard = ({ icon, title, value } : { icon: React.ReactNode, title: string, value: string }) => {
+const StatCard = ({ icon, title, value }: { icon: React.ReactNode, title: string, value: string }) => {
 	return (
-		<Card className="flex items-center gap-4 p-4">
+		<Card className="flex flex-col items-center justify-center text-center gap-2 py-6 h-36">
 			<div className="text-3xl">{icon}</div>
-			<div>
-				<h2 className="text-sm text-gray-500">{title}</h2>
-				<p className="text-xl font-semibold">{value}</p>
-			</div>
+			<h2 className="text-sm text-gray-500">{title}</h2>
+			<p className="text-xl font-semibold">{value}</p>
 		</Card>
 	)
 }
