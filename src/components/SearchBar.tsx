@@ -20,8 +20,8 @@ export default function SearchBar({ placeholder = "Cari produk..." }) {
           placeholder-gray-400
           focus:outline-none
           focus:ring-2
-          focus:ring-blue-500
-          focus:border-blue-500
+          focus:ring-cyan-500
+          focus:border-cyan-500
           transition-all
           duration-200
           shadow-sm

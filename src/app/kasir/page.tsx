@@ -1,4 +1,4 @@
-import KatalogSidebar from "@/components/Sidebar";
+import SidebarKasir from "@/components/SidebarKasir";
 import Keranjang from "@/components/SideCart";
 import SearchBar from "@/components/SearchBar";
 import KasirCard from "@/components/KasirCard";
@@ -12,7 +12,7 @@ const DashboardKasir = async () => {
 
   return (
     <div className="min-h-screen flex bg-gray-100">
-      <KatalogSidebar />
+      <SidebarKasir />
       {/* Main Content */}
       <main className=" flex-1 p-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

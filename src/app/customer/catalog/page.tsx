@@ -1,7 +1,7 @@
-import AppSidebar from "@/components/Sidebar";
 import ProductCard from "@/components/ProductCard";
 import ProductPagination from "@/components/Pagination";
-import KatalogSidebar from "@/components/Sidebar";
+import KatalogSidebar from "@/components/SidebarKasir";
+import SearchBar from "@/components/SearchBar";
 
 const products = [
   {
@@ -88,23 +88,20 @@ const products = [
 
 export default function Catalog() {
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="flex bg-gray-100 min-h-screen">
       {/* Sidebar Fixed Desktop */}
       <KatalogSidebar />
-
-      {/* Content Wrapper */}
-      <div className="lg:ml-64">
-        {/* Main Content */}
-        <main className="p-4">
-          <h1 className="text-2xl font-bold mb-6">Semua Kategori</h1>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {products.map((product, i) => (
-              <ProductCard key={i} product={product} />
-            ))}
-          </div>
-          <ProductPagination />
-        </main>
-      </div>
+      {/* Main Content */}
+      <main className="p-4 flex-1">
+        <SearchBar/>
+        <h1 className="text-2xl font-bold mb-6">Semua Kategori</h1>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          {products.map((product, i) => (
+            <ProductCard key={i} product={product} />
+          ))}
+        </div>
+        <ProductPagination />
+      </main>
     </div>
   );
 }
