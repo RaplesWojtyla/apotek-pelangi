@@ -5,6 +5,7 @@ import ProductPagination from "@/components/Pagination";
 import KatalogSidebar from "@/components/SidebarKasir";
 import SearchBar from "@/components/SearchBar";
 import { useEffect, useState } from "react";
+import { ProductDetail } from "@/action/product.action";
 
 export default function Catalog() {
   const [page, setPage] = useState<number>(1)
