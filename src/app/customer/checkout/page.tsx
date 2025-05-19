@@ -1,5 +1,3 @@
-import React from "react";
-import "../../app/globals.css";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -30,7 +28,6 @@ export default function CheckoutPage() {
                         </div>
                     </div>
                 </section>
-
 
                 {/* Produk Dipesan */}
                 <h2 className="font-semibold mb-2">Produk Dipesan</h2>
