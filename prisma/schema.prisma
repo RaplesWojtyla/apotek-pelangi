@@ -82,12 +82,25 @@ model Vendor {
   faktur_pembelian FakturPembelian[]
 }
 
+model KategoriBarang {
+  id            String @id @default(cuid())
+  nama_kategori String 
+  foto_kategori String @default("kategori.png")
+  createdAt     DateTime @default(now())
+
+  jenis_barang JenisBarang[]
+
+}
+
 model JenisBarang {
-  id        String   @id @default(cuid())
-  nama      String
-  createdAt DateTime @default(now())
+  id                 String   @id @default(cuid())
+  id_kategori_barang String 
+  nama_jenis         String
+  createdAt          DateTime @default(now())
 
   barang Barang[]
+
+  kategori_barang KategoriBarang @relation(fields: [id_kategori_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
 }
 
 model Barang {
@@ -98,7 +111,7 @@ model Barang {
   foto_barang     String   @default("Barang.png")
   createdAt       DateTime @default(now())
 
-  detail_obat             DetailObat?
+  detail_barang           DetailBarang?
   stok_barang             StokBarang[]
   cart                    Cart[]
   detail_faktur_penjualan DetailFakturPenjualan[]
@@ -108,7 +121,7 @@ model Barang {
   jenis_barang JenisBarang @relation(fields: [id_jenis_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
 }
 
-model DetailObat {
+model DetailBarang {
   id              String   @id @default(cuid())
   id_barang       String   @unique
   deskripsi       String?
@@ -119,7 +132,7 @@ model DetailObat {
   perhatian       String?
   kontra_indikasi String?
   efek_samping    String?
-  golongan        String
+  golongan        String?
   kemasan         String?
   manufaktur      String?
   no_bpom         String?
@@ -133,7 +146,7 @@ model StokBarang {
   id_barang          String
   kode_batch         String?
   tanggal_masuk      DateTime @default(now())
-  tanggal_kadaluarsa DateTime
+  tanggal_kadaluarsa DateTime?
   jumlah             Int
   createdAt          DateTime @default(now())
 
@@ -216,7 +229,7 @@ model DetailFakturPembelian {
   id_faktur_pembelian String
   id_barang           String
   jumlah              Int
-  harga_beli          String
+  harga_beli          Int
 
   faktur_pembelian FakturPembelian @relation(fields: [id_faktur_pembelian], references: [id], onDelete: Cascade, onUpdate: Cascade)
   barang           Barang          @relation(fields: [id_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
