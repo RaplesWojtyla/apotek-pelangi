@@ -1,9 +1,11 @@
+import Navbar from "@/components/Navbar";
 import Image from "next/image";
 
 export default function Home() {
 	return (
 		<>
 			<section className="flex-grow">
+				<Navbar />
 				<div className="bg-cyan-600 text-white px-6 md:px-12 py-16">
 					<h1 className="text-3xl md:text-4xl font-bold mb-4">Tentang Apotek Pelangi</h1>
 					<p className="text-lg font-semibold mb-4">

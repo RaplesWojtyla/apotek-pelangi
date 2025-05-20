@@ -1,7 +1,7 @@
 'use client'
 
 import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
-import { ShoppingCart, Bell, Search } from 'lucide-react';
+import { ShoppingCart, Bell } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
 
@@ -27,26 +27,6 @@ export const Navbar =  () => {
 					</Link>
 				</div>
 
-				{isSignedIn ? (
-					<div className="flex-1 mx-6 max-w-xl">
-						<div className="relative">
-							<input
-								type="text"
-								placeholder="Ketik kata kunci produk yang anda cari"
-								className="w-full border border-gray-300 rounded-full px-4 py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-							/>
-							<button
-								className="absolute right-2 top-1/2 transform -translate-y-1/2 text-cyan-500"
-								aria-label="Cari"
-							>
-								<Search className="w-6 h-6" />
-							</button>
-						</div>
-					</div>
-				) : (
-					<div className="flex-1" />
-				)}
-
 				<div className="flex items-center space-x-4">
 					{isSignedIn ? (
 						<>
@@ -57,14 +37,15 @@ export const Navbar =  () => {
 								<Bell className="w-6 h-6 text-cyan-500 hover:text-cyan-700" />
 							</button>
 							<UserButton />
+								<nav className="hidden md:flex space-x-4 text-sm text-gray-600">
+								<a href="/customer" className="hover:text-cyan-500">
+									Dashboard
+								</a>
+							</nav>
 						</>
 					) : (
 						<>
-							<nav className="hidden md:flex space-x-4 text-sm text-gray-600">
-								<a href="/Catalog" className="hover:text-cyan-500">
-									Katalog Produk
-								</a>
-							</nav>
+						
 							<Button
 								className='text-sm text-cyan-500 font-medium mr-0 cursor-pointer'
 								variant={'link'}
