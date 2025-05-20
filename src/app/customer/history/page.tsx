@@ -1,71 +1,111 @@
-import React from "react";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+"use client";
 
-const transactions = [
-	{
-		id: "TRX001",
-		date: "2024-05-01",
-		status: "success",
-		total: 120000,
-	},
-	{
-		id: "TRX002",
-		date: "2024-05-02",
-		status: "pending",
-		total: 45000,
-	},
-	{
-		id: "TRX003",
-		date: "2024-05-03",
-		status: "failed",
-		total: 70000,
-	},
+import React, { useState } from "react";
+import Image from "next/image";
+
+
+// Dummy data
+const transaksi = [
+  {
+    id: "TRX00000001",
+    status: "Berhasil",
+    total: 22000,
+    items: [
+      {
+        nama: "Artrodar 50mg 10 kapsul",
+        jumlah: 1,
+        harga: 12000,
+        gambar: "/img/artrodar.png",
+      },
+    ],
+  },
+  {
+    id: "TRX00000002",
+    status: "Proses",
+    total: 22000,
+    items: [
+      {
+        nama: "Artrodar 50mg 10 kapsul",
+        jumlah: 1,
+        harga: 12000,
+        gambar: "/img/artrodar.png",
+      },
+    ],
+  },
 ];
 
-const statusBadge = (status: string) => {
-	switch (status) {
-		case "success":
-			return <Badge className="bg-green-500 text-white">Berhasil</Badge>;
-		case "pending":
-			return <Badge className="bg-yellow-400 text-black">Diproses</Badge>;
-		case "failed":
-			return <Badge variant="destructive">Gagal</Badge>;
-		default:
-			return <Badge>Unknown</Badge>;
-	}
-};
+// Status filter
+const statusTabs = ["Semua", "Belum Bayar", "Diproses", "Dikirim", "Dibatalkan", "Selesai"];
 
-export default function HistoryPage() {
-	return (
-		<div className="flex flex-col min-h-screen bg-gray-100">
-			<Navbar />
-			<main className="flex-grow w-full px-4 sm:px-8 py-6">
-				<h1 className="text-2xl sm:text-3xl font-bold mb-6">Riwayat Transaksi</h1>
+export default function RiwayatTransaksiPage() {
+  const [filter, setFilter] = useState("Semua");
 
-				<div className="space-y-4 max-w-6xl mx-auto">
-					{transactions.map((trx) => (
-						<Card
-							key={trx.id}
-							className="p-6 sm:p-8 bg-white rounded-xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center"
-						>
-							<div>
-								<p className="text-base sm:text-lg font-semibold">ID Transaksi: {trx.id}</p>
-								<p className="text-sm text-gray-500">Tanggal: {trx.date}</p>
-							</div>
-							<div className="mt-3 sm:mt-0 flex flex-col items-start sm:items-end gap-1">
-								{statusBadge(trx.status)}
-								<p className="text-base sm:text-lg font-bold text-gray-700">
-									Total: Rp{trx.total.toLocaleString()}
-								</p>
-							</div>
-						</Card>
-					))}
-				</div>
-			</main>
-			<Footer />
-		</div>
-	);
+  const filtered = transaksi.filter((t) =>
+    filter === "Semua" ? true : t.status.toLowerCase() === filter.toLowerCase()
+  );
+
+  return (
+    <div className="max-w-5xl mx-auto px-4 py-6">
+      <h1 className="text-2xl font-bold mb-6">Riwayat Transaksi</h1>
+
+      {/* Tabs */}
+      <div className="flex space-x-2 overflow-x-auto mb-6">
+        {statusTabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setFilter(tab)}
+            className={`px-4 py-2 rounded-md font-semibold ${
+              filter === tab ? "bg-blue-500 text-white" : "bg-blue-100 text-blue-700"
+            }`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {/* Kartu transaksi */}
+      <div className="space-y-4">
+        {filtered.map((trx) => (
+          <div
+            key={trx.id}
+            className="border rounded-lg p-4 flex flex-col gap-4 shadow-sm bg-white"
+          >
+            <div className="text-sm text-gray-600 font-medium">No Pesanan : {trx.id}</div>
+            <div className="flex items-start gap-4">
+              <Image
+                src={trx.items[0].gambar}
+                alt={trx.items[0].nama}
+                width={100}
+                height={100}
+                className="object-contain rounded"
+              />
+              <div className="flex-1">
+                <p className="font-semibold">{trx.items[0].nama}</p>
+                <p className="text-sm text-gray-600">
+                  {trx.items[0].jumlah} x Rp{trx.items[0].harga.toLocaleString()}
+                </p>
+                <a href="#" className="text-blue-600 text-sm mt-2 inline-block">
+                  Lihat Detail
+                </a>
+              </div>
+              <div className="text-right">
+                <p className="font-semibold text-lg">Rp{trx.total.toLocaleString()}</p>
+                <span
+                  className={`inline-block mt-2 px-3 py-1 text-xs rounded ${
+                    trx.status === "Berhasil"
+                      ? "bg-green-500 text-white"
+                      : trx.status === "Proses"
+                      ? "bg-yellow-400 text-white"
+                      : "bg-gray-300 text-gray-700"
+                  }`}
+                >
+                  {trx.status}
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
