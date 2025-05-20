@@ -87,7 +87,7 @@ const CartPage = () => {
 							<Checkbox />
 							<span>Pilih Semua</span>
 						</label>
-						<span className="text-sm text-gray-500 cursor-pointer">Hapus Semua</span>
+						<span className="text-sm text-red-500 cursor-pointer">Hapus Semua</span>
 					</div>
 
 					<ScrollArea className="h-[500px] pr-2">
@@ -147,7 +147,7 @@ const CartPage = () => {
 						<span>Total Harga</span>
 						<span className="font-bold">Rp{subtotal.toLocaleString()}</span>
 					</div>
-					<Button className="w-full">Tebus Obat</Button>
+					<Button className="w-full">Bayar Sekarang</Button>
 				</div>
 			</div>
 		</div>

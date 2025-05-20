@@ -5,7 +5,7 @@ import {
 	ShoppingCart,
 	ClipboardList,
 } from "lucide-react";
-import AdminSidebar from "@/components/SidebarAdmin"; // sesuaikan path-nya
+import AdminSidebar from "@/components/SidebarAdmin";
 import StatCard from "@/components/StatCard";
 import { checkRole } from "@/lib/clerk";
 import { redirect } from "next/navigation";
