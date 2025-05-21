@@ -1,120 +1,64 @@
+'use server'
+
 import { prisma } from "@/lib/prisma"
 
-export type ProductDetail = Awaited<ReturnType<typeof getProducts>>[number]
+export type Product = Awaited<ReturnType<typeof getProducts>>[number]
+export type ProductDetail = Awaited<ReturnType<typeof getProductDetail>>
 
-const ITEMS_PER_PAGE: number = 16
-
-export const getProducts = async (page: number, search: string) => {
-	const skip = (page - 1) * ITEMS_PER_PAGE
+export const getProducts = async ({ page = 1, matcher = '', take = 16 }) => {
+	const skip = (page - 1) * take
 
 	try {
 		const products = await prisma.barang.findMany({
 			skip,
-			take: ITEMS_PER_PAGE,
+			take,
 			where: {
 				nama_barang: {
-					contains: search,
-					mode: "insensitive"
+					contains: matcher,
+					mode: 'insensitive'
 				}
 			},
 			include: {
-				detail_barang: true,
-				stok_barang: true,
-				ulasan: true,
 				jenis_barang: {
 					include: {
-						kategori_barang: {
-							select: {
-								nama_kategori: true,
-								foto_kategori: true
-							}
-						}
-					}
-				}
+						kategori_barang: true
+					},
+				},
 			}
 		})
 
-		const enriched = products.map((product) => {
-			const totalStok = product.stok_barang.reduce((sum, stok) => sum + stok.jumlah, 0)
-			const totalRating = product.ulasan.reduce((sum, u) => sum + u.rating, 0)
-			const rataRating = product.ulasan.length > 0 ? totalRating / product.ulasan.length : 0
-
-			return {
-				...product,
-				totalStok,
-				rataRating
-			}
-		})
-
-		return enriched
+		return products
 	} catch (error) {
 		console.error("[getProducts] error:", error)
 		throw new Error("Gagal mengambil data produk.")
 	}
 }
 
-export const getAllCategories = async () => {
+export const getProductDetail = async (id: string) => {
 	try {
-		const categories = await prisma.kategoriBarang.findMany({
-			select: {
-				id: true,
-				nama_kategori: true,
-				foto_kategori: true
-			}
-		})
-		return categories
-	} catch (error) {
-		console.error("[getAllCategories] error:", error)
-		throw new Error("Gagal mengambil kategori.")
-	}
-}
-
-export const getAllTypes = async (id_kategori: string) => {
-	try {
-		const types = await prisma.jenisBarang.findMany({
+		const productDetail = await prisma.barang.findUnique({
 			where: {
-				id_kategori_barang: id_kategori
+				id
 			},
-			select: {
-				id: true,
-				nama_jenis: true
+			include: {
+				detail_barang: true,
+				stok_barang: true,
+				jenis_barang: {
+					include: {
+						kategori_barang: true
+					}
+				}
 			}
 		})
-		return types
-	} catch (error) {
-		console.error("[getAllTypes] error:", error)
-		throw new Error("Gagal mengambil jenis barang.")
-	}
-}
-
-export const getTotalStock = async (id_barang: string) => {
-	try {
-		const stok = await prisma.stokBarang.aggregate({
-			where: { id_barang },
-			_sum: { jumlah: true }
-		})
-
-		return stok._sum.jumlah ?? 0
-	} catch (error) {
-		console.error("[getTotalStokBarang] error:", error)
-		throw new Error("Gagal menghitung stok barang.")
-	}
-}
-
-export const getRating = async (id_barang: string) => {
-	try {
-		const ulasan = await prisma.ulasan.aggregate({
-			where: { id_barang },
-			_avg: { rating: true },
-			_count: { id: true }
-		})
+		const totalStok = productDetail?.stok_barang.reduce((sum, stok) => sum + stok.jumlah, 0)
 
 		return {
-			rataRating: ulasan._avg.rating ?? 0,
-			totalUlasan: ulasan._count.id
+			...productDetail,
+			totalStock: totalStok 
 		}
 	} catch (error) {
-		console.error("[getRatingUlasanBarang] error:", error)
-		throw new Error("Gagal mengambil data ulasan barang.")
+		console.error(`[getProducts] error: ${error}`);
+
+		throw new Error("Gagal mengambil detail produk.")
 	}
 }

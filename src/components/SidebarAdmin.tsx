@@ -27,10 +27,12 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
 			>
 				<h2 className="text-xl font-bold mb-4 mt-16">Admin Panel</h2>
 				<nav className="flex flex-col gap-4">
-					<SidebarLink href="/admin/dashboard" icon={<Home className="w-5 h-5" />} label="Dashboard" />
-					<SidebarLink href="/admin/transaksi" icon={<ShoppingCart className="w-5 h-5" />} label="Transaksi" />
+					<SidebarLink href="/admin/#" icon={<Home className="w-5 h-5" />} label="Dashboard" />
+					<SidebarLink href="/admin/daftarobat" icon={<ShoppingCart className="w-5 h-5" />} label="Transaksi" />
 					<SidebarLink href="/admin/jenisobat" icon={<ListOrdered className="w-5 h-5" />} label="Produk" />
 					<SidebarLink href="/admin/daftaruser" icon={<Users className="w-5 h-5" />} label="Pengguna" />
+					<SidebarLink href="/admin/logpembelian" icon={<Users className="w-5 h-5" />} label="Log Pembelian" />
+					<SidebarLink href="/admin/logpenjualan" icon={<Users className="w-5 h-5" />} label="Log Penjualan" />
 					<SidebarLink href="/logout" icon={<LogOut className="w-5 h-5" />} label="Keluar" />
 				</nav>
 			</aside>

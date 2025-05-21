@@ -9,7 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 
 
-const CartPage = () => {
+export default function page() {
 	const cartItems = [
 		{
 			id: 1,
@@ -52,7 +52,6 @@ const CartPage = () => {
 
 	return (
 		<div className="bg-gray-100 min-h-screen">
-			<Navbar />
 
 			<div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4 md:items-start">
 				{/* Left section (main content) */}
@@ -87,7 +86,7 @@ const CartPage = () => {
 							<Checkbox />
 							<span>Pilih Semua</span>
 						</label>
-						<span className="text-sm text-gray-500 cursor-pointer">Hapus Semua</span>
+						<span className="text-sm text-red-500 cursor-pointer">Hapus Semua</span>
 					</div>
 
 					<ScrollArea className="h-[500px] pr-2">
@@ -123,7 +122,7 @@ const CartPage = () => {
 											{item.status === "normal" && (
 												<>
 													<p className="text-sm">
-														Rp{item.price.toLocaleString()}
+														Rp{item.price.toLocaleString('id-ID')}
 													</p>
 													<p className="text-xs text-gray-500">{item.type}</p>
 												</>
@@ -147,11 +146,9 @@ const CartPage = () => {
 						<span>Total Harga</span>
 						<span className="font-bold">Rp{subtotal.toLocaleString()}</span>
 					</div>
-					<Button className="w-full">Tebus Obat</Button>
+					<Button className="w-full">Bayar Sekarang</Button>
 				</div>
 			</div>
 		</div>
 	);
 };
-
-export default CartPage;

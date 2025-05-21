@@ -9,7 +9,7 @@ export default function CheckoutPage() {
             <div className="max-w-5xl mx-auto px-4 py-8 space-y-6 text-sm">
                 {/* Back & Title */}
                 <div className="text-gray-700 text-sm">
-                    <h2 className="text-xl font-bold text-gray-800">Keranjang</h2>
+                    <h2 className="text-xl font-bold text-gray-800">Checkout</h2>
                 </div>
 
                 {/* Alamat Pengiriman */}
@@ -89,7 +89,6 @@ export default function CheckoutPage() {
                     </div>
                 </section>
             </div>
-            <Footer />
         </div>
     );
 }

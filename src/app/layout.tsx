@@ -4,6 +4,8 @@ import "./globals.css";
 import Footer from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs"
 import { syncUser } from "@/action/user.action";
+import { currentUser } from "@clerk/nextjs/server";
+import { Toaster } from "react-hot-toast"
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -25,15 +27,13 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	try {
-		await syncUser()
-	} catch (e) {
-		console.error(`Gagal menyinkronkan data user.`)
-	}
+	const user = await currentUser()
+
+	if (user) await syncUser()
 
 	return (
 		<ClerkProvider>
-			<html lang="id">
+			<html lang="id" suppressHydrationWarning>
 				<body
 					className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 				>
@@ -41,6 +41,7 @@ export default async function RootLayout({
 						{children}
 					</main>
 					<Footer />
+					<Toaster />
 				</body>
 			</html>
 		</ClerkProvider>

@@ -64,7 +64,6 @@ model User {
     cart             Cart[]
     faktur_penjualan FakturPenjualan[]
     faktur_pembelian FakturPembelian[]
-    ulasan           Ulasan[]
     log_aktivitas    LogAktivitas[]
 
     createdAt DateTime @default(now())
@@ -115,7 +114,6 @@ model Barang {
     cart                    Cart[]
     detail_faktur_penjualan DetailFakturPenjualan[]
     detail_faktur_pembelian DetailFakturPembelian[]
-    ulasan                  Ulasan[]
 
     jenis_barang JenisBarang @relation(fields: [id_jenis_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
 }
@@ -178,6 +176,8 @@ model Cart {
     user            User            @relation(fields: [id_user], references: [id], onDelete: Cascade, onUpdate: Cascade)
     barang          Barang          @relation(fields: [id_barang], references: [id], onDelete: Cascade, onUpdate: Cascade)
     pengajuan_resep PengajuanResep? @relation(fields: [id_resep], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    @@unique([id_user, id_barang])
 }
 
 model FakturPenjualan {
@@ -232,18 +232,6 @@ model DetailFakturPembelian {
 
     faktur_pembelian FakturPembelian @relation(fields: [id_faktur_pembelian], references: [id], onDelete: Cascade, onUpdate: Cascade)
     barang           Barang          @relation(fields: [id_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
-}
-
-model Ulasan {
-    id         String   @id @default(cuid())
-    id_user    String
-    id_barang  String
-    isi_ulasan String?
-    rating     Int
-    createdAt  DateTime @default(now())
-
-    user   User   @relation(fields: [id_user], references: [id], onDelete: Restrict, onUpdate: Cascade)
-    barang Barang @relation(fields: [id_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
 }
 
 model LogAktivitas {
