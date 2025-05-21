@@ -19,21 +19,21 @@ export default function Home() {
 
 					<div className="grid grid-cols-1 md:grid-cols-3 mt-10 text-center">
 						<div className="rounded-xl py-4">
-							<p className="text-2xl font-bold">7,000+</p>
+							<p className="text-2xl font-bold">5</p>
 							<p className="text-sm mb-4">Mitra Apotek Pelangi</p>
 							<button className="text-yellow-400 font-semibold border border-yellow-400 rounded-full px-4 py-2 hover:bg-yellow-400 hover:text-[#002A5C] transition">
 								Belanja Produk
 							</button>
 						</div>
 						<div className="rounded-xl py-4">
-							<p className="text-2xl font-bold">50,000+</p>
+							<p className="text-2xl font-bold">5.000+</p>
 							<p className="text-sm mb-4">Produk Tersedia</p>
 							<button className="text-yellow-400 font-semibold border border-yellow-400 rounded-full px-4 py-2 hover:bg-yellow-400 hover:text-[#002A5C] transition">
 								Menjadi Mitra Apotik
 							</button>
 						</div>
 						<div className="rounded-xl py-4">
-							<p className="text-2xl font-bold">480+</p>
+							<p className="text-2xl font-bold">1+</p>
 							<p className="text-sm mb-4">Jangkauan Kota</p>
 							<button className="text-yellow-400 font-semibold border border-yellow-400 rounded-full px-4 py-2 hover:bg-yellow-400 hover:text-[#002A5C] transition">
 								Layanan untuk Brand
@@ -52,7 +52,7 @@ export default function Home() {
 							Khusus Untuk Produk Kesehatan
 						</h3>
 						<p className="text-sm md:text-base leading-relaxed">
-							Unduh aplikasi gapotik dan temukan kemudahan akses ke lebih dari 50.000 produk kesehatan,
+							Gunakan aplikasi Apotek Pelangi dan temukan kemudahan akses ke berbagai produk kesehatan,
 							mulai dari obat-obatan, vitamin, suplemen, hingga peralatan medis. Nikmati fitur-fitur
 							unggulan seperti konsultasi online dengan apoteker, konsultasi dengan dokter, dan layanan
 							antar cepat langsung ke rumah Anda.

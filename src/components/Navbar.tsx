@@ -5,7 +5,7 @@ import { ShoppingCart, Bell } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
 
-export const Navbar =  () => {
+export const Navbar = () => {
 	const { isSignedIn } = useUser()
 
 	return (
@@ -37,15 +37,15 @@ export const Navbar =  () => {
 								<Bell className="w-6 h-6 text-cyan-500 hover:text-cyan-700" />
 							</button>
 							<UserButton />
-								<nav className="hidden md:flex space-x-4 text-sm text-gray-600">
-								<a href="/customer" className="hover:text-cyan-500">
+							<nav className="hidden md:flex space-x-4 text-sm text-gray-600">
+								<Link href={'/sign-in/callback'} className="hover:text-cyan-500">
 									Dashboard
-								</a>
+								</Link>
 							</nav>
 						</>
 					) : (
 						<>
-						
+
 							<Button
 								className='text-sm text-cyan-500 font-medium mr-0 cursor-pointer'
 								variant={'link'}

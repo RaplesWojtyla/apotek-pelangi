@@ -52,7 +52,6 @@ const CartPage = () => {
 
 	return (
 		<div className="bg-gray-100 min-h-screen">
-			<Navbar />
 
 			<div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4 md:items-start">
 				{/* Left section (main content) */}
@@ -123,7 +122,7 @@ const CartPage = () => {
 											{item.status === "normal" && (
 												<>
 													<p className="text-sm">
-														Rp{item.price.toLocaleString()}
+														Rp{item.price.toLocaleString('id-ID')}
 													</p>
 													<p className="text-xs text-gray-500">{item.type}</p>
 												</>

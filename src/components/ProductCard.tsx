@@ -1,11 +1,22 @@
-import React from "react";
-import { Heart, ShoppingCart } from "lucide-react";
-import { ProductDetail } from "@/action/product.action";
-import { Button } from "./ui/button";
+'use client'
 
-export default function ProductCard({ product }: { product: ProductDetail }) {
+import { Heart, ShoppingCart } from "lucide-react";
+import { Product } from "@/action/product.action";
+import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
+
+export default function ProductCard({ product }: { product: Product }) {
+	const router = useRouter()
+
+	const handleDetail = (id: string) => {
+		router.push(`/customer/catalog/${id}`)
+	}
+
 	return (
-		<div className="relative bg-white rounded-xl shadow-md p-4 flex flex-col items-center cursor-pointer">
+		<div 
+			className="relative bg-white rounded-xl shadow-md p-4 flex flex-col items-center cursor-pointer"
+			onClick={() => handleDetail(product.id)}
+		>
 			{/* Icon hati */}
 			<button className="absolute top-3 right-3 text-cyan-500 hover:text-cyan-600">
 				<Heart size={18} />
@@ -19,7 +30,7 @@ export default function ProductCard({ product }: { product: ProductDetail }) {
 			/>
 
 			{/* Label jenis */}
-			<span className="text-xs text-gray-500 mb-1">Untuk: Batuk</span>
+			<span className="text-xs text-gray-500 mb-1">Untuk: {product.jenis_barang.nama_jenis}</span>
 
 			{/* Nama */}
 			<h3 className="text-sm font-medium text-center mb-1">{product.nama_barang}</h3>

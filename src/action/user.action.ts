@@ -1,5 +1,7 @@
+'use server'
+
 import { prisma } from "@/lib/prisma"
-import { clerkClient, currentUser } from "@clerk/nextjs/server"
+import { auth, clerkClient, currentUser } from "@clerk/nextjs/server"
 
 export const syncUser = async () => {
 	try {
@@ -42,7 +44,7 @@ export const syncUser = async () => {
 	}
 }
 
-export const getUserDb = async (clerkId: string) => {
+export const getUserByClerkId = async (clerkId: string) => {
 	try {
 		const user = await prisma.user.findUnique({
 			where: {
@@ -55,5 +57,21 @@ export const getUserDb = async (clerkId: string) => {
 		console.error(error);
 
 		throw new Error('Terjadi kesalahan saat mengambil data user.')
+	}
+}
+
+export const getDbUserId = async () => {
+	const { userId: clerkId } = await auth()
+
+	if (!clerkId) return null
+
+	try {
+		const dbUserId = await getUserByClerkId(clerkId)
+
+		return dbUserId?.id
+	} catch (error) {
+		console.error(error)
+
+		throw new Error("Gagal mengambil ID user")
 	}
 }
