@@ -6,7 +6,7 @@ import CatalogSidebar from "@/components/customer/CatalogSidebar";
 import CatalogProducts from "@/components/customer/CatalogProduct";
 import { useSearchParams } from "next/navigation";
 
-export const Catalog = () => {
+export const page = () => {
 	const searchParams = useSearchParams()
 	const search = String(searchParams.get('search') ?? '')
 	const page = Number(searchParams.get('page') ?? 1)
@@ -24,4 +24,4 @@ export const Catalog = () => {
 	);
 }
 
-export default Catalog
+export default page
