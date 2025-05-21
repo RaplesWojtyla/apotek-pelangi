@@ -8,7 +8,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export const ProductDetailPage = () => {
+export default function page() {
     const [productDetail, setProductDetail] = useState<ProductDetail>()
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [jumlah, setJumlah] = useState<number>(1)
@@ -178,5 +178,3 @@ export const ProductDetailPage = () => {
         </div>
     );
 }
-
-export default ProductDetailPage
