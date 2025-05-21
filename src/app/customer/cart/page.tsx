@@ -9,7 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 
 
-const CartPage = () => {
+export default function page() {
 	const cartItems = [
 		{
 			id: 1,
@@ -152,5 +152,3 @@ const CartPage = () => {
 		</div>
 	);
 };
-
-export default CartPage;
