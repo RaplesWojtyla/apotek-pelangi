@@ -77,7 +77,7 @@ importers:
         version: 4.1.7
       '@types/node':
         specifier: '20'
-        version: 20.17.32
+        version: 20.17.48
       '@types/react':
         specifier: ^18.3.1
         version: 18.3.1
@@ -1073,8 +1073,8 @@ packages:
   '@types/d3-timer@3.0.2':
     resolution: {integrity: sha512-Ps3T8E8dZDam6fUyNiMkekK3XUsaUEik+idO9/YjPtfj2qruF8tFBXS7XhtE4iIXBLxhmLjP3SXpLhVf21I9Lw==}
 
-  '@types/node@20.17.32':
-    resolution: {integrity: sha512-zeMXFn8zQ+UkjK4ws0RiOC9EWByyW1CcVmLe+2rQocXRsGEDxUCwPEIVgpsGcLHS/P8JkT0oa3839BRABS0oPw==}
+  '@types/node@20.17.48':
+    resolution: {integrity: sha512-KpSfKOHPsiSC4IkZeu2LsusFwExAIVGkhG1KkbaBMLwau0uMhj0fCrvyg9ddM2sAvd+gtiBJLir4LAw1MNMIaw==}
 
   '@types/prop-types@15.7.14':
     resolution: {integrity: sha512-gNMvNH49DJ7OJYv+KAKn0Xp45p8PLl6zo2YnvDIbTd4J6MER2BmWN49TG7n9LvkyihINxeKW8+3bfS2yDC9dzQ==}
@@ -2455,7 +2455,7 @@ snapshots:
 
   '@types/d3-timer@3.0.2': {}
 
-  '@types/node@20.17.32':
+  '@types/node@20.17.48':
     dependencies:
       undici-types: 6.19.8
 

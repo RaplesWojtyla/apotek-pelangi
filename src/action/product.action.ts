@@ -29,8 +29,7 @@ export const getProducts = async ({ page = 1, matcher = '', take = 16 }) => {
 
 		return products
 	} catch (error) {
-		console.error(`[getProducts] error: ${error}`);
-
+		console.error("[getProducts] error:", error)
 		throw new Error("Gagal mengambil data produk.")
 	}
 }
@@ -51,7 +50,12 @@ export const getProductDetail = async (id: string) => {
 				}
 			}
 		})
+		// const totalStok = productDetail?.stok_barang.reduce((sum, stok) => sum + stok.jumlah, 0)
 
+		// return {
+		// 	...productDetail,
+		// 	totalStock: totalStok 
+		// }
 		return productDetail
 	} catch (error) {
 		console.error(`[getProducts] error: ${error}`);
