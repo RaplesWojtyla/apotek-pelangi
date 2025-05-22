@@ -50,12 +50,7 @@ export const getProductDetail = async (id: string) => {
 				}
 			}
 		})
-		const totalStok = productDetail?.stok_barang.reduce((sum, stok) => sum + stok.jumlah, 0)
-
-		return {
-			...productDetail,
-			totalStock: totalStok 
-		}
+		return productDetail
 	} catch (error) {
 		console.error(`[getProducts] error: ${error}`);
 
