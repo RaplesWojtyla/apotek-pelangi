@@ -1,10 +1,8 @@
-'use client'
-
 import { UserButton } from '@clerk/nextjs';
 import { ShoppingCart, Bell } from 'lucide-react';
 import Link from 'next/link';
 
-export const Navbar = () => {
+export const NavbarCustomer = () => {
 	return (
 		<>
 			{/* Navbar Fixed */}
@@ -34,9 +32,9 @@ export const Navbar = () => {
 					<UserButton />
 
 					<nav className="hidden md:flex space-x-4 text-sm text-gray-600">
-						<a href="/customer/catalog" className="hover:text-cyan-500">
+						<Link href="/customer/catalog" className="hover:text-cyan-500">
 							Katalog Produk
-						</a>
+						</Link>
 					</nav>
 				</div>
 			</header>
@@ -46,4 +44,4 @@ export const Navbar = () => {
 	);
 };
 
-export default Navbar
+export default NavbarCustomer

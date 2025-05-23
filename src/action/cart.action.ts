@@ -4,8 +4,9 @@ import { prisma } from "@/lib/prisma"
 import { getDbUserId } from "./user.action"
 import { NextResponse } from "next/server"
 import { SumberCart } from "@prisma/client"
+import { revalidatePath } from "next/cache"
 
-const getCart = async () => {
+export const getCart = async () => {
 	const dbUserId = await getDbUserId()
 
 	if (!dbUserId) return null
@@ -24,7 +25,7 @@ const getCart = async () => {
 	}
 }
 
-const addToCart = async (idBarang: string, amount: number, sumber: SumberCart) => {
+export const addToCart = async (idBarang: string, amount: number, sumber: SumberCart) => {
 	const dbUserId = await getDbUserId()
 
 	if (!dbUserId) return NextResponse.redirect('/unauthorized')
@@ -45,8 +46,10 @@ const addToCart = async (idBarang: string, amount: number, sumber: SumberCart) =
 			}
 		})
 
+		revalidatePath('/customer', 'layout')
+
 		return cart
 	} catch (error) {
-		throw new Error("Gagal menambahkan data ke kasir")
+		throw new Error("Gagal menambahkan data ke keranjang")
 	}
 }

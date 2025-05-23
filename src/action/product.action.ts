@@ -21,7 +21,7 @@ export const getProducts = async ({ page = 1, matcher = '', take = 16 }) => {
 			include: {
 				jenis_barang: {
 					include: {
-						kategori_barang: true
+						kategori_barang: true,
 					},
 				},
 			}
@@ -50,13 +50,15 @@ export const getProductDetail = async (id: string) => {
 				}
 			}
 		})
-		// const totalStok = productDetail?.stok_barang.reduce((sum, stok) => sum + stok.jumlah, 0)
 
-		// return {
-		// 	...productDetail,
-		// 	totalStock: totalStok 
-		// }
-		return productDetail
+		if (!productDetail?.detail_barang || !productDetail.stok_barang) return null
+
+		const totalStok = productDetail.stok_barang.reduce((sum, stok) => sum + stok.jumlah, 0)
+
+		return {
+			...productDetail,
+			totalStock: totalStok
+		}
 	} catch (error) {
 		console.error(`[getProducts] error: ${error}`);
 
