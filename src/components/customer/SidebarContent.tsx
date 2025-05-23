@@ -7,9 +7,9 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Home, Layers, Settings } from "lucide-react";
-import Link from "next/link";
+import { Layers} from "lucide-react";
 import { Separator } from "../ui/separator";
+import { UserButton } from "@clerk/nextjs";
 
 const SidebarContent = ({ categories, isLoading }: { categories: Category[], isLoading: boolean }) => {
 	return (
@@ -17,12 +17,12 @@ const SidebarContent = ({ categories, isLoading }: { categories: Category[], isL
 			{/* Logo / Header */}
 			<div className="mb-6">
 				<div className="flex items-center space-x-3">
-					<div className="bg-cyan-600 p-2 round	ed-md text-white">
-						<Home size={20} />
+					<div className="p-2 rounded-md">
+						<UserButton />
 					</div>
 					<div>
 						<h1 className="text-lg font-bold text-gray-800 leading-none">
-							Apotek Pelangi
+							Nama User
 						</h1>
 						<p className="text-xs text-gray-500">Customer</p>
 					</div>
@@ -59,16 +59,6 @@ const SidebarContent = ({ categories, isLoading }: { categories: Category[], isL
 						</AccordionItem>
 					</Accordion>
 				))}
-
-				<hr className="my-4 border-gray-200" />
-
-				<Link
-					href="/settings"
-					className="flex items-center space-x-2 text-gray-700 hover:text-cyan-600 text-sm"
-				>
-					<Settings size={16} />
-					<span>Pengaturan</span>
-				</Link>
 			</div>
 		</div>
 	);

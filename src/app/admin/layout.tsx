@@ -1,4 +1,4 @@
-import Navbar from '@/components/Navbar';
+import Navbar from '@/components/NavbarAdmin';
 import React, { ReactNode } from 'react'
 
 export default function KasirLayout({ children }: { children: ReactNode }) {
