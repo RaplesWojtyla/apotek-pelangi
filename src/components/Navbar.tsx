@@ -33,9 +33,9 @@ export const Navbar = () => {
 							<Link href="/CustDashboard" aria-label="Keranjang">
 								<ShoppingCart className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
 							</Link>
-							<button aria-label="Notifikasi">
+							<Button aria-label="Notifikasi">
 								<Bell className="w-6 h-6 text-cyan-500 hover:text-cyan-700" />
-							</button>
+							</Button>
 							<UserButton />
 							<nav className="hidden md:flex space-x-4 text-sm text-gray-600">
 								<Link href={'/sign-in/callback'} className="hover:text-cyan-500">
