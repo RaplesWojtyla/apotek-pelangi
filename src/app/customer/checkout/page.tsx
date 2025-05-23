@@ -1,94 +1,94 @@
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { CreditCard } from "lucide-react";
 
-export default function CheckoutPage() {
-    return (
-        <div className="bg-gray-100 min-h-screen">
-            <Navbar />
-            <div className="max-w-5xl mx-auto px-4 py-8 space-y-6 text-sm">
-                {/* Back & Title */}
-                <div className="text-gray-700 text-sm">
-                    <h2 className="text-xl font-bold text-gray-800">Checkout</h2>
-                </div>
+export default function PembayaranPage() {
+  return (
+        <div className="min-h-screen bg-white text-gray-900">
+  <Navbar />
 
-                {/* Alamat Pengiriman */}
-                <section className="border rounded-lg p-4">
-                    <div className="flex justify-between items-start w-full">
-                        <div className="text-sm text-gray-700">
-                            <h2 className="font-semibold text-base text-black">Alamat Pengiriman</h2>
-                            <p>Jane Cooper</p>
-                            <p>(+62) 81976564321</p>
-                        </div>
-                        <div className="text-sm text-gray-700 text-center absolute left-1/2 transform -translate-x-1/2">
-                            <p>Jl. Raya Bahagia No.25C, Tangerang Selatan, Tangerang</p>
-                        </div>
-                        <div>
-                            <Button variant="outline" className="text-sm h-9">Pilih Alamat Lain</Button>
-                        </div>
-                    </div>
-                </section>
+  <div className="p-4 md:p-10 max-w-5xl mx-auto">
+    <h1 className="text-3xl font-bold mb-6">Checkout</h1>
 
-                {/* Produk Dipesan */}
-                <h2 className="font-semibold mb-2">Produk Dipesan</h2>
-                <section className="border rounded-lg p-4">
-                    <div className="grid grid-cols-4 gap-4 items-center">
-                        <img src="/produk.png" alt="FG Troches" className="w-20 h-20 object-cover" />
-                        <p className="col-span-1">FG Troches 30 Tablet</p>
-                        <p className="text-center">Rp 12.000</p>
-                        <div className="text-right">
-                            <p>Jumlah: 1</p>
-                            <p className="font-semibold">Subtotal: Rp 12.000</p>
-                        </div>
-                    </div>
-                </section>
+    <Card className="bg-gray-100 p-6 md:p-10 space-y-6 shadow-lg rounded-lg">
+      <h2 className="text-xl font-semibold">
+        Pesanan anda telah diterima. Silahkan lakukan pembayaran
+      </h2>
 
-                {/* Pengiriman */}
-                <h2 className="font-semibold mb-2">Pengiriman</h2>
-                <section className="border rounded-lg p-4 flex items-center gap-4">
-                    <img src="/jne.png" alt="JNE" className="w-24" />
-                    <div>
-                        <p className="font-semibold">Pengiriman Reguler</p>
-                        <p className="text-gray-600">Estimasi: 6 - 8 Apr 2025</p>
-                        <p className="text-gray-600">Rp 20.000</p>
-                    </div>
-                </section>
+      <div className="mb-6">
+        <p className="font-medium text-lg">Korey Doyle</p>
+        <p className="text-sm text-gray-600">No Telepon: 084860342321</p>
+      </div>
 
-                {/* Pembayaran */}
-                <h2 className="font-semibold mb-2">Pembayaran</h2>
-                <section className="border rounded-lg p-4 flex items-center gap-4">
-                    <img src="/bca.png" alt="BCA" className="w-20" />
-                    <div>
-                        <p className="font-semibold">No. Rek: 1234567890</p>
-                        <p className="text-gray-700">A/N Ottertek Indonesia</p>
-                        <p className="text-gray-600 text-xs mt-2">
-                            Konfirmasi di atas jam 21.00 atau di Hari Libur?
-                            <br /> Pesanan akan diproses pada hari kerja berikutnya.
-                        </p>
-                    </div>
-                </section>
+      <hr className="border-gray-300" />
 
-                {/* Ringkasan */}
-                <section className="border rounded-lg p-4 space-y-2 text-sm">
-                    <div className="flex justify-between">
-                        <span>Subtotal untuk produk</span>
-                        <span>Rp 12.000</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span>Total ongkos kirim</span>
-                        <span>Rp 20.000</span>
-                    </div>
-                    <div className="flex justify-between font-semibold">
-                        <span>Total Pembayaran</span>
-                        <span>Rp 32.000</span>
-                    </div>
-
-                    <div className="flex justify-end gap-2 mt-4">
-                        <Button variant="outline">Batalkan Pesanan</Button>
-                        <Button>Selesaikan Pesanan</Button>
-                    </div>
-                </section>
-            </div>
+      <div className="grid md:grid-cols-4 gap-4 text-sm text-gray-600 my-6">
+        <div className="mb-3">
+          <p className="text-gray-500">Kode Invoice:</p>
+          <p className="font-semibold text-gray-900">INV-00002</p>
         </div>
+        <div className="mb-3">
+          <p className="text-gray-500">Tanggal Transaksi:</p>
+          <p className="font-semibold text-gray-900">22 Mei 2025</p>
+        </div>
+        <div className="mb-3">
+          <p className="text-gray-500">Total:</p>
+          <p className="font-semibold text-gray-900">Rp 164.673,00</p>
+        </div>
+        <div className="mb-3">
+          <p className="text-gray-500">Metode Pembayaran:</p>
+          <p className="font-semibold text-gray-900">GOPAY</p>
+        </div>
+      </div>
+
+      <hr className="border-gray-300" />
+
+      <div className="grid md:grid-cols-2 gap-6 my-6">
+        <div>
+          <h3 className="text-gray-900 font-semibold mb-3">Detail Pesanan</h3>
+
+          <div className="flex justify-between text-sm text-gray-600 mb-2">
+            <span>Subtotal</span>
+            <span>Rp 164.673,00</span>
+          </div>
+
+          <div className="flex justify-between text-sm text-gray-600 mb-2">
+            <span>Diskon</span>
+            <span>Rp 0,00</span>
+          </div>
+
+          <hr className="border-gray-300 my-3" />
+
+          <div className="flex justify-between font-semibold text-gray-900">
+            <span>Total</span>
+            <span>Rp 164.673,00</span>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-gray-900 font-semibold mb-3">Status Pembayaran</h3>
+          <div className="flex items-center gap-2 text-sm">
+            <CreditCard className="text-blue-600" size={18} />
+            <Badge className="bg-yellow-400 text-black font-medium">
+              Menunggu Pembayaran
+            </Badge>
+          </div>
+        </div>
+      </div>
+
+      <div className="pt-4">
+        <Button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6">
+          Bayar Sekarang
+        </Button>
+      </div>
+    </Card>
+  </div>
+
+  <Footer />
+</div>
+
     );
-}
+    }
