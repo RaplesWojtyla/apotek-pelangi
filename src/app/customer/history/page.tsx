@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import TransaksiDetailDialog from "@/components/TransactionDetail";
 
 
 // Dummy data
@@ -84,9 +85,7 @@ export default function RiwayatTransaksiPage() {
                 <p className="text-sm text-gray-600">
                   {trx.items[0].jumlah} x Rp{trx.items[0].harga.toLocaleString()}
                 </p>
-                <a href="#" className="text-blue-600 text-sm mt-2 inline-block">
-                  Lihat Detail
-                </a>
+                <TransaksiDetailDialog transaksi={trx} />
               </div>
               <div className="text-right">
                 <p className="font-semibold text-lg">Rp{trx.total.toLocaleString()}</p>
