@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
 
@@ -6,37 +7,35 @@ export default function Home() {
 		<>
 			<section className="flex-grow">
 				<Navbar />
-				<div className="bg-cyan-600 text-white px-6 md:px-12 py-16">
+				<div className="bg-cyan-500 text-white px-6 md:px-12 py-16">
 					<h1 className="text-3xl md:text-4xl font-bold mb-4">Tentang Apotek Pelangi</h1>
 					<p className="text-lg font-semibold mb-4">
 						Apotek Pelangi adalah solusi terlengkap untuk kebutuhan Kesehatan harian Anda
 					</p>
 					<p className="max-w-2xl text-sm md:text-base leading-relaxed">
-						Dapatkan semua kebutuhan Kesehatan Anda dengan mudah melalui ekosistem kami.
-						Kami bermitra dengan 7.000+ Mitra Apotek Pelangi yang menyediakan 50.000+ produk
-						dan menjangkau 480+ kota di seluruh Indonesia.
+						Apotek Pelangi hadir sebagai solusi modern untuk kebutuhan obat-obatan dan kesehatan Anda. Melalui aplikasi ini, Anda dapat mencari obat, mengecek ketersediaan, melakukan pemesanan online. Dengan sistem yang cepat, aman, dan terpercaya, kami menjadikan pengalaman berobat lebih nyaman, tanpa perlu antre di apotek.
 					</p>
 
 					<div className="grid grid-cols-1 md:grid-cols-3 mt-10 text-center">
 						<div className="rounded-xl py-4">
 							<p className="text-2xl font-bold">5</p>
-							<p className="text-sm mb-4">Mitra Apotek Pelangi</p>
+							<p className="text-sm mb-4">Produk Tersedia</p>
 							<button className="text-yellow-400 font-semibold border border-yellow-400 rounded-full px-4 py-2 hover:bg-yellow-400 hover:text-[#002A5C] transition">
 								Belanja Produk
 							</button>
 						</div>
 						<div className="rounded-xl py-4">
 							<p className="text-2xl font-bold">5.000+</p>
-							<p className="text-sm mb-4">Produk Tersedia</p>
+							<p className="text-sm mb-4">Member Apotek Pelangi</p>
 							<button className="text-yellow-400 font-semibold border border-yellow-400 rounded-full px-4 py-2 hover:bg-yellow-400 hover:text-[#002A5C] transition">
-								Menjadi Mitra Apotik
+								Daftar Member
 							</button>
 						</div>
 						<div className="rounded-xl py-4">
 							<p className="text-2xl font-bold">1+</p>
-							<p className="text-sm mb-4">Jangkauan Kota</p>
+							<p className="text-sm mb-4">Jenis Obat</p>
 							<button className="text-yellow-400 font-semibold border border-yellow-400 rounded-full px-4 py-2 hover:bg-yellow-400 hover:text-[#002A5C] transition">
-								Layanan untuk Brand
+								Lihat Jenis Obat
 							</button>
 						</div>
 					</div>
@@ -52,10 +51,7 @@ export default function Home() {
 							Khusus Untuk Produk Kesehatan
 						</h3>
 						<p className="text-sm md:text-base leading-relaxed">
-							Gunakan aplikasi Apotek Pelangi dan temukan kemudahan akses ke berbagai produk kesehatan,
-							mulai dari obat-obatan, vitamin, suplemen, hingga peralatan medis. Nikmati fitur-fitur
-							unggulan seperti konsultasi online dengan apoteker, konsultasi dengan dokter, dan layanan
-							antar cepat langsung ke rumah Anda.
+							Apotek Pelangi adalah aplikasi apotek digital yang memudahkan Anda untuk membeli obat, konsultasi, dan memantau kesehatan dari mana saja. Dengan sistem pemesanan cepat, informasi stok real-time, dan layanan pelanggan yang ramah, kami hadir untuk menjadikan kesehatan lebih dekat dan mudah dijangkau.
 						</p>
 					</div>
 
@@ -137,12 +133,12 @@ export default function Home() {
 				</div>
 
 				<div className="flex justify-center mt-10">
-					<button className="bg-[#0050B3] text-white font-semibold px-6 py-3 rounded-full hover:bg-[#003f8c] transition">
+					<button className="bg-cyan-500 text-white font-semibold px-6 py-3 rounded-full hover:bg-cyan-600 transition">
 						Lihat Katalog Produk
 					</button>
 				</div>
 			</section>
-
+					<Footer />
 		</>
 	);
 }

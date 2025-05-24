@@ -1,11 +1,12 @@
-import Navbar from '@/components/Navbar'
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
+import NavbarKasir from '@/components/NavbarKasir'
 
-export default function KasirLayout({ children }: { children: ReactNode }) {
+const KasirLayout = ( { children}: { children: ReactNode }) => {
     return (
         <>
-            <Navbar />
-            { children }
-        </>
-    )
+            <NavbarKasir />
+            {children}
+        </>)
 }
+
+export default KasirLayout

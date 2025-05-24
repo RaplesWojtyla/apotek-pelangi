@@ -5,7 +5,8 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Home, Layers, Settings } from "lucide-react";
+import { UserButton } from "@clerk/nextjs";
+import { ArrowLeftRight, Layers } from "lucide-react";
 import Link from "next/link";
 
 const SidebarContent = ({ categories }: { categories: Category[] }) => {
@@ -14,12 +15,12 @@ const SidebarContent = ({ categories }: { categories: Category[] }) => {
 			{/* Logo / Header */}
 			<div className="mb-6">
 				<div className="flex items-center space-x-3">
-					<div className="bg-cyan-600 p-2 round	ed-md text-white">
-						<Home size={20} />
+					<div className="p-2 rounded-md">
+						<UserButton />
 					</div>
 					<div>
 						<h1 className="text-lg font-bold text-gray-800 leading-none">
-							Apotek Pelangi
+							Nama User
 						</h1>
 						<p className="text-xs text-gray-500">Kasir</p>
 					</div>
@@ -54,10 +55,10 @@ const SidebarContent = ({ categories }: { categories: Category[] }) => {
 
 				<Link
 					href="/settings"
-					className="flex items-center space-x-2 text-gray-700 hover:text-cyan-600 text-sm"
+					className="flex items-center space-x-2 text-gray-800 font-semibold hover:text-cyan-600 text-sm"
 				>
-					<Settings size={16} />
-					<span>Pengaturan</span>
+					<ArrowLeftRight size={16} />
+					<span>Daftar Transaksi</span>
 				</Link>
 			</div>
 		</div>
