@@ -1,7 +1,7 @@
 'use client'
 
 import { getProducts, Product } from "@/action/product.action";
-import ProductCard from "../ProductCard";
+import ProductCard from "./ProductCard";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import SkeletonCard from "../SkeletonCard";
@@ -13,7 +13,7 @@ const CatalogProducts = ({ search, currPage }: { search: string, currPage: numbe
 	useEffect(() => {
 		const fetchProducts = async () => {
 			try {
-				const data = await getProducts({matcher: search, page: currPage})
+				const data = await getProducts({ matcher: search, page: currPage })
 
 				setProducts(data)
 			} catch (error) {

@@ -68,6 +68,9 @@ model User {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@index([role])
+    @@index([status])
 }
 
 model Vendor {
@@ -116,6 +119,9 @@ model Barang {
     detail_faktur_pembelian DetailFakturPembelian[]
 
     jenis_barang JenisBarang @relation(fields: [id_jenis_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+    @@index([nama_barang])
+    @@index([id_jenis_barang])
 }
 
 model DetailBarang {
@@ -148,6 +154,9 @@ model StokBarang {
     createdAt          DateTime  @default(now())
 
     barang Barang @relation(fields: [id_barang], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    @@index([id_barang])
+    @@index([tanggal_kadaluarsa])
 }
 
 model PengajuanResep {

@@ -1,5 +1,3 @@
-'use client'
-
 import { UserButton } from '@clerk/nextjs';
 import { Separator } from '@radix-ui/react-separator';
 import { ShoppingCart, Bell, MapPinned } from 'lucide-react';

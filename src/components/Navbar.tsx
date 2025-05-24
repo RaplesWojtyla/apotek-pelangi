@@ -62,7 +62,7 @@ export const Navbar = () => {
 								)}
 							</div>
 							<button aria-label="Notifikasi">
-								<Bell className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
+								<Bell className="w-6 h-6 text-cyan-500 hover:text-cyan-700" />
 							</button>
 							<UserButton />
 						</>
