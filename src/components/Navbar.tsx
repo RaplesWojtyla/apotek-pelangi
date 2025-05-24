@@ -51,6 +51,7 @@ export const Navbar = () => {
 							<Link href="">
 								<MapPinned className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
 							</Link>
+
 							<div className="relative">
 								<Link href="/customer/cart" aria-label="Keranjang">
 									<ShoppingCart className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
@@ -61,9 +62,9 @@ export const Navbar = () => {
 									</span>
 								)}
 							</div>
-							<button aria-label="Notifikasi">
-								<Bell className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
-							</button>
+							<Button aria-label="Notifikasi">
+								<Bell className="w-6 h-6 text-cyan-500 hover:text-cyan-700" />
+							</Button>
 							<UserButton />
 						</>
 					) : (
