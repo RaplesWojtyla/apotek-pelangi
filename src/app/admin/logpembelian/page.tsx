@@ -2,6 +2,16 @@ import React from "react";
 import AdminSidebar from "@/components/SidebarAdmin";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from "@/components/ui/dialog";
+
 
 // Dummy data sesuai struktur fakturpembelian + detailfaktur_pembelian
 const fakturPembelian = [
@@ -63,29 +73,58 @@ export default function LogPembelianPage() {
               </tr>
             </thead>
             <tbody>
-              {fakturPembelian.map((faktur, index) => (
-                <tr key={faktur.id} className="border-t hover:bg-gray-50">
-                  <td className="px-4 py-3">{index + 1}</td>
-                  <td className="px-4 py-3">{faktur.nama_vendor}</td>
-                  <td className="px-4 py-3">{faktur.nama_user}</td>
-                  <td className="px-4 py-3">
-                    {new Date(faktur.tanggal_faktur).toLocaleDateString()}
-                  </td>
-                  <td className="px-4 py-3">Rp{faktur.pajak.toLocaleString()}</td>
-                  <td className="px-4 py-3">Rp{faktur.total.toLocaleString()}</td>
-                  <td className="px-4 py-3">
-                    <ul className="list-disc pl-4 space-y-1">
-                      {faktur.detail.map((item, i) => (
-                        <li key={i}>
-                          {item.nama_barang} (x{item.jumlah}) - Rp
-                          {(item.harga_beli * item.jumlah).toLocaleString()}
-                        </li>
-                      ))}
-                    </ul>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {fakturPembelian.map((faktur, index) => (
+    <tr key={faktur.id} className="border-t hover:bg-gray-50">
+      <td className="px-4 py-3">{index + 1}</td>
+      <td className="px-4 py-3">{faktur.nama_vendor}</td>
+      <td className="px-4 py-3">{faktur.nama_user}</td>
+      <td className="px-4 py-3">
+        {new Date(faktur.tanggal_faktur).toLocaleDateString()}
+      </td>
+      <td className="px-4 py-3">Rp{faktur.pajak.toLocaleString()}</td>
+      <td className="px-4 py-3">Rp{faktur.total.toLocaleString()}</td>
+      <td className="px-4 py-3">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="sm">Lihat Detail</Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Detail Pembelian - {faktur.id}</DialogTitle>
+              <DialogDescription>
+                Transaksi oleh <strong>{faktur.nama_user}</strong> dari <strong>{faktur.nama_vendor}</strong> pada{" "}
+                <strong>{new Date(faktur.tanggal_faktur).toLocaleString()}</strong>
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="mt-4 space-y-2">
+              <div><strong>Keterangan:</strong> {faktur.keterangan || "-"}</div>
+              <div><strong>Pajak:</strong> Rp{faktur.pajak.toLocaleString()}</div>
+              <div><strong>Total:</strong> Rp{faktur.total.toLocaleString()}</div>
+              <div className="mt-3">
+                <strong>Barang Dibeli:</strong>
+                <ul className="list-disc ml-5 mt-2 space-y-1 text-sm">
+                  {faktur.detail.map((item, i) => (
+                    <li key={i}>
+                      {item.nama_barang} (x{item.jumlah}) – Rp{(item.harga_beli * item.jumlah).toLocaleString()} 
+                      <br />
+                      <span className="text-xs text-gray-500">Harga satuan: Rp{item.harga_beli.toLocaleString()}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <DialogClose asChild>
+              <Button variant="outline" className="mt-4">Tutup</Button>
+            </DialogClose>
+          </DialogContent>
+        </Dialog>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
           </table>
         </div>
       </div>

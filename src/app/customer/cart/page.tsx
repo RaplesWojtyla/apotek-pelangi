@@ -5,6 +5,17 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 export default function CartPage() {
   const cartItems = [
@@ -62,9 +73,27 @@ export default function CartPage() {
           <label className="flex items-center space-x-2 text-base">
             <Checkbox />
             <span>Pilih Semua</span>
-            <span className="text-sm text-red-600 cursor-pointer mt-1 ml-[36rem] max-sm:ml-48">
-              Hapus Semua
-            </span>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <span className="text-sm text-red-600 cursor-pointer mt-1 ml-[36rem] max-sm:ml-48">
+                  Hapus Semua
+                </span>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Hapus Semua Item?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Tindakan ini akan menghapus semua produk dari keranjang Anda. Apakah Anda yakin?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Batal</AlertDialogCancel>
+                  <AlertDialogAction>
+                    Hapus
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </label>
         </div>
 
