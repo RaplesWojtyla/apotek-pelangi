@@ -62,14 +62,13 @@ export const Navbar = () => {
 									</span>
 								)}
 							</div>
-							<Button aria-label="Notifikasi">
-								<Bell className="w-6 h-6 text-cyan-500 hover:text-cyan-700" />
-							</Button>
+							<Link href={'/customer/notification'} aria-label="Notifikasi">
+								<Bell className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
+							</Link>
 							<UserButton />
 						</>
 					) : (
 						<>
-
 							<Button
 								className='text-sm text-cyan-500 font-medium mr-0 cursor-pointer'
 								variant={'link'}

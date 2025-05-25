@@ -15,7 +15,7 @@ export const createType = async (
             }
         })
 
-        revalidatePath('/')
+        revalidatePath('/admin')
         return {
             success: true,
             message: 'Berhasil menambahkan jenis barang.',

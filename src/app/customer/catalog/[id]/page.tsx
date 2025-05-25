@@ -111,36 +111,46 @@ export default function page() {
                             <p className="text-xl text-green-700 font-semibold">Rp {productDetail.harga_jual.toLocaleString('id-ID')}</p>
 
                             <div className="flex items-center gap-4">
-                                <span className="text-sm">Jumlah:</span>
-                                <div className="flex items-center border rounded-md overflow-hidden">
-                                    <Button
-                                        className="px-3 py-1 text-lg bg-gray-100 hover:bg-gray-200 cursor-pointer text-black"
-                                        onClick={() => setJumlah(prev => prev - 1)}
-                                        disabled={jumlah < 2}
-                                    >
-                                        -
-                                    </Button>
-                                    <span className="px-4">{jumlah}</span>
-                                    <Button
-                                        className="px-3 py-1 text-lg bg-gray-100 hover:bg-gray-200 cursor-pointer text-black"
-                                        onClick={() => setJumlah(prev => prev + 1)}
-                                        disabled={jumlah >= productDetail.totalStock}
-                                    >
-                                        +
-                                    </Button>
-                                </div>
+                                {productDetail.totalStock < 1 ? (
+                                    <p className="text-red-500 font-bold">Stok tidak tersedia</p>
+                                ) : (
+                                    <>
+                                        <p className="text-sm">Jumlah:</p>
+                                        <div className="flex items-center border rounded-md overflow-hidden">
+                                            <Button
+                                                variant={'ghost'}
+                                                className="px-3 py-1 text-lg bg-gray-100 hover:bg-gray-200 cursor-pointer text-black"
+                                                onClick={() => setJumlah(prev => prev - 1)}
+                                                disabled={jumlah < 2}
+                                            >
+                                                -
+                                            </Button>
+                                            <span className="px-4">{jumlah}</span>
+                                            <Button
+                                                variant={'ghost'}
+                                                className="px-3 py-1 text-lg bg-gray-100 hover:bg-gray-200 cursor-pointer text-black"
+                                                onClick={() => setJumlah(prev => prev + 1)}
+                                                disabled={jumlah >= productDetail.totalStock}
+                                            >
+                                                +
+                                            </Button>
+                                        </div>
+                                    </>
+                                )}
                             </div>
 
                             <div className="flex w-full gap-2">
                                 <Button
-                                    className="flex-1 bg-cyan-500 text-white text-sm py-2 rounded-md hover:bg-cyan-600"
+                                    className={`flex-1 bg-cyan-500 text-white text-sm py-2 rounded-md hover:bg-cyan-600 `}
                                     onClick={() => { }}
+                                    disabled={productDetail.totalStock < 1}
                                 >
                                     Beli Sekarang
                                 </Button>
                                 <Button
                                     className="p-2 bg-white border border-cyan-500 rounded-md hover:bg-cyan-50 text-cyan-600 cursor-pointer"
                                     onClick={handleAddToCart}
+                                    disabled={productDetail.totalStock < 1}
                                 >
                                     <ShoppingCart size={18} />
                                 </Button>

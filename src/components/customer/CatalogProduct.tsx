@@ -8,7 +8,8 @@ import SkeletonCard from "../SkeletonCard";
 
 const CatalogProducts = ({ search, currPage }: { search: string, currPage: number }) => {
 	const [products, setProducts] = useState<Product[]>([])
-	const [isLoading, setIsLoading] = useState<boolean>(true)
+	const [isFetchingProducts, setIsFetchingProducts] = useState<boolean>(true)
+	const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false)
 
 	useEffect(() => {
 		const fetchProducts = async () => {
@@ -27,14 +28,14 @@ const CatalogProducts = ({ search, currPage }: { search: string, currPage: numbe
 					}
 				})
 			} finally {
-				setIsLoading(false)
+				setIsFetchingProducts(false)
 			}
 		}
 
 		fetchProducts()
 	}, [])
 
-	if (isLoading) return <SkeletonCard />
+	if (isFetchingProducts) return <SkeletonCard />
 
 	return (
 		<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">

@@ -21,7 +21,7 @@ const Unauthorized = () => {
             Sorry, but you are not allowed to access 
             the page you are looking for.
           </p>
-          <Link href="/">
+          <Link href="/sign-in/callback">
             <span className="text-cyan-500 font-medium hover:underline mt-4 inline-block">
               Back to homepage
             </span>
