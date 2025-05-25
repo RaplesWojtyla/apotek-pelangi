@@ -30,12 +30,12 @@ export const Navbar = () => {
 				<div className="flex items-center space-x-4">
 					{isSignedIn ? (
 						<>
-							<Link href="/CustDashboard" aria-label="Keranjang">
+							<Link href="/customer/cart" aria-label="Keranjang">
 								<ShoppingCart className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
 							</Link>
-							<Button aria-label="Notifikasi">
-								<Bell className="w-6 h-6 text-cyan-500 hover:text-cyan-700" />
-							</Button>
+							<Link href={'/customer/notification'} aria-label="Notifikasi">
+								<Bell className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
+							</Link>
 							<UserButton />
 							<nav className="hidden md:flex space-x-4 text-sm text-gray-600">
 								<Link href={'/sign-in/callback'} className="hover:text-cyan-500">

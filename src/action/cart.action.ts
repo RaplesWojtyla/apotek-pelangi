@@ -6,20 +6,47 @@ import { NextResponse } from "next/server"
 import { SumberCart } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 
+export type CartItem = Awaited<ReturnType<typeof getCart>>[number]
+
 export const getCart = async () => {
 	const dbUserId = await getDbUserId()
 
-	if (!dbUserId) return null
+	if (!dbUserId) return []
 
 	try {
 		const cart = await prisma.cart.findMany({
 			where: { id_user: dbUserId },
 			include: {
-				barang: true
+				barang: {
+					include: {
+						stok_barang: {
+							select: { jumlah: true }
+						},
+						jenis_barang: {
+							include: {
+								kategori_barang: {
+									select: { nama_kategori: true }
+								}
+							}
+						}
+					}
+				}
+			},
+			orderBy: {
+				createdAt: 'desc'
 			}
 		})
 
-		return cart
+		const formattedCart = cart.map(obj => {
+			const totalStock = obj.barang.stok_barang.reduce((acc, item) => acc + item.jumlah, 0)
+
+			return {
+				...obj,
+				totalStock: totalStock
+			}
+		})
+		
+		return formattedCart
 	} catch (error) {
 		throw new Error("Gagal memuat keranjang anda")
 	}

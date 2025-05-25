@@ -21,7 +21,7 @@ const Unauthorized = () => {
             Sorry but the page you are looking for does not exist, has been
             removed, name changed or is temporarily unavailable.
           </p>
-          <Link href="/">
+          <Link href="/sign-in/callback">
             <span className="text-cyan-500 font-medium hover:underline mt-4 inline-block">
               Back to homepage
             </span>
