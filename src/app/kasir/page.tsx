@@ -35,7 +35,7 @@ const products = [
 	{
 		name: "Obat Batuk Herbal",
 		price: "Rp12.000",
-		image: "/images/obat-batuk.png", // pastikan path-nya benar
+		image: "/images/obat-batuk.png",
 	},
 	{
 		name: "Paracetamol 500mg",

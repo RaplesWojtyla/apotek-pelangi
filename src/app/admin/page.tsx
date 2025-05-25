@@ -1,4 +1,3 @@
-import React from "react";
 import {
 	BarChart,
 	Users,
@@ -7,6 +6,8 @@ import {
 } from "lucide-react";
 import AdminSidebar from "@/components/SidebarAdmin";
 import StatCard from "@/components/StatCard";
+import BarGraph from "@/components/BarGraph";
+import TableTransaction from "@/components/TableTransaction";
 
 export default function DashboardAdmin() {
 	return (
@@ -34,6 +35,10 @@ export default function DashboardAdmin() {
 					title="Pendapatan"
 					value="Rp12.000.000"
 				/>
+			</div>
+			<div className=" flex max-w-full mr-14 h-[200px] mt-6 md:h-[300px] lg:h-[400px]">
+				< BarGraph />
+				< TableTransaction />
 			</div>
 		</AdminSidebar>
 	);

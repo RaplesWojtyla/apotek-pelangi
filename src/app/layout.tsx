@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Footer from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs"
 import { syncUser } from "@/action/user.action";
 import { currentUser } from "@clerk/nextjs/server";
@@ -40,7 +39,6 @@ export default async function RootLayout({
 					<main className="min-h-[calc(100vh-10rem)]">
 						{children}
 					</main>
-					<Footer />
 					<Toaster />
 				</body>
 			</html>

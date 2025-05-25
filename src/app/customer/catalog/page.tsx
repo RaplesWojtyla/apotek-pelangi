@@ -12,7 +12,7 @@ export default function page() {
 	const page = Number(searchParams.get('page') ?? 1)
 
 	return (
-		<div className="flex bg-gray-100 min-h-screen">
+		<div className="flex bg-gray-100 min-h-screen pt-15">
 			<CatalogSidebar />
 			<div className="p-4 flex-1">
 				<SearchBar />
