@@ -60,11 +60,6 @@ export const NavbarCustomer = () => {
 						<Bell className="w-6 h-6 text-cyan-500 hover:text-cyan-700" />
 					</button>
 					<UserButton />
-					<nav className="hidden md:flex space-x-4 text-sm text-gray-600">
-						<Link href="/customer/catalog" className="hover:text-cyan-500">
-							Katalog Produk
-						</Link>
-					</nav>
 				</div>
 			</header>
 			<div className="pt-2">

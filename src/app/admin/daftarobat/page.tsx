@@ -3,6 +3,23 @@ import AdminSidebar from "@/components/SidebarAdmin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Pencil, Trash2, Plus, Search } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+  DialogFooter
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 const dummyData = [
   {
@@ -31,7 +48,6 @@ const dummyData = [
 export default function DaftarObat() {
   return (
     <AdminSidebar>
-      {/* Judul */}
       <h1 className="text-2xl font-bold mb-4">Daftar Obat</h1>
 
       {/* Search + Tambah */}
@@ -42,13 +58,64 @@ export default function DaftarObat() {
             <Search className="w-4 h-4" />
           </Button>
         </div>
-        <Button className="flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700">
-          <Plus className="w-4 h-4" />
-          Tambah Obat
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700">
+              <Plus className="w-4 h-4" />
+              Tambah Obat
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Tambah Obat</DialogTitle>
+              <DialogDescription>
+                Masukkan data obat yang ingin ditambahkan.
+              </DialogDescription>
+            </DialogHeader>
+
+            <form className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Nama Obat</label>
+                <Input placeholder="Contoh: Paracetamol" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Kategori</label>
+                <Select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Pilih Kategori" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Obat & Perawatan" className="hover:bg-blue-100">Obat & Perawatan</SelectItem>
+                    <SelectItem value="Peralatan" className="hover:bg-blue-100">Peralatan</SelectItem>
+                    <SelectItem value="Susu" className="hover:bg-blue-100">Susu</SelectItem>
+                    <SelectItem value="Weight Management" className="hover:bg-blue-100">Weight Management</SelectItem>
+                    <SelectItem value="Kesehatan Seksual" className="hover:bg-blue-100">Kesehatan Seksual</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Stok</label>
+                <Input type="number" placeholder="Masukkan stok" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Harga</label>
+                <Input type="number" placeholder="Masukkan harga" />
+              </div>
+            </form>
+
+            <DialogFooter className="mt-4">
+              <DialogClose asChild>
+                <Button variant="outline">Batal</Button>
+              </DialogClose>
+              <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700">
+                Simpan
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
-      {/* Table */}
+      {/* Tabel Obat */}
       <div className="overflow-x-auto rounded-lg shadow">
         <table className="min-w-full bg-white text-sm text-left">
           <thead className="bg-gray-100 text-gray-600">
