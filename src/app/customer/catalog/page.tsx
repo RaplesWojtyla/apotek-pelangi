@@ -8,8 +8,10 @@ import { useSearchParams } from "next/navigation";
 
 export default function page() {
 	const searchParams = useSearchParams()
-	const search = String(searchParams.get('search') ?? '')
+	const search = String(searchParams.get('matcher') ?? '')
 	const page = Number(searchParams.get('page') ?? 1)
+	const totalPages: number = 8
+	const take: number = 4
 
 	return (
 		<div className="flex bg-gray-100 min-h-screen pt-15">
@@ -17,9 +19,13 @@ export default function page() {
 			<div className="p-4 flex-1">
 				<SearchBar />
 				<h1 className="text-2xl font-bold mb-6">Semua Kategori</h1>
-				<CatalogProducts search={search} currPage={page} />
+				<CatalogProducts 
+					search={search}
+					currPage={page}
+					take={take}
+				/>
 				<ProductPagination />
 			</div>
 		</div>
-	);
+	)
 }
