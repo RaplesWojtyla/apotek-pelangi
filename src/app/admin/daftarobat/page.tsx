@@ -268,34 +268,35 @@ export default function DaftarObat() {
         </Link>
       </div>
 
-      {/* Tabel dengan scrollbar horizontal selalu muncul dan konten terpotong */}
-<div className="relative w-full overflow-x-auto scrollbar scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 border rounded-md">
-  <Table className="min-w-[1800px] text-sm">
-    <TableHeader>
-      {table.getHeaderGroups().map((group) => (
-        <TableRow key={group.id}>
-          {group.headers.map((header) => (
-            <TableHead key={header.id}>
-              {flexRender(header.column.columnDef.header, header.getContext())}
-            </TableHead>
-          ))}
-        </TableRow>
-      ))}
-    </TableHeader>
-    <TableBody>
-      {table.getRowModel().rows.map((row) => (
-        <TableRow key={row.id}>
-          {row.getVisibleCells().map((cell) => (
-            <TableCell key={cell.id}>
-              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-            </TableCell>
-          ))}
-        </TableRow>
-      ))}
-    </TableBody>
-  </Table>
-</div>
-
+      {/* Tabel dengan horizontal scroll */}
+      <div className="relative w-full">
+        <div className="overflow-x-auto pb-4">
+          <Table className="min-w-[1800px] text-sm">
+            <TableHeader>
+              {table.getHeaderGroups().map((group) => (
+                <TableRow key={group.id}>
+                  {group.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
     </AdminSidebar>
   )
 }

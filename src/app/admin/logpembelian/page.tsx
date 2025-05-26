@@ -1,7 +1,6 @@
-import React from "react"
-import AdminSidebar from "@/components/SidebarAdmin"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import React from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogTrigger,
@@ -57,7 +56,6 @@ const fakturPembelian = [
 
 export default function LogPembelianPage() {
   return (
-    <AdminSidebar>
       <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">Log Pembelian Obat</h1>
 
@@ -131,6 +129,5 @@ export default function LogPembelianPage() {
           </Table>
         </div>
       </div>
-    </AdminSidebar>
-  )
+  );
 }

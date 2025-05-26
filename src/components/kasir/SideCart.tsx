@@ -18,7 +18,7 @@ export default function Keranjang() {
   let kembalian = bayar - total
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-md w-full max-w-md mx-auto">
+    <div className="hidden lg:block fixed right-0 top-0 bottom-0 w-[540px] pt-18 bg-white p-6 border-l shadow-lg overflow-y-auto z-40">
       <h2 className="text-2xl font-bold mb-4 text-cyan-600">🛒 Keranjang</h2>
 
       <ul className="divide-y divide-gray-200 mb-4 max-h-64 overflow-y-auto">
@@ -37,7 +37,7 @@ export default function Keranjang() {
                       setItems(updated)
                     }}
                   >
-                    –
+                    -
                   </Button>
                   <span className="w-6 text-center">{item.qty}</span>
                   <Button

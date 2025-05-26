@@ -1,5 +1,4 @@
 import React from "react";
-import AdminSidebar from "@/components/SidebarAdmin";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,7 +47,6 @@ const fakturPenjualan = [
 
 export default function LogPenjualanPage() {
   return (
-    <AdminSidebar>
       <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">Log Penjualan Kasir</h1>
 
@@ -133,6 +131,5 @@ export default function LogPenjualanPage() {
           </table>
         </div>
       </div>
-    </AdminSidebar>
   );
 }

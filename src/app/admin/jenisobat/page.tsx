@@ -1,7 +1,6 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import AdminSidebar from "@/components/SidebarAdmin";
 import Link from "next/link";
 
 const categories = [
@@ -35,7 +34,6 @@ const obatData = [
 export default function ProdukPage() {
   return (
     <div className="flex">
-      <AdminSidebar />
       <div className="p-6 w-full">
         <h1 className="text-2xl font-bold mb-6 ml-2">Kategori</h1>
 
