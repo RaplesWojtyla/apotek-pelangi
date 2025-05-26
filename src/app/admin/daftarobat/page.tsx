@@ -1,5 +1,4 @@
 import React from "react";
-import AdminSidebar from "@/components/SidebarAdmin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Pencil, Trash2, Plus, Search } from "lucide-react";
@@ -30,8 +29,7 @@ const dummyData = [
 
 export default function DaftarObat() {
   return (
-    <AdminSidebar>
-      {/* Judul */}
+    <>
       <h1 className="text-2xl font-bold mb-4">Daftar Obat</h1>
 
       {/* Search + Tambah */}
@@ -82,6 +80,6 @@ export default function DaftarObat() {
           </tbody>
         </table>
       </div>
-    </AdminSidebar>
+    </>
   );
 }

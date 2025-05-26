@@ -5,7 +5,6 @@ import {
 	ShoppingCart,
 	ClipboardList,
 } from "lucide-react";
-import AdminSidebar from "@/components/SidebarAdmin";
 import StatCard from "@/components/StatCard";
 import { checkRole } from "@/lib/clerk";
 import { redirect } from "next/navigation";
@@ -19,7 +18,7 @@ export default async function DashboardAdmin() {
 	}
 
 	return (
-		<AdminSidebar>
+		<>
 			<h1 className="text-2xl font-bold mb-6">Dashboard Admin</h1>
 
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -48,6 +47,6 @@ export default async function DashboardAdmin() {
 				< BarGraph />
 				< TableTransaction />
 			</div>
-		</AdminSidebar>
+		</>
 	);
 }

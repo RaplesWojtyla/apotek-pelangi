@@ -1,6 +1,6 @@
 import Banner from "@/components/Banner";
-import SkeletonCard from "@/components/SkeletonCard";
-import SkeletonKategori from "@/components/SkeletonKategori";
+import SkeletonCard from "@/components/skeleton/SkeletonCard";
+import SkeletonKategori from "@/components/skeleton/SkeletonKategori";
 import TebusResep from "@/components/TebusResep";
 import { Suspense } from "react";
 import CardProducts from "@/components/CardProducts";

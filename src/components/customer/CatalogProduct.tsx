@@ -4,7 +4,7 @@ import { getProducts, Product } from "@/action/product.action";
 import ProductCard from "./ProductCard";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import SkeletonCard from "../SkeletonCard";
+import SkeletonCard from "@/components/skeleton/SkeletonCard";
 
 const CatalogProducts = ({ search, currPage }: { search: string, currPage: number }) => {
 	const [products, setProducts] = useState<Product[]>([])

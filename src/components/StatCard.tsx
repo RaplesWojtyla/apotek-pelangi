@@ -7,6 +7,7 @@ const StatCard = ({ icon, title, value }: { icon: React.ReactNode, title: string
 			<div className="text-3xl">{icon}</div>
 			<h2 className="text-sm text-gray-500">{title}</h2>
 			<p className="text-xl font-semibold">{value}</p>
+			{/* <Skeleton className="h-6 w-24 mt-1" /> */}
 		</Card>
 	)
 }

@@ -54,7 +54,7 @@ const SidebarContent = ({ categories }: { categories: Category[] }) => {
 				<hr className="my-4 border-gray-200" />
 
 				<Link
-					href="/settings"
+					href="/kasir/daftar_transaksi"
 					className="flex items-center space-x-2 text-gray-800 font-semibold hover:text-cyan-600 text-sm"
 				>
 					<ArrowLeftRight size={16} />

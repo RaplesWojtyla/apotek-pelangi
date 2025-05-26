@@ -1,5 +1,4 @@
 import React from "react";
-import AdminSidebar from "@/components/SidebarAdmin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Pencil, Trash2, Plus, Search } from "lucide-react";
@@ -30,7 +29,7 @@ const dummyUsers = [
 
 export default function DaftarUsers() {
   return (
-    <AdminSidebar>
+    <>
       {/* Judul */}
       <h1 className="text-2xl font-bold mb-4">Daftar Pengguna</h1>
 
@@ -92,6 +91,6 @@ export default function DaftarUsers() {
           </tbody>
         </table>
       </div>
-    </AdminSidebar>
+    </>
   );
 }

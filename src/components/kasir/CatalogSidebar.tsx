@@ -1,15 +1,25 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+	Sheet,
+	SheetContent,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
+} from "@/components/ui/sheet";
 import { Card, CardContent } from "@/components/ui/card";
 import SidebarContent from "./SidebarContent";
-import { Category, countAllCategories, getCategories } from "@/action/category.action";
+import {
+	Category,
+	countAllCategories,
+	getCategories,
+} from "@/action/category.action";
 
 export const CatalogSidebar = async () => {
-	const take: number = await countAllCategories()
-	const categories: Category[] = await getCategories(take)
+	const take: number = await countAllCategories();
+	const categories: Category[] = await getCategories(take);
 
 	return (
 		<>
-			{/* Mobile (Menu Button) */}
+			{/* Mobile Button */}
 			<div className="lg:hidden p-4">
 				<Sheet>
 					<SheetTrigger className="bg-cyan-600 text-white px-4 py-2 rounded-lg shadow">
@@ -24,16 +34,16 @@ export const CatalogSidebar = async () => {
 				</Sheet>
 			</div>
 
-			{/* Desktop Sidebar - below navbar */}
-			<div className="hidden mt-1 lg:block p-4 w-64 lg:flex-shrink-0">
-				<Card className="w-full overflow-hidden shadow-lg rounded-xl">
-					<CardContent className="p-4 h-full overflow-y-auto max-h-[80vh]">
+			{/* Desktop Sidebar */}
+			<div className="hidden lg:block p-4 w-64 flex-shrink-0">
+				<aside className="hidden lg:block fixed pt-15 inset-y-0 left-0 w-64 bg-white border-r shadow-sm z-40">
+					<div className="h-full p-4 overflow-y-auto">
 						<SidebarContent categories={categories} />
-					</CardContent>
-				</Card>
+					</div>
+				</aside>
 			</div>
 		</>
 	);
-}
+};
 
-export default CatalogSidebar
+export default CatalogSidebar;

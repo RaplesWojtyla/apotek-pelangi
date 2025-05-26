@@ -1,6 +1,5 @@
 'use client'
 
-import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -39,7 +38,6 @@ export default function CartPage() {
 
   return (
     <div className="bg-white min-h-screen">
-      <Navbar />
 
       <div className="max-w-7xl mx-auto px-6 py-4">
         <h1 className="text-3xl font-bold mb-6">Keranjang</h1>

@@ -1,12 +1,12 @@
 'use client'
 
 import { UserButton } from '@clerk/nextjs';
-import { Separator } from './ui/separator';
-import { Sheet } from './ui/sheet';
+import { Separator } from '../ui/separator';
+import { Sheet } from '../ui/sheet';
 import { ShoppingCart, Bell, MapPinned, LayoutDashboard, PackageSearch, Menu, History } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from './ui/button';
-import { SheetContent, SheetTrigger } from './ui/sheet';
+import { Button } from '../ui/button';
+import { SheetContent, SheetTrigger } from '../ui/sheet';
 import { useState } from 'react';
 
 export const NavbarCustomer = () => {

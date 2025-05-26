@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "@/components/Navbar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -25,7 +24,6 @@ const DaftarTransaksiPage = () => {
 
 	return (
 		<div className="bg-gray-100 min-h-screen">
-			<Navbar />
 
 			<div className="p-4 max-w-6xl mx-auto">
 				<h2 className="text-xl font-bold mb-4">Daftar Transaksi</h2>

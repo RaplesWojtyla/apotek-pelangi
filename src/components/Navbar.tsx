@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs'
-import { ShoppingCart, Bell, MapPinned, LayoutDashboard, PackageSearch, History, Menu } from 'lucide-react'
+import { Bell, LayoutDashboard, Menu } from 'lucide-react'
 import { Button } from './ui/button'
 import { Separator } from './ui/separator'
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
@@ -11,7 +11,6 @@ import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
 export const Navbar = () => {
 	const { isSignedIn } = useUser()
 	const [isOpen, setIsOpen] = useState(false)
-	const cartItemCount = 3
 
 	return (
 		<>
@@ -32,28 +31,7 @@ export const Navbar = () => {
 								Dashboard
 							</Link>
 							<Separator orientation="vertical" className="w-px h-5 bg-gray-300 mr-4" />
-							<Link href="/customer/catalog" className="hover:text-cyan-500">
-								Katalog
-							</Link>
-							<Separator orientation="vertical" className="w-px h-5 bg-gray-300 mr-4" />
-							<Link href="/customer/history" className="hover:text-cyan-500">
-								Riwayat Transaksi
-							</Link>
 						</nav>
-
-						<Link href="">
-							<MapPinned className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
-						</Link>
-						<div className="relative">
-							<Link href="/customer/cart" aria-label="Keranjang">
-								<ShoppingCart className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
-							</Link>
-							{cartItemCount > 0 && (
-								<span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5">
-									{cartItemCount}
-								</span>
-							)}
-						</div>
 						<Button variant="ghost" size="icon" aria-label="Notifikasi">
 							<Bell className="w-6 h-6 text-cyan-500 hover:text-cyan-700" />
 						</Button>
@@ -76,12 +54,6 @@ export const Navbar = () => {
 
 				{/* Mobile Menu */}
 				<div className="md:hidden flex items-center space-x-1">
-					<Button variant="ghost" size="icon" asChild aria-label="Lokasi">
-						<Link href="">
-							<MapPinned className="w-6 h-6 text-cyan-500 hover:text-cyan-700" />
-						</Link>
-					</Button>
-
 					<Button variant="ghost" size="icon" aria-label="Notifikasi">
 						<Bell className="w-6 h-6 text-cyan-500 hover:text-cyan-700" />
 					</Button>
@@ -103,18 +75,6 @@ export const Navbar = () => {
 										<Link href="/customer" onClick={() => setIsOpen(false)} className="flex items-center space-x-2 text-gray-700 hover:text-cyan-600">
 											<LayoutDashboard size={18} />
 											<span>Dashboard</span>
-										</Link>
-										<Link href="/customer/catalog" onClick={() => setIsOpen(false)} className="flex items-center space-x-2 text-gray-700 hover:text-cyan-600">
-											<PackageSearch size={18} />
-											<span>Katalog</span>
-										</Link>
-										<Link href="/customer/history" onClick={() => setIsOpen(false)} className="flex items-center space-x-2 text-gray-700 hover:text-cyan-600">
-											<History size={18} />
-											<span>Riwayat Transaksi</span>
-										</Link>
-										<Link href="/customer/cart" onClick={() => setIsOpen(false)} className="flex items-center space-x-2 text-gray-700 hover:text-cyan-600">
-											<ShoppingCart size={18} />
-											<span>Keranjang</span>
 										</Link>
 									</div>
 									<Separator />
