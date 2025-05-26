@@ -5,7 +5,6 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/components/ui/sheet";
-import { Card, CardContent } from "@/components/ui/card";
 import SidebarContent from "./SidebarContent";
 import {
 	Category,
