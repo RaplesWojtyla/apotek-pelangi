@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 import TransaksiDetailDialog from "@/components/TransactionDetail";
 
-
 // Dummy data
 const transaksi = [
   {
@@ -46,7 +45,7 @@ export default function RiwayatTransaksiPage() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6">
+    <div className="max-w-5xl min-h-screen mx-auto px-4 py-6 pt-18">
       <h1 className="text-2xl font-bold mb-6">Riwayat Transaksi</h1>
 
       {/* Tabs */}
@@ -56,7 +55,7 @@ export default function RiwayatTransaksiPage() {
             key={tab}
             onClick={() => setFilter(tab)}
             className={`px-4 py-2 rounded-md font-semibold ${
-              filter === tab ? "bg-blue-500 text-white" : "bg-blue-100 text-blue-700"
+              filter === tab ? "bg-cyan-500 text-white" : "bg-cyan-100 text-cyan-700"
             }`}
           >
             {tab}
