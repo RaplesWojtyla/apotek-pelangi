@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs'
-import { Bell, BookImage, LayoutDashboard, Menu } from 'lucide-react'
+import { Bell, LayoutDashboard, Menu } from 'lucide-react'
 import { Button } from './ui/button'
 import { Separator } from './ui/separator'
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
