@@ -1,11 +1,17 @@
 import AdminSidebar from '@/components/admin/Sidebar';
 import Navbar from '@/components/admin/NavbarAdmin';
-import React, { ReactNode } from 'react'
+import { checkRole } from '@/lib/clerk';
+import { redirect } from 'next/navigation';
+import { ReactNode } from 'react'
 
-export default function KasirLayout({ children }: { children: ReactNode }) {
+export default async function KasirLayout({ children }: { children: ReactNode }) {
+    if (!await checkRole('ADMIN')) {
+        return redirect('/unauthorized')
+    }
+
     return (
         <>
-            <Navbar />
+            < Navbar />
             <div className="flex">
                 <div className="w-64 min-h-screen border-r">
                     <AdminSidebar />

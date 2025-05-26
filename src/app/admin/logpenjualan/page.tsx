@@ -1,6 +1,16 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from "@/components/ui/dialog";
+
 
 // Dummy data sesuai struktur tabel
 const fakturPenjualan = [
@@ -53,8 +63,8 @@ export default function LogPenjualanPage() {
                 <th className="px-4 py-3">Nama Kasir</th>
                 <th className="px-4 py-3">Tanggal</th>
                 <th className="px-4 py-3">Total</th>
-                <th className="px-4 py-3">Detail Transaksi</th>
                 <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Detail Transaksi</th>
               </tr>
             </thead>
             <tbody>
@@ -67,25 +77,53 @@ export default function LogPenjualanPage() {
                   </td>
                   <td className="px-4 py-3">Rp{faktur.total.toLocaleString()}</td>
                   <td className="px-4 py-3">
-                    <ul className="list-disc pl-4 space-y-1">
-                      {faktur.detail.map((item, i) => (
-                        <li key={i}>
-                          {item.nama_barang} (x{item.jumlah}) - Rp
-                          {(item.harga * item.jumlah).toLocaleString()}
-                        </li>
-                      ))}
-                    </ul>
-                  </td>
-                  <td className="px-4 py-3">
                     <span
-                      className={`px-2 py-1 rounded text-xs font-medium ${
-                        faktur.status === "Selesai"
+                      className={`px-2 py-1 rounded text-xs font-medium ${faktur.status === "Selesai"
                           ? "bg-green-100 text-green-700"
                           : "bg-yellow-100 text-yellow-700"
-                      }`}
+                        }`}
                     >
                       {faktur.status}
                     </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm">Lihat Detail</Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-lg">
+                        <DialogHeader>
+                          <DialogTitle>Detail Transaksi – {faktur.id}</DialogTitle>
+                          <DialogDescription>
+                            Dilayani oleh <strong>{faktur.nama_kasir}</strong> pada{" "}
+                            <strong>{new Date(faktur.tanggal_faktur).toLocaleString()}</strong>
+                          </DialogDescription>
+                        </DialogHeader>
+
+                        <div className="mt-4 space-y-2 text-sm">
+                          <div><strong>Alamat:</strong> {faktur.alamat}</div>
+                          <div><strong>Status:</strong> {faktur.status}</div>
+                          <div><strong>Keterangan:</strong> {faktur.keterangan || "-"}</div>
+                          <div><strong>Total:</strong> Rp{faktur.total.toLocaleString()}</div>
+                          <div className="mt-3">
+                            <strong>Barang Dibeli:</strong>
+                            <ul className="list-disc ml-5 mt-2 space-y-1">
+                              {faktur.detail.map((item, i) => (
+                                <li key={i}>
+                                  {item.nama_barang} (x{item.jumlah}) – Rp{(item.harga * item.jumlah).toLocaleString()}
+                                  <br />
+                                  <span className="text-xs text-gray-500">Harga satuan: Rp{item.harga.toLocaleString()}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+
+                        <DialogClose asChild>
+                          <Button variant="outline" className="mt-4">Tutup</Button>
+                        </DialogClose>
+                      </DialogContent>
+                    </Dialog>
                   </td>
                 </tr>
               ))}

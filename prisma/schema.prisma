@@ -186,6 +186,9 @@ model Cart {
     barang          Barang          @relation(fields: [id_barang], references: [id], onDelete: Cascade, onUpdate: Cascade)
     pengajuan_resep PengajuanResep? @relation(fields: [id_resep], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
     @@unique([id_user, id_barang])
 }
 

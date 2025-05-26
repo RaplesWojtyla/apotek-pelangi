@@ -1,4 +1,3 @@
-import React from "react";
 import {
 	BarChart,
 	Users,
@@ -6,17 +5,10 @@ import {
 	ClipboardList,
 } from "lucide-react";
 import StatCard from "@/components/StatCard";
-import { checkRole } from "@/lib/clerk";
-import { redirect } from "next/navigation";
 import BarGraph from "@/components/BarGraph";
 import TableTransaction from "@/components/TableTransaction";
 
-export default async function DashboardAdmin() {
-
-	if (!await checkRole('ADMIN')) {
-		return redirect('/unauthorized')
-	}
-
+export default function DashboardAdmin() {
 	return (
 		<>
 			<h1 className="text-2xl font-bold mb-6">Dashboard Admin</h1>

@@ -13,7 +13,7 @@ export const createCategory = async (nama_kategori: string, foto_kategori?: stri
 				foto_kategori: foto_kategori || "kategori.png",
 			},
 		})
-		revalidatePath('/')
+		revalidatePath('/admin')
 
 		return {
 			success: true,
@@ -79,7 +79,7 @@ export const updateCategory = async (
 				foto_kategori,
 			},
 		})
-		revalidatePath('/')
+		revalidatePath('/admin')
 
 		return {
 			success: true,
@@ -98,7 +98,7 @@ export const deleteCategory = async (id: string) => {
 		const deleted = await prisma.kategoriBarang.delete({
 			where: { id },
 		})
-		revalidatePath('/')
+		revalidatePath('/admin')
 
 		return {
 			success: true,
