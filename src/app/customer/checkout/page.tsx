@@ -1,94 +1,75 @@
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { CreditCard } from "lucide-react";
 
-export default function PembayaranPage() {
+export default function CheckoutPage() {
   return (
-        <div className="min-h-screen bg-white text-gray-900">
-  <Navbar />
+    <div className="min-h-screen bg-gray-100 p-4 md:p-10">
+      <h1 className="text-3xl font-bold mb-6">Checkout</h1>
 
-  <div className="p-4 md:p-10 max-w-5xl mx-auto">
-    <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Form: Info Penerima + Metode Pembayaran */}
+        <div className="lg:col-span-2 space-y-6">
+          <Card className="p-6 space-y-6">
+            {/* Informasi Penerima */}
+            <div>
+              <h2 className="text-xl font-bold mb-4">Informasi Penerima</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="font-medium">Nama Penerima</label>
+                  <Input placeholder="Masukkan nama penerima" className="mt-1" />
+                </div>
+                <div>
+                  <label className="font-medium">Nomor Telepon</label>
+                  <Input placeholder="Masukkan nomor telepon" className="mt-1" />
+                </div>
+              </div>
+            </div>
 
-    <Card className="bg-gray-100 p-6 md:p-10 space-y-6 shadow-lg rounded-lg">
-      <h2 className="text-xl font-semibold">
-        Pesanan anda telah diterima. Silahkan lakukan pembayaran
-      </h2>
-
-      <div className="mb-6">
-        <p className="font-medium text-lg">Korey Doyle</p>
-        <p className="text-sm text-gray-600">No Telepon: 084860342321</p>
-      </div>
-
-      <hr className="border-gray-300" />
-
-      <div className="grid md:grid-cols-4 gap-4 text-sm text-gray-600 my-6">
-        <div className="mb-3">
-          <p className="text-gray-500">Kode Invoice:</p>
-          <p className="font-semibold text-gray-900">INV-00002</p>
-        </div>
-        <div className="mb-3">
-          <p className="text-gray-500">Tanggal Transaksi:</p>
-          <p className="font-semibold text-gray-900">22 Mei 2025</p>
-        </div>
-        <div className="mb-3">
-          <p className="text-gray-500">Total:</p>
-          <p className="font-semibold text-gray-900">Rp 164.673,00</p>
-        </div>
-        <div className="mb-3">
-          <p className="text-gray-500">Metode Pembayaran:</p>
-          <p className="font-semibold text-gray-900">GOPAY</p>
-        </div>
-      </div>
-
-      <hr className="border-gray-300" />
-
-      <div className="grid md:grid-cols-2 gap-6 my-6">
-        <div>
-          <h3 className="text-gray-900 font-semibold mb-3">Detail Pesanan</h3>
-
-          <div className="flex justify-between text-sm text-gray-600 mb-2">
-            <span>Subtotal</span>
-            <span>Rp 164.673,00</span>
-          </div>
-
-          <div className="flex justify-between text-sm text-gray-600 mb-2">
-            <span>Diskon</span>
-            <span>Rp 0,00</span>
-          </div>
-
-          <hr className="border-gray-300 my-3" />
-
-          <div className="flex justify-between font-semibold text-gray-900">
-            <span>Total</span>
-            <span>Rp 164.673,00</span>
-          </div>
+            {/* Metode Pembayaran */}
+            <div>
+              <h2 className="text-xl font-bold mb-4">Pilih Metode Pembayaran</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Button variant="outline" className="justify-between w-full">
+                  Dana <span className="ml-auto">&rarr;</span>
+                </Button>
+                <Button variant="outline" className="justify-between w-full">
+                  Gopay <span className="ml-auto">&rarr;</span>
+                </Button>
+                <Button variant="outline" className="justify-between w-full">
+                  QRIS <span className="ml-auto">&rarr;</span>
+                </Button>
+                <Button variant="outline" className="justify-between w-full">
+                  Bank Transfer <span className="ml-auto">&rarr;</span>
+                </Button>
+              </div>
+            </div>
+          </Card>
         </div>
 
-        <div>
-          <h3 className="text-gray-900 font-semibold mb-3">Status Pembayaran</h3>
-          <div className="flex items-center gap-2 text-sm">
-            <CreditCard className="text-blue-600" size={18} />
-            <Badge className="bg-yellow-400 text-black font-medium">
-              Menunggu Pembayaran
-            </Badge>
-          </div>
+        {/* Ringkasan Order */}
+        <div className="space-y-4">
+          <Card className="p-6">
+            <h2 className="text-xl font-bold">Order</h2>
+            <div className="flex justify-between">
+              <span>Subtotal</span>
+              <span className="font-semibold">Rp 164.673,00</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Biaya lainnya</span>
+              <span className="font-semibold">Rp 0,00</span>
+            </div>
+            <div className="flex justify-between text-lg font-bold">
+              <span>Total</span>
+              <span>Rp 164.673,00</span>
+            </div>
+          </Card>
+
+          <Button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-lg py-4">
+            Booking
+          </Button>
         </div>
       </div>
-
-      <div className="pt-4">
-        <Button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6">
-          Bayar Sekarang
-        </Button>
-      </div>
-    </Card>
-  </div>
-
-  <Footer />
-</div>
-
-    );
-    }
+    </div>
+  );
+}
