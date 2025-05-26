@@ -6,10 +6,10 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import { UserButton } from "@clerk/nextjs";
-import { ArrowLeftRight, Layers } from "lucide-react";
+import { ArrowLeftRight, BookImage, Layers } from "lucide-react";
 import Link from "next/link";
 
-const SidebarContent = ({ categories }: { categories: Category[] }) => {
+const SidebarContent = ({ categories, userName }: { categories: Category[], userName: string }) => {
 	return (
 		<div className="flex flex-col max-h-full">
 			{/* Logo / Header */}
@@ -20,7 +20,7 @@ const SidebarContent = ({ categories }: { categories: Category[] }) => {
 					</div>
 					<div>
 						<h1 className="text-lg font-bold text-gray-800 leading-none">
-							Nama User
+							{userName}
 						</h1>
 						<p className="text-xs text-gray-500">Kasir</p>
 					</div>
@@ -28,8 +28,15 @@ const SidebarContent = ({ categories }: { categories: Category[] }) => {
 			</div>
 
 			{/* Scrollable Nav */}
-			<div className="flex-1 overflow-y-auto pr-1">
+			<div className="flex-1 overflow-y-auto max-h-screen pr-1">
 				<p className="text-xs uppercase text-gray-400 mb-2">Kategori</p>
+				<Link
+					href="/kasir"
+					className="flex items-center space-x-2 text-gray-800 font-semibold mb-1 hover:text-cyan-600 text-sm"
+				>
+					<BookImage size={16} />
+					<span>Semua Produk</span>
+				</Link>
 
 				{categories.map(category => (
 					<Accordion key={category.id} type="multiple" className="w-full">
