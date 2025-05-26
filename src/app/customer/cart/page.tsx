@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 import { CartItem } from "@/action/cart.action";
 import toast from "react-hot-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function CartPage() {
@@ -89,7 +89,7 @@ export default function CartPage() {
 	}
 
 	const handleAddAmountManualProduct = (id: string) => {
-		setCartItems(prev => 
+		setCartItems(prev =>
 			prev.map(item => item.id === id ? ({
 				...item,
 				jumlah: item.jumlah + 1
@@ -98,7 +98,7 @@ export default function CartPage() {
 	}
 
 	const handleSubsAmountManualProduct = (id: string) => {
-		setCartItems(prev => 
+		setCartItems(prev =>
 			prev.map(item => item.id === id ? ({
 				...item,
 				jumlah: item.jumlah - 1
@@ -137,102 +137,106 @@ export default function CartPage() {
 	const renderCartItem = (item: CartItem) => (
 		<div
 			key={item.id}
-			className={`flex flex-col sm:flex-row justify-between sm:items-center p-4 sm:p-6 rounded-2xl border ${item.totalStock < 1
+			className={`relative flex flex-col sm:flex-row justify-between sm:items-center p-4 sm:p-6 rounded-2xl border ${item.totalStock < 1
 				? "bg-red-200 border-red-300"
 				: "bg-white border-gray-300"
 				} shadow-sm`}
 		>
+			{/* Tombol Hapus */}
+			<button
+				className="absolute top-3 right-3 text-red-500 hover:text-red-700"
+			>
+				<Trash2 className="w-5 h-5" />
+			</button>
+
+			{/* Kiri: Checkbox dan Gambar */}
 			<div className="flex items-start sm:items-center flex-1">
 				<Checkbox
-					className="mr-4 mt-1 sm:mt-0 cursor-pointer border-gray-400"
+					className="mr-4 mt-1 sm:mt-0 border-gray-400"
 					checked={item.sumber === 'RESEP' ? item.totalStock > 0 : selectedManualProductIds.has(item.id)}
-					onCheckedChange={item.sumber === 'MANUAL' ?
-						() => handleToggleSelectManualProduct(item.id) : undefined
-					}
+					onCheckedChange={item.sumber === 'MANUAL' ? () => handleToggleSelectManualProduct(item.id) : undefined}
 					disabled={item.totalStock < 1 || item.sumber === 'RESEP'}
 				/>
 				<Image
-					className="cursor-pointer"
 					src={`/${item.barang.foto_barang}`}
 					alt={item.barang.nama_barang}
 					width={70}
 					height={70}
+					className="rounded-lg object-cover cursor-pointer"
 					onClick={() => router.push(`/customer/catalog/${item.id_barang}`)}
 				/>
 				<div className="ml-4 sm:ml-6 cursor-pointer" onClick={() => router.push(`/customer/catalog/${item.id_barang}`)}>
-					<h4 className="font-semibold text-sm sm:text-base mb-1">{item.barang.nama_barang}</h4>
-					<p className="text-xs sm:text-sm text-gray-500 mb-1">{item.barang.jenis_barang.kategori_barang.nama_kategori}</p>
-					<span
-						className={`text-xs font-medium w-fit px-2 py-1 rounded flex items-center justify-center ${item.totalStock > 0
-							? "bg-green-600 text-white"
-							: "bg-red-600 text-white"
-							}`}
-					>
-						{item.totalStock > 0 ? "Stok Tersedia" : "Stok tidak tersedia"}
+					<h4 className="font-semibold text-base mb-1">{item.barang.nama_barang}</h4>
+					<p className="text-sm text-gray-500">{item.barang.jenis_barang.kategori_barang.nama_kategori}</p>
+					<span className={`inline-block mt-2 px-2 py-0.5 rounded text-xs font-medium ${item.totalStock > 0 ? "bg-green-100 text-green-800" : "bg-red-700 text-white"}`}>
+						{item.totalStock > 0 ? "Stok tersedia" : "Stok tidak tersedia"}
 					</span>
 				</div>
 			</div>
 
-			<div className="flex items-center justify-between sm:justify-center mt-4 sm:mt-0 space-x-2 w-full sm:w-40">
-				<Button
-					variant="outline"
-					size="sm"
-					className="w-8 h-8 p-0 text-lg cursor-pointer"
-					disabled={item.sumber === 'RESEP' || item.totalStock < 1}
-				>
-					-
-				</Button>
-				<span className="font-semibold text-sm sm:text-base">{item.jumlah}</span>
-				<Button
-					variant="outline"
-					size="sm"
-					className="w-8 h-8 p-0 text-lg cursor-pointer"
-					disabled={item.sumber === 'RESEP' || item.totalStock < 1}
-				>
-					+
-				</Button>
-			</div>
+			{/* Jumlah & Harga */}
+			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-2 mt-4 sm:mt-0 w-full sm:w-auto">
+				<div className="flex justify-between items-center w-full sm:w-auto">
+					{/* kontrol jumlah */}
+					<div className="flex items-center gap-2">
+						<Button
+							variant="outline"
+							size="sm"
+							className="w-8 h-8 p-0 text-lg"
+							disabled={item.sumber === 'RESEP' || item.totalStock < 1}
+						>
+							-
+						</Button>
+						<span className="font-semibold text-base">{item.jumlah}</span>
+						<Button
+							variant="outline"
+							size="sm"
+							className="w-8 h-8 p-0 text-lg"
+							disabled={item.sumber === 'RESEP' || item.totalStock < 1}
+						>
+							+
+						</Button>
+					</div>
 
-			<div className="text-sm sm:text-base font-semibold mt-2 sm:mt-0 sm:w-28 text-right">
-				Rp{(item.jumlah * item.barang.harga_jual).toLocaleString("id-ID")}
+					{/* Harga */}
+					<div className="text-base font-semibold whitespace-nowrap ml-4 sm:ml-6">
+						Rp{(item.jumlah * item.barang.harga_jual).toLocaleString("id-ID")}
+					</div>
+				</div>
 			</div>
 		</div>
+
 	)
 
 	return (
-		<div className="bg-white min-h-screen">
+		<div className="bg-white min-h-screen pt-12">
 			<div className="max-w-7xl mx-auto px-6 py-4">
 				<h1 className="text-3xl font-bold mb-6">Keranjang</h1>
-
 				<Tabs defaultValue="semua" className="mb-6" onValueChange={setActiveTab}>
 					<TabsList className="flex flex-wrap gap-2 w-full sm:w-[805px]">
-						<TabsTrigger value="semua" className="flex-1 h-10 rounded-xl border border-gray-300 text-lg font-semibold data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+						<TabsTrigger value="semua" className="flex-1 h-10 rounded-xl border border-gray-300 text-lg font-semibold data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
 							Semua
 						</TabsTrigger>
-						<TabsTrigger value="obat-satuan" className="flex-1 h-10 rounded-xl border border-gray-300 text-lg font-semibold data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+						<TabsTrigger value="obat-satuan" className="flex-1 h-10 rounded-xl border border-gray-300 text-lg font-semibold data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
 							Obat Satuan
 						</TabsTrigger>
-						<TabsTrigger value="obat-resep" className="flex-1 h-10 rounded-xl border border-gray-300 text-lg font-semibold data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+						<TabsTrigger value="obat-resep" className="flex-1 h-10 rounded-xl border border-gray-300 text-lg font-semibold data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
 							Obat Resep
 						</TabsTrigger>
 					</TabsList>
-					<div className="flex items-center justify-between my-4">
-						<div className="flex justify-center items-center">
+					<div className="flex items-center justify-between mb-2 mt-2 lg:mr-103">
+						<div className="flex items-center">
 							<Checkbox
 								id="select-all"
 								checked={isSelectAllChecked}
 								onCheckedChange={checked => handleSelectAllManualProducts(Boolean(checked))}
 								disabled={isSelectAllDisabled}
 							/>
-							<label
-								htmlFor="select-all"
-								className="text-sm ml-2 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex justify-center items-center"
-							>
+							<label htmlFor="select-all" className="text-sm ml-2 font-medium">
 								Pilih Semua
 							</label>
 						</div>
-
-						<Button variant={'ghost'} className="text-red-500">
+						<Button variant="ghost" className="text-red-500 text-sm font-medium">
 							Hapus Semua
 						</Button>
 					</div>
