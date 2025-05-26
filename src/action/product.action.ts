@@ -7,51 +7,51 @@ export type ProductDetail = Awaited<ReturnType<typeof getProductDetail>>
 import { revalidatePath } from "next/cache"
 
 export const createProduct = async (
-  nama_barang: string,
-  harga_jual: number,
-  id_jenis_barang: string,
-  foto_barang: string,
-  detail: {
-    deskripsi?: string,
-    indikasi_umum?: string,
-    komposisi?: string,
-    dosis?: string,
-    aturan_pakai?: string,
-    perhatian?: string,
-    kontra_indikasi?: string,
-    efek_samping?: string,
-    golongan?: string,
-    kemasan?: string,
-    manufaktur?: string,
-    no_bpom?: string,
-  }
-) => {
-  try {
-    const barang = await prisma.barang.create({
-      data: {
-        nama_barang,
-        harga_jual,
-        foto_barang: foto_barang && foto_barang.trim() !== "" ? foto_barang : "Barang.png",
-        id_jenis_barang,
-        detail_barang: {
-          create: {
-            ...detail
-          }
-        }
-      }
-    });
-	revalidatePath('/')
-
-	return {
-		success: true,
-		status: 201,
-		message: "Barang berhasil ditambahkan",
-		data: barang,
+	nama_barang: string,
+	harga_jual: number,
+	id_jenis_barang: string,
+	foto_barang: string,
+	detail: {
+		deskripsi?: string,
+		indikasi_umum?: string,
+		komposisi?: string,
+		dosis?: string,
+		aturan_pakai?: string,
+		perhatian?: string,
+		kontra_indikasi?: string,
+		efek_samping?: string,
+		golongan?: string,
+		kemasan?: string,
+		manufaktur?: string,
+		no_bpom?: string,
 	}
-  } catch (error) {
-    console.error("[createProduct] error:", error);
-    throw new Error("Gagal menambahkan produk");
-  }
+) => {
+	try {
+		const barang = await prisma.barang.create({
+			data: {
+				nama_barang,
+				harga_jual,
+				foto_barang: foto_barang && foto_barang.trim() !== "" ? foto_barang : "Barang.png",
+				id_jenis_barang,
+				detail_barang: {
+					create: {
+						...detail
+					}
+				}
+			}
+		});
+		revalidatePath('/')
+
+		return {
+			success: true,
+			status: 201,
+			message: "Barang berhasil ditambahkan",
+			data: barang,
+		}
+	} catch (error) {
+		console.error("[createProduct] error:", error);
+		throw new Error("Gagal menambahkan produk");
+	}
 };
 
 
@@ -116,93 +116,114 @@ export const getProductDetail = async (id: string) => {
 	}
 }
 
-export const updateProduct = async (
-  id: string,
-  data: {
-    nama_barang?: string;
-    harga_jual?: number;
-    foto_barang?: string;
-    id_jenis_barang?: string;
-  }
-) => {
-  try {
-    const updatedBarang = await prisma.barang.update({
-      where: { id },
-      data,
-    });
-	revalidatePath('/')
+export const getCatalogPages = async (matcher: string, take: number) => {
+	try {
+		const products = await prisma.barang.findMany({
+			where: {
+				nama_barang: {
+					contains: matcher,
+					mode: 'insensitive'
+				}
+			}
+		})
 
-	return {
-		success: true,
-		status: 201,
-		message: "Barang berhasil diperbarui",
-		data: updatedBarang,
+		const totalPages: number = Math.ceil(products.length / take)
+
+		return totalPages
+	} catch (error) {
+		console.error(`[getProductDetail] ERROR: ${error}`);
+
+		throw new Error("Gagal memuat halaman katalog!")
 	}
-  } catch (error) {
-    console.error("[updateProduct]", error);
-    throw new Error("Gagal memperbarui data barang");
-  }
+}
+
+export const updateProduct = async (
+	id: string,
+	data: {
+		nama_barang?: string;
+		harga_jual?: number;
+		foto_barang?: string;
+		id_jenis_barang?: string;
+	}
+) => {
+	try {
+		const updatedBarang = await prisma.barang.update({
+			where: { id },
+			data,
+		});
+		revalidatePath('/')
+
+		return {
+			success: true,
+			status: 201,
+			message: "Barang berhasil diperbarui",
+			data: updatedBarang,
+		}
+	} catch (error) {
+		console.error("[updateProduct]", error);
+		throw new Error("Gagal memperbarui data barang");
+	}
 };
 
 export const updateDetailProduct = async (
-  id_barang: string,
-  detailData: {
-    deskripsi?: string;
-    indikasi_umum?: string;
-    komposisi?: string;
-    dosis?: string;
-    aturan_pakai?: string;
-    perhatian?: string;
-    kontra_indikasi?: string;
-    efek_samping?: string;
-    golongan?: string;
-    kemasan?: string;
-    manufaktur?: string;
-    no_bpom?: string;
-  }
-) => {
-  try {
-    const updatedDetailProduct = await prisma.detailBarang.update({
-      where: { id_barang },
-      data: detailData,
-    });
-	revalidatePath('/')
-
-	return {
-		success: true,
-		status: 201,
-		message: "Detail Barang berhasil diperbarui",
-		data: updatedDetailProduct,
+	id_barang: string,
+	detailData: {
+		deskripsi?: string;
+		indikasi_umum?: string;
+		komposisi?: string;
+		dosis?: string;
+		aturan_pakai?: string;
+		perhatian?: string;
+		kontra_indikasi?: string;
+		efek_samping?: string;
+		golongan?: string;
+		kemasan?: string;
+		manufaktur?: string;
+		no_bpom?: string;
 	}
-  } catch (error) {
-    console.error("[updateDetailProduct]", error);
-    throw new Error("Gagal memperbarui detail barang");
-  }
+) => {
+	try {
+		const updatedDetailProduct = await prisma.detailBarang.update({
+			where: { id_barang },
+			data: detailData,
+		});
+		revalidatePath('/')
+
+		return {
+			success: true,
+			status: 201,
+			message: "Detail Barang berhasil diperbarui",
+			data: updatedDetailProduct,
+		}
+	} catch (error) {
+		console.error("[updateDetailProduct]", error);
+		throw new Error("Gagal memperbarui detail barang");
+	}
 };
 
 export const deleteProduct = async (id: string) => {
-  try {
-    await prisma.detailBarang.delete({
-      where: {
-        id_barang: id
-      }
-    });
+	try {
+		await prisma.detailBarang.delete({
+			where: {
+				id_barang: id
+			}
+		});
 
-    await prisma.barang.delete({
-      where: {
-        id
-      }
-    });
-	revalidatePath('/')
+		await prisma.barang.delete({
+			where: {
+				id
+			}
+		});
+		revalidatePath('/')
 
-	return {
-		success: true,
-		status: 201,
-		message: "Barang berhasil dihapus",
+		return {
+			success: true,
+			status: 201,
+			message: "Barang berhasil dihapus",
+		}
+	} catch (error) {
+		console.error("[deleteProduct] error:", error);
+		throw new Error("Gagal menghapus produk");
 	}
-  } catch (error) {
-    console.error("[deleteProduct] error:", error);
-    throw new Error("Gagal menghapus produk");
-  }
 };
 

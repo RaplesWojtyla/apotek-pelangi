@@ -11,10 +11,14 @@ import {
 	countAllCategories,
 	getCategories,
 } from "@/action/category.action";
+import { currentUser } from "@clerk/nextjs/server";
 
 export const CatalogSidebar = async () => {
 	const take: number = await countAllCategories();
 	const categories: Category[] = await getCategories(take);
+	const user = await currentUser()
+
+	const userName = user?.firstName
 
 	return (
 		<>
@@ -28,7 +32,7 @@ export const CatalogSidebar = async () => {
 						<SheetHeader hidden>
 							<SheetTitle>Mobile Sidebar</SheetTitle>
 						</SheetHeader>
-						<SidebarContent categories={categories} />
+						<SidebarContent categories={categories} userName={userName ?? "GUEST"} />
 					</SheetContent>
 				</Sheet>
 			</div>
@@ -37,7 +41,7 @@ export const CatalogSidebar = async () => {
 			<div className="hidden lg:block p-4 w-64 flex-shrink-0">
 				<aside className="hidden lg:block fixed pt-15 inset-y-0 left-0 w-64 bg-white border-r shadow-sm z-40">
 					<div className="h-full p-4 overflow-y-auto">
-						<SidebarContent categories={categories} />
+						<SidebarContent categories={categories} userName={userName ?? "GUEST"} />
 					</div>
 				</aside>
 			</div>
