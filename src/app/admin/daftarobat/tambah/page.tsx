@@ -1,24 +1,10 @@
 'use client'
 
-import {
-  Input
-} from "@/components/ui/input"
-import {
-  Label
-} from "@/components/ui/label"
-import {
-  Textarea
-} from "@/components/ui/textarea"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select"
-import {
-  Button
-} from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export default function TambahObatPage() {
@@ -26,150 +12,87 @@ export default function TambahObatPage() {
     <div className="min-h-screen p-6 bg-background text-foreground">
       <div className="mb-6 text-sm text-muted-foreground">
         <Link href="/admin/daftarobat" className="hover:underline">
-          Daftar Obat
+          Daftar Produk
         </Link>{" "}
-        &gt; <span>Create</span>
+        &gt; <span className="text-foreground font-medium">Tambah Produk</span>
       </div>
 
-      <h1 className="text-2xl font-bold mb-6">Create Product</h1>
+      <h1 className="text-3xl font-bold mb-8">Tambah Produk</h1>
 
-      {/* Informasi Obat */}
-      <div className="bg-muted/10 p-6 rounded-xl mb-6">
-        <h2 className="text-lg font-semibold mb-4">Informasi Obat</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <section className="bg-card p-6 rounded-xl shadow-sm border mb-8">
+        <h2 className="text-lg font-semibold mb-4">Informasi Produk</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <Label>Nama Obat</Label>
-            <Input placeholder="Contoh: Paracetamol" />
+            <Label>Deskripsi (Nama Produk)<span className="text-red-500">*</span></Label>
+            <Input placeholder="Contoh: Hansaplast Classic - Plester luka waterproof" />
           </div>
           <div>
-            <Label>Kategori</Label>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Pilih kategori" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Wanita">Kesehatan Wanita</SelectItem>
-                <SelectItem value="Demam">Demam</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>Unit</Label>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Pilih unit" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Box">Box</SelectItem>
-                <SelectItem value="Strip">Strip</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>Golongan Obat</Label>
+            <Label>Golongan<span className="text-red-500">*</span></Label>
             <Select>
               <SelectTrigger>
                 <SelectValue placeholder="Pilih golongan" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Bebas">Bebas</SelectItem>
-                <SelectItem value="Keras">Keras</SelectItem>
-                <SelectItem value="Narkotika">Narkotika</SelectItem>
+                <SelectItem value="Obat Bebas">Obat Bebas</SelectItem>
+                <SelectItem value="Obat Bebas Terbatas">Obat Bebas Terbatas</SelectItem>
+                <SelectItem value="Obat Keras">Obat Keras</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div>
-            <Label>Tipe Obat</Label>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Pilih tipe" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Umum">Umum</SelectItem>
-                <SelectItem value="Resep">Resep dokter</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label>Kemasan<span className="text-red-500">*</span></Label>
+            <Input placeholder="Contoh: Box 20 strips" />
           </div>
           <div>
-            <Label>Nomor Izin Edar</Label>
-            <Input placeholder="Contoh: DKL123456789A21" />
+            <Label>Manufaktur<span className="text-red-500">*</span></Label>
+            <Input placeholder="Contoh: PT Hansaplast Indonesia" />
           </div>
           <div>
-            <Label>Status</Label>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Pilih status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Aktif">Aktif</SelectItem>
-                <SelectItem value="Kadaluwarsa">Kadaluwarsa</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>Harga Jual (Rp) *</Label>
-            <Input type="number" placeholder="Contoh: 12000" />
+            <Label>No BPOM<span className="text-red-500">*</span></Label>
+            <Input placeholder="Contoh: AKD20801816454" />
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Deskripsi dan Indikasi */}
-      <div className="bg-muted/10 p-6 rounded-xl mb-6">
-        <h2 className="text-lg font-semibold mb-4">Deskripsi Obat</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <section className="bg-card p-6 rounded-xl shadow-sm border mb-8">
+        <h2 className="text-lg font-semibold mb-4">Detail Obat</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <Label>Deskripsi *</Label>
-            <Textarea rows={6} placeholder="Tulis deskripsi obat..." />
+            <Label>Indikasi Umum<span className="text-red-500">*</span></Label>
+            <Textarea rows={4} placeholder="Penutup luka kecil dan goresan" />
           </div>
           <div>
-            <Label>Indikasi / Manfaat *</Label>
-            <Textarea rows={6} placeholder="Tulis manfaat atau kegunaan..." />
-          </div>
-        </div>
-      </div>
-
-      {/* Detail Tambahan */}
-      <div className="bg-muted/10 p-6 rounded-xl mb-6">
-        <h2 className="text-lg font-semibold mb-4">Detail Tambahan</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label>Komposisi</Label>
-            <Textarea rows={3} placeholder="Contoh: Paracetamol 500mg" />
+            <Label>Komposisi<span className="text-red-500">*</span></Label>
+            <Textarea rows={4} placeholder="Adhesive tape dengan pad penyerap" />
           </div>
           <div>
-            <Label>Dosis</Label>
-            <Textarea rows={3} placeholder="Contoh: 3x sehari setelah makan" />
+            <Label>Dosis<span className="text-red-500">*</span></Label>
+            <Textarea rows={3} placeholder="Sesuai kebutuhan" />
           </div>
           <div>
-            <Label>Aturan Pakai</Label>
-            <Textarea rows={3} placeholder="Contoh: Dikonsumsi dengan air putih" />
+            <Label>Aturan Pakai<span className="text-red-500">*</span></Label>
+            <Textarea rows={3} placeholder="Tempelkan pada kulit yang bersih dan kering" />
           </div>
           <div>
-            <Label>Perhatian</Label>
-            <Textarea rows={3} placeholder="Contoh: Tidak untuk anak di bawah 5 tahun" />
+            <Label>Perhatian<span className="text-red-500">*</span></Label>
+            <Textarea rows={3} placeholder="Ganti secara teratur, jaga kebersihan luka" />
           </div>
           <div>
-            <Label>Kontra Indikasi</Label>
-            <Textarea rows={3} />
+            <Label>Kontra Indikasi<span className="text-red-500">*</span></Label>
+            <Textarea rows={3} placeholder="Luka terbuka yang luas atau dalam" />
           </div>
           <div>
-            <Label>Efek Samping</Label>
-            <Textarea rows={3} />
-          </div>
-          <div>
-            <Label>Kemasan</Label>
-            <Input placeholder="Contoh: Box isi 10 strip" />
-          </div>
-          <div>
-            <Label>Manufaktur</Label>
-            <Input placeholder="Contoh: Kimia Farma" />
+            <Label>Efek Samping<span className="text-red-500">*</span></Label>
+            <Textarea rows={3} placeholder="Iritasi kulit pada pengguna sensitif" />
           </div>
         </div>
-      </div>
+      </section>
 
       <div className="flex justify-end">
-        <Button className="bg-primary text-white hover:bg-primary/90">Simpan Obat</Button>
+        <Button className="bg-primary text-white hover:bg-primary/90 px-6 py-2 text-base rounded-lg">
+          Simpan Obat
+        </Button>
       </div>
     </div>
-  );
+  )
 }
