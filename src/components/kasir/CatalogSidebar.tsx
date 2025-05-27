@@ -1,24 +1,33 @@
-import {
-	Sheet,
-	SheetContent,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger,
-} from "@/components/ui/sheet";
+'use client'
+
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import SidebarContent from "./SidebarContent";
-import {
-	Category,
-	countAllCategories,
-	getCategories,
-} from "@/action/category.action";
-import { currentUser } from "@clerk/nextjs/server";
+import { Category, countAllCategories, getCategories } from "@/action/category.action";
+import { useUser } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
 
-export const CatalogSidebar = async () => {
-	const take: number = await countAllCategories();
-	const categories: Category[] = await getCategories(take);
-	const user = await currentUser()
+export const CatalogSidebar = () => {
+	const [categories, setCategories] = useState<Category[]>([]);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const { user } = useUser();
 
-	const userName = user?.firstName
+	useEffect(() => {
+		const fetchData = async () => {
+			setIsLoading(true);
+			try {
+				const total = await countAllCategories();
+				const data = await getCategories(total);
+				setCategories(data);
+			} catch (error) {
+				console.error("Failed to fetch categories", error);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+		fetchData();
+	}, []);
+
+	const userName = user?.firstName ?? "GUEST";
 
 	return (
 		<>
@@ -32,7 +41,7 @@ export const CatalogSidebar = async () => {
 						<SheetHeader hidden>
 							<SheetTitle>Mobile Sidebar</SheetTitle>
 						</SheetHeader>
-						<SidebarContent categories={categories} userName={userName ?? "GUEST"} />
+						<SidebarContent categories={categories} userName={userName} isLoading={isLoading} />
 					</SheetContent>
 				</Sheet>
 			</div>
@@ -41,7 +50,7 @@ export const CatalogSidebar = async () => {
 			<div className="hidden lg:block p-4 w-64 flex-shrink-0">
 				<aside className="hidden lg:block fixed pt-15 inset-y-0 left-0 w-64 bg-white border-r shadow-sm z-40">
 					<div className="h-full p-4 overflow-y-auto">
-						<SidebarContent categories={categories} userName={userName ?? "GUEST"} />
+						<SidebarContent categories={categories} userName={userName} isLoading={isLoading} />
 					</div>
 				</aside>
 			</div>
