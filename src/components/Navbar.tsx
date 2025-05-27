@@ -28,7 +28,7 @@ export const Navbar = () => {
 						<>
 							<nav className="hidden md:flex space-x-4 text-sm text-gray-600">
 								<div className="flex h-5 items-center space-x-4 text-sm">
-									<Link href="/customer" className="hover:text-cyan-500">
+									<Link href="/sign-in/callback" className="hover:text-cyan-500">
 										Dashboard
 									</Link>
 									<Separator orientation="vertical" className="w-px h-5 bg-gray-300 mr-4" />
