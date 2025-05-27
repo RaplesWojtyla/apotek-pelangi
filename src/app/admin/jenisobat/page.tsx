@@ -1,30 +1,36 @@
+'use client'
+
 import React from "react";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
-  HeartPulse,
-  Dumbbell,
-  Baby,
-  Syringe,
-  Stethoscope,
-  Thermometer,
-} from "lucide-react";
-import Link from "next/link";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const categories = [
-  { label: "Semua Kategori", icon: <Stethoscope className="w-6 h-6 text-blue-600" /> },
-  { label: "Obat & Perawatan", icon: <Syringe className="w-6 h-6 text-green-600" /> },
-  { label: "Weight Management", icon: <Dumbbell className="w-6 h-6 text-purple-600" /> },
-  { label: "Susu", icon: <Baby className="w-6 h-6 text-yellow-600" /> },
-  { label: "Kesehatan Seksual", icon: <HeartPulse className="w-6 h-6 text-pink-600" /> },
-  { label: "Peralatan", icon: <Thermometer className="w-6 h-6 text-gray-600" /> },
+  { label: "Semua Kategori", icon: "/logo.png" },
+  { label: "Obat & Perawatan", icon: "/logo.png" },
+  { label: "Weight Management", icon: "/logo.png" },
+  { label: "Susu", icon: "/logo.png" },
+  { label: "Kesehatan Seksual", icon: "/logo.png" },
+  { label: "Peralatan", icon: "/logo.png" },
 ];
 
 const obatData = [
-  { icon: <Syringe className="w-5 h-5 text-blue-600" />, title: "Batuk, Pilek & Flu" },
-  { icon: <Thermometer className="w-5 h-5 text-red-500" />, title: "Demam & Nyeri" },
-  { icon: <HeartPulse className="w-5 h-5 text-green-600" />, title: "Masalah Pencernaan" },
-  { icon: <Stethoscope className="w-5 h-5 text-purple-600" />, title: "Alergi" },
+  { icon: "/logo.png", title: "Batuk, Pilek & Flu" },
+  { icon: "/logo.png", title: "Demam & Nyeri" },
+  { icon: "/logo.png", title: "Masalah Pencernaan" },
+  { icon: "/logo.png", title: "Alergi" },
 ];
 
 export default function ProdukPage() {
@@ -34,15 +40,51 @@ export default function ProdukPage() {
         {/* Header Kategori */}
         <h1 className="text-2xl font-bold mb-6 px-2 md:px-0">Kategori</h1>
 
-        {/* Kategori horizontal */}
+        {/* Kategori horizontal dengan item + untuk tambah kategori */}
         <div className="overflow-x-auto mb-8 px-2 md:px-0">
           <div className="flex space-x-6 w-max min-w-full pb-4">
-            {/* Tombol Tambah */}
-            <Link href="/admin/produk/jenis-obat/tambah">
-              <Button className="rounded-xl w-24 h-24 text-4xl min-w-[6rem] flex items-center justify-center bg-blue-600 text-white hover:bg-blue-700">
-                +
-              </Button>
-            </Link>
+            {/* Item Tambah Kategori sebagai gambar + modal */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <div className="w-24 h-24 bg-blue-50 border border-blue-200 rounded-full flex items-center justify-center shadow-sm cursor-pointer text-4xl font-bold text-blue-600 select-none">
+                  +
+                </div>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Tambah Kategori</DialogTitle>
+                  <DialogDescription>
+                    Masukkan nama kategori baru dan upload ikon kategori.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  {/* Nama Kategori */}
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="kategori" className="text-right">
+                      Nama Kategori
+                    </Label>
+                    <Input id="kategori" className="col-span-3" placeholder="Masukkan nama kategori" />
+                  </div>
+
+                  {/* Upload Icon */}
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="iconUpload" className="text-right">
+                      Upload Icon
+                    </Label>
+                    <input
+                      id="iconUpload"
+                      type="file"
+                      accept="image/*"
+                      className="col-span-3 cursor-pointer"
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button type="button">Simpan</Button>
+                </DialogFooter>
+              </DialogContent>
+
+            </Dialog>
 
             {/* Daftar kategori */}
             {categories.map((cat, i) => (
@@ -50,8 +92,8 @@ export default function ProdukPage() {
                 key={i}
                 className="flex flex-col items-center min-w-[6rem] space-y-2"
               >
-                <div className="w-24 h-24 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-center shadow-sm">
-                  {cat.icon}
+                <div className="w-24 h-24 bg-blue-50 border border-blue-200 rounded-full flex items-center justify-center shadow-sm">
+                  <Image src={cat.icon} alt={cat.label} width={40} height={40} />
                 </div>
                 <span className="text-sm text-center w-28 whitespace-normal font-medium text-gray-700">
                   {cat.label}
@@ -61,14 +103,53 @@ export default function ProdukPage() {
           </div>
         </div>
 
-        {/* Judul + Tombol Tambah Jenis */}
+        {/* Judul Obat & Perawatan + tombol tambah jenis */}
         <div className="flex items-center justify-between mb-6 px-2 md:px-0">
           <h2 className="text-xl font-semibold">Obat & Perawatan</h2>
-          <Link href="/admin/produk/jenis-obat/tambah">
-            <Button variant="default" className="text-sm">
-              Tambah Jenis
-            </Button>
-          </Link>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="default" className="text-sm">
+                Tambah Jenis
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Tambah Jenis Obat</DialogTitle>
+                <DialogDescription>
+                  Pilih kategori dan masukkan nama jenis obat baru.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="kategoriSelect" className="text-right">
+                    Kategori
+                  </Label>
+                  <Select>
+                    <SelectTrigger className="w-[280px]">
+                      <SelectValue placeholder="Pilih Kategori.." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((cat, idx) => (
+                        <SelectItem key={idx} value={cat.label}>
+                          {cat.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="jenisNama" className="text-right">
+                    Nama Jenis
+                  </Label>
+                  <Input id="jenisNama" className="col-span-3" />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button type="button">Simpan</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Kartu Obat */}
@@ -78,7 +159,7 @@ export default function ProdukPage() {
               <CardContent className="p-4">
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-10 h-10 bg-blue-100 rounded-md flex items-center justify-center">
-                    {category.icon}
+                    <Image src={category.icon} alt={category.title} width={32} height={32} />
                   </div>
                   <h3 className="font-semibold text-md text-gray-800">
                     {category.title}
