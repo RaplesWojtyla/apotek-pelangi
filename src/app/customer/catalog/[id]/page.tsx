@@ -46,7 +46,7 @@ export default function page() {
         if (!productDetail?.detail_barang) return
 
         try {
-            const res = fetch('/api/cart', {
+            const res = fetch('/api/customer/cart', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
