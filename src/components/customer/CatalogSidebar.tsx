@@ -6,13 +6,17 @@ import SidebarContent from "./SidebarContent";
 import { Category, countAllCategories, getCategories } from "@/action/category.action";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useUser } from "@clerk/nextjs";
 
 export const CatalogSidebar = () => {
 	const [categories, setCategories] = useState<Category[]>([])
 	const [isLoading, setIsLoading] = useState<boolean>(true)
+	const { user } = useUser()
 
 	useEffect(() => {
 		const fetchCategories = async () => {
+			setIsLoading(true)
+
 			try {
 				const take = await countAllCategories()
 				const data = await getCategories(take)
@@ -41,7 +45,10 @@ export const CatalogSidebar = () => {
 						<SheetHeader hidden>
 							<SheetTitle>Mobile Sidebar</SheetTitle>
 						</SheetHeader>
-						<SidebarContent categories={categories} isLoading={isLoading} />
+						<SidebarContent 
+						categories={categories} 
+						isLoading={isLoading} 
+						userName={user?.firstName ?? "GUEST"} />
 					</SheetContent>
 				</Sheet>
 			</div>
@@ -50,7 +57,11 @@ export const CatalogSidebar = () => {
 			<div className="hidden lg:block p-4 w-64 lg:flex-shrink-0">
 				<Card className="w-full overflow-hidden shadow-lg rounded-xl">
 					<CardContent className="p-4 h-full overflow-y-auto max-h-[80vh]">
-						<SidebarContent categories={categories} isLoading={isLoading} />
+						<SidebarContent 
+						categories={categories} 
+						isLoading={isLoading} 
+						userName={user?.firstName ?? "GUEST"} 
+					/>
 					</CardContent>
 				</Card>
 			</div>

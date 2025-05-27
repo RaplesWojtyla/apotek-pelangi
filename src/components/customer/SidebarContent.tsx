@@ -11,7 +11,7 @@ import { Layers} from "lucide-react";
 import { Separator } from "../ui/separator";
 import { UserButton } from "@clerk/nextjs";
 
-const SidebarContent = ({ categories, isLoading }: { categories: Category[], isLoading: boolean }) => {
+const SidebarContent = ({ categories, isLoading, userName }: { categories: Category[], isLoading: boolean, userName: string }) => {
 	return (
 		<div className="flex flex-col max-h-full">
 			{/* Logo / Header */}
@@ -22,7 +22,7 @@ const SidebarContent = ({ categories, isLoading }: { categories: Category[], isL
 					</div>
 					<div>
 						<h1 className="text-lg font-bold text-gray-800 leading-none">
-							Nama User
+							{userName}
 						</h1>
 						<p className="text-xs text-gray-500">Customer</p>
 					</div>

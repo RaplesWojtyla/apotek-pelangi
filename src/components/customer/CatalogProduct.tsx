@@ -6,15 +6,21 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import SkeletonCard from "@/components/skeleton/SkeletonCard";
 
-const CatalogProducts = ({ search, currPage }: { search: string, currPage: number }) => {
+const CatalogProducts = ({ 
+	search, currPage, take 
+}: { 
+	search: string, currPage: number, take: number 
+}) => {
 	const [products, setProducts] = useState<Product[]>([])
 	const [isFetchingProducts, setIsFetchingProducts] = useState<boolean>(true)
 	const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false)
 
 	useEffect(() => {
 		const fetchProducts = async () => {
+			setIsFetchingProducts(true)
+
 			try {
-				const data = await getProducts({ matcher: search, page: currPage })
+				const data = await getProducts({ matcher: search, page: currPage, take: take })
 
 				setProducts(data)
 			} catch (error) {
@@ -33,7 +39,7 @@ const CatalogProducts = ({ search, currPage }: { search: string, currPage: numbe
 		}
 
 		fetchProducts()
-	}, [])
+	}, [search, currPage])
 
 	if (isFetchingProducts) return <SkeletonCard />
 

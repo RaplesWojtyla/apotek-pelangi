@@ -9,7 +9,7 @@ import { UserButton } from "@clerk/nextjs";
 import { ArrowLeftRight, BookImage, Layers } from "lucide-react";
 import Link from "next/link";
 
-const SidebarContent = ({ categories }: { categories: Category[] }) => {
+const SidebarContent = ({ categories, userName }: { categories: Category[], userName: string }) => {
 	return (
 		<div className="flex flex-col max-h-full">
 			{/* Logo / Header */}
@@ -20,7 +20,7 @@ const SidebarContent = ({ categories }: { categories: Category[] }) => {
 					</div>
 					<div>
 						<h1 className="text-lg font-bold text-gray-800 leading-none">
-							Nama User
+							{userName}
 						</h1>
 						<p className="text-xs text-gray-500">Kasir</p>
 					</div>

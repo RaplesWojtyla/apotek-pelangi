@@ -5,16 +5,18 @@ import { Product } from "@/action/product.action";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useCartContext } from "@/context/CartContext";
 
 export default function ProductCard({ product }: { product: Product }) {
 	const router = useRouter()
+	const { fetchAndUpdateCartCount } = useCartContext()
 
 	const handleDetail = (id: string) => {
 		router.push(`/customer/catalog/${id}`)
 	}
 
 	async function handleAddToCart() {
-		const res = fetch('/api/cart', {
+		const res = fetch('/api/customer/cart', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -25,13 +27,13 @@ export default function ProductCard({ product }: { product: Product }) {
 				sumber: 'MANUAL'
 			})
 		}).then(async (res) => {
-			// await new Promise(ree => setTimeout(ree, 3000))
 			if (!res.ok) {
-				const err = await res.json().catch(() => ({ message: 'Terjadi kesalahan pada server.' }))
+				const err: any = await res.json().catch()
 
-				throw new Error(err.message || 'Gagal menambahkan data ke dalam keranjang!')
+				throw new Error(err.error || 'Gagal menambahkan data ke dalam keranjang!')
 			}
 
+			await fetchAndUpdateCartCount(false)
 			return res.json()
 		})
 
@@ -42,7 +44,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
 				return "Berhasil ditambahkan ke keranjang!"
 			},
-			error: (err) => err.message || "Gagal menambahkan ke keranjang!"
+			error: (err: any) => err.message || "Gagal menambahkan ke keranjang!"
 		}, {
 			style: {
 				minWidth: '250px'
