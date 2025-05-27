@@ -32,7 +32,7 @@ export const CatalogSidebar = () => {
 	return (
 		<>
 			{/* Mobile Button */}
-			<div className="lg:hidden p-4">
+			<div className="lg:hidden p-4 fixed top-3 left-4">
 				<Sheet>
 					<SheetTrigger className="bg-cyan-600 text-white px-4 py-2 rounded-lg shadow">
 						☰
