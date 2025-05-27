@@ -1,17 +1,19 @@
 'use client'
 
-import { UserButton } from '@clerk/nextjs';
+import { UserButton, useUser } from '@clerk/nextjs';
 import { Separator } from '../ui/separator';
 import { Sheet } from '../ui/sheet';
 import { ShoppingCart, Bell, MapPinned, LayoutDashboard, PackageSearch, Menu, History } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { SheetContent, SheetTrigger } from '../ui/sheet';
+import { useCartContext } from '@/context/CartContext';
 import { useState } from 'react';
 
 export const NavbarCustomer = () => {
-	const cartItemCount = 3;
-	const [isOpen, setIsOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState(false)
+	const { cartItemsCount, isLoadingCartCount } = useCartContext()
+	const { isSignedIn } = useUser()
 
 	return (
 		<>
@@ -56,9 +58,14 @@ export const NavbarCustomer = () => {
 							<Link href="/customer/cart" aria-label="Keranjang">
 								<ShoppingCart className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
 							</Link>
-							{cartItemCount > 0 && (
+							{!isLoadingCartCount && isSignedIn && cartItemsCount > 0 && (
 								<span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5">
-									{cartItemCount}
+									{cartItemsCount}
+								</span>
+							)}
+							{isLoadingCartCount && isSignedIn && (
+								<span className="absolute -top-2 -right-2 bg-gray-300 text-transparent rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+									0
 								</span>
 							)}
 						</div>

@@ -9,7 +9,7 @@ export const syncUser = async () => {
 	try {
 		const user = await currentUser();
 
-		if (!user) return;
+		if (!user) return null
 
 		const client = await clerkClient();
 		const role = user.publicMetadata?.metadata?.role ?? "CUSTOMER";
@@ -53,6 +53,8 @@ export const getUserByClerkId = async (clerkId: string) => {
 				clerkId,
 			},
 		});
+
+		if (!user) return syncUser()
 
 		return user;
 	} catch (error) {
@@ -105,82 +107,77 @@ export const getDbUserId = async () => {
 }
 
 export const setUserAsCashier = async (clerkId: string) => {
-  try {
-    const updatedKasir = await prisma.user.update({
-      where: {
-        clerkId,
-      },
-      data: {
-        role: LevelUser.KASIR,
-      },
-    });
-	revalidatePath('/')
+	try {
+		const updatedKasir = await prisma.user.update({
+			where: {
+				clerkId,
+			},
+			data: {
+				role: LevelUser.KASIR,
+			},
+		});
+		revalidatePath('/')
 
-	return {
-		success: true,
-		status: 200,
-		message: "Role User berhasil diperbarui",
-		data: updatedKasir,
+		return {
+			success: true,
+			status: 200,
+			message: "Role User berhasil diperbarui",
+			data: updatedKasir,
+		}
+	} catch (error) {
+		console.error("[setUserAsKasir] error:", error);
+		throw new Error("Gagal mengubah user menjadi kasir.");
 	}
-  } catch (error) {
-    console.error("[setUserAsKasir] error:", error);
-    throw new Error("Gagal mengubah user menjadi kasir.");
-  }
 };
 
 export const updateUser = async (
-  clerkId: string,
-  nama: string,
-  no_hp: string,
-  alamat: string
+	clerkId: string,
+	nama: string,
+	no_hp: string,
+	alamat: string
 ) => {
-  try {
-    const updatedUser = await prisma.user.update({
-      where: { clerkId },
-      data: {
-        nama,
-        no_hp,
-        alamat,
-      },
-    });
-	revalidatePath('/')
+	try {
+		const updatedUser = await prisma.user.update({
+			where: { clerkId },
+			data: {
+				nama,
+				no_hp,
+				alamat,
+			},
+		});
+		revalidatePath('/')
 
-	return {
-		success: true,
-		status: 200,
-		message: "Data berhasil diperbarui",
-		data: updatedUser,
+		return {
+			success: true,
+			status: 200,
+			message: "Data berhasil diperbarui",
+			data: updatedUser,
+		}
+	} catch (error) {
+		console.error("[updateKasir] error:", error);
+		throw new Error("Gagal mengupdate data kasir.");
 	}
-  } catch (error) {
-    console.error("[updateKasir] error:", error);
-    throw new Error("Gagal mengupdate data kasir.");
-  }
 };
 
 export const nonActiveUser = async (clerkId: string) => {
-  try {
-    const nonAktifUser = await prisma.user.update({
-      where: { clerkId },
-      data: {
-        status: "NONAKTIF",
-      },
-    });
-	revalidatePath('/')
+	try {
+		const nonAktifUser = await prisma.user.update({
+			where: { clerkId },
+			data: {
+				status: "NONAKTIF",
+			},
+		});
+		revalidatePath('/')
 
-	return {
-		success: true,
-		status: 200,
-		message: "User berhasil dinonaktifkan",
-		data: nonAktifUser,
+		return {
+			success: true,
+			status: 200,
+			message: "User berhasil dinonaktifkan",
+			data: nonAktifUser,
+		}
+	} catch (error) {
+		console.error("[deleteKasir] error:", error);
+		throw new Error("Gagal menghapus kasir.");
 	}
-  } catch (error) {
-    console.error("[deleteKasir] error:", error);
-    throw new Error("Gagal menghapus kasir.");
-  }
 };
-
-
-
-
-
 
