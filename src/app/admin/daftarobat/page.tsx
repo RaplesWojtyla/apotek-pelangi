@@ -46,22 +46,21 @@ const dummyData = [
 
 function StatCardJumlahObat({ jumlah }: { jumlah: number }) {
   return (
-    <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm border w-full max-w-[160px] md:max-w-[220px] mb-4">
-      <div className="p-2 rounded-full bg-blue-100">
-        <Package className="text-blue-600 w-4 h-4" />
+    <div className="flex items-center gap-4 p-6 bg-white rounded-xl shadow-sm border w-full md:w-[260px] mb-6">
+      <div className="p-4 rounded-full bg-blue-100">
+        <Package className="text-blue-600 w-6 h-6" />
       </div>
       <div>
-        <p className="text-xs text-muted-foreground">Jumlah Obat</p>
-        <h3 className="text-base font-bold">{jumlah}</h3>
+        <p className="text-sm text-muted-foreground">Jumlah Obat</p>
+        <h3 className="text-2xl font-bold">{jumlah}</h3>
       </div>
     </div>
   );
 }
 
-
 export default function DaftarObat() {
   return (
-    <div className="p-4 max-w-[1240px]">
+    <div className="p-4 max-w-[1204px]">
       <h1 className="text-2xl font-bold mb-4">Daftar Produk</h1>
 
       <StatCardJumlahObat jumlah={dummyData.length} />
@@ -69,7 +68,7 @@ export default function DaftarObat() {
       {/* Search dan Tambah */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-2 w-full md:w-auto">
-          <Input placeholder="Cari obat..." className="w-full max-w-xs sm:w-64" />
+          <Input placeholder="Cari obat..." className="w-full md:w-64" />
           <Button variant="outline" size="icon">
             <Search className="w-4 h-4" />
           </Button>
@@ -82,8 +81,9 @@ export default function DaftarObat() {
           </Button>
         </Link>
       </div>
-    
-        <Table className="table-fixed w-full">
+
+      <div className="">
+        <Table>
           <TableCaption></TableCaption>
           <TableHeader>
             <TableRow>
@@ -128,6 +128,8 @@ export default function DaftarObat() {
           </TableBody>
         </Table>
 
+
+      </div>
 
 
     </div>
