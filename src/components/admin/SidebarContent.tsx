@@ -32,8 +32,8 @@ export default function SidebarContent() {
 
         <div className="space-y-2">
           <SidebarLink href="/admin" icon={<Home size={16} />} label="Dashboard" />
-          <SidebarLink href="/admin/daftarobat" icon={<ShoppingCart size={16} />} label="Transaksi" />
-          <SidebarLink href="/admin/jenisobat" icon={<ListOrdered size={16} />} label="Produk" />
+          <SidebarLink href="/admin/daftarobat" icon={<ListOrdered size={16} />} label="Produk" />
+          <SidebarLink href="/admin/jenisobat" icon={<ShoppingCart size={16} />} label="Kategori" />
           <SidebarLink href="/admin/daftaruser" icon={<Users size={16} />} label="Pengguna" />
           <SidebarLink href="/admin/logpembelian" icon={<FileText size={16} />} label="Log Pembelian" />
           <SidebarLink href="/admin/logpenjualan" icon={<FileText size={16} />} label="Log Penjualan" />

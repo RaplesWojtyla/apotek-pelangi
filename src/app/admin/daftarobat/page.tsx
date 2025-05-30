@@ -1,153 +1,137 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Pencil, Trash2, Plus, Search } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-  DialogFooter
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
+  import React from "react";
+  import { Button } from "@/components/ui/button";
+  import { Input } from "@/components/ui/input";
+  import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+  import { Pencil, Trash2, Plus, Search, Package } from "lucide-react";
+  import Link from "next/link";
 
-const dummyData = [
-  {
-    id: 1,
-    nama: "Paracetamol",
-    kategori: "Obat & Perawatan",
-    stok: 100,
-    harga: 5000,
-  },
-  {
-    id: 2,
-    nama: "Amoxicillin",
-    kategori: "Obat & Perawatan",
-    stok: 50,
-    harga: 12000,
-  },
-  {
-    id: 3,
-    nama: "Hansaplast",
-    kategori: "Peralatan",
-    stok: 200,
-    harga: 2000,
-  },
-];
+  const dummyData = [
+    {
+      id: "OBT001",
+      deskripsi: "Paracetamol 500mg - Obat penurun demam dan pereda nyeri",
+      indikasi_umum: "Demam, sakit kepala, nyeri ringan hingga sedang",
+      komposisi: "Paracetamol 500mg",
+      dosis: "Dewasa: 1-2 tablet 3-4 kali sehari",
+      aturan_pakai: "Diminum sesudah makan",
+      golongan: "Bebas Terbatas",
+      kemasan: "Strip 10 tablet",
+      manufaktur: "PT Kimia Farma",
+      no_bpom: "DTL0332706637A1"
+    },
+    {
+      id: "OBT002",
+      deskripsi: "Amoxicillin 500mg - Antibiotik golongan penisilin",
+      indikasi_umum: "Infeksi bakteri pada saluran pernapasan, kulit, dan jaringan lunak",
+      komposisi: "Amoxicillin trihydrate setara dengan amoxicillin 500mg",
+      dosis: "Dewasa: 250-500mg setiap 8 jam",
+      aturan_pakai: "Diminum dengan atau tanpa makanan",
+      golongan: "Keras",
+      kemasan: "Kapsul 10's",
+      manufaktur: "PT Indofarma",
+      no_bpom: "GKL0208505843A1"
+    },
+    {
+      id: "OBT003",
+      deskripsi: "Hansaplast Classic - Plester luka waterproof",
+      indikasi_umum: "Penutup luka kecil dan goresan",
+      komposisi: "Adhesive tape dengan pad penyerap",
+      dosis: "Sesuai kebutuhan",
+      aturan_pakai: "Tempelkan pada kulit yang bersih dan kering",
+      golongan: "Alat Kesehatan",
+      kemasan: "Box 20 strips",
+      manufaktur: "PT Hansaplast Indonesia",
+      no_bpom: "AKD20801816454"
+    }
+  ];
 
-export default function DaftarObat() {
-  return (
-    <>
-      <h1 className="text-2xl font-bold mb-4">Daftar Obat</h1>
-
-      {/* Search + Tambah */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-2 w-full md:w-auto">
-          <Input placeholder="Cari obat..." className="w-full md:w-64" />
-          <Button variant="outline" size="icon">
-            <Search className="w-4 h-4" />
-          </Button>
+  function StatCardJumlahObat({ jumlah }: { jumlah: number }) {
+    return (
+      <div className="flex items-center gap-4 p-6 bg-white rounded-xl shadow-sm border w-full md:w-[260px] mb-6">
+        <div className="p-4 rounded-full bg-blue-100">
+          <Package className="text-blue-600 w-6 h-6" />
         </div>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700">
+        <div>
+          <p className="text-sm text-muted-foreground">Jumlah Obat</p>
+          <h3 className="text-2xl font-bold">{jumlah}</h3>
+        </div>
+      </div>
+    );
+  }
+
+  export default function DaftarObat() {
+    return (
+      <div className="p-4 max-w-[1204px]">
+        <h1 className="text-2xl font-bold mb-4">Daftar Produk</h1>
+
+        <StatCardJumlahObat jumlah={dummyData.length} />
+
+        {/* Search dan Tambah */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+          <div className="flex items-center gap-2 w-full md:w-auto">
+            <Input placeholder="Cari obat..." className="w-full md:w-64" />
+            <Button variant="outline" size="icon">
+              <Search className="w-4 h-4" />
+            </Button>
+          </div>
+
+          <Link href="/admin/daftarobat/tambah" passHref>
+            <Button className="flex items-center gap-2 bg-cyan-500 text-white hover:bg-cyan-600">
               <Plus className="w-4 h-4" />
               Tambah Obat
             </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>Tambah Obat</DialogTitle>
-              <DialogDescription>
-                Masukkan data obat yang ingin ditambahkan.
-              </DialogDescription>
-            </DialogHeader>
+          </Link>
+        </div>
 
-            <form className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Nama Obat</label>
-                <Input placeholder="Contoh: Paracetamol" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Kategori</label>
-                <Select>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Pilih Kategori" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Obat & Perawatan" className="hover:bg-blue-100">Obat & Perawatan</SelectItem>
-                    <SelectItem value="Peralatan" className="hover:bg-blue-100">Peralatan</SelectItem>
-                    <SelectItem value="Susu" className="hover:bg-blue-100">Susu</SelectItem>
-                    <SelectItem value="Weight Management" className="hover:bg-blue-100">Weight Management</SelectItem>
-                    <SelectItem value="Kesehatan Seksual" className="hover:bg-blue-100">Kesehatan Seksual</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Stok</label>
-                <Input type="number" placeholder="Masukkan stok" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Harga</label>
-                <Input type="number" placeholder="Masukkan harga" />
-              </div>
-            </form>
+        <div className="">
+          <Table>
+            <TableCaption></TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead>No</TableHead>
+                <TableHead>Deskripsi</TableHead>
+                <TableHead>Indikasi</TableHead>
+                <TableHead>Komposisi</TableHead>
+                <TableHead>Dosis</TableHead>
+                <TableHead>Aturan Pakai</TableHead>
+                <TableHead>Golongan</TableHead>
+                <TableHead>Kemasan</TableHead>
+                <TableHead>Manufaktur</TableHead>
+                <TableHead>No. BPOM</TableHead>
+                <TableHead>Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {dummyData.map((obat, index) => (
+                <TableRow key={obat.id}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{obat.deskripsi}</TableCell>
+                  <TableCell>{obat.indikasi_umum}</TableCell>
+                  <TableCell>{obat.komposisi}</TableCell>
+                  <TableCell>{obat.dosis}</TableCell>
+                  <TableCell>{obat.aturan_pakai}</TableCell>
+                  <TableCell>{obat.golongan}</TableCell>
+                  <TableCell>{obat.kemasan}</TableCell>
+                  <TableCell>{obat.manufaktur}</TableCell>
+                  <TableCell>{obat.no_bpom}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      <Button size="sm" variant="outline">
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button size="sm" variant="destructive">
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
 
-            <DialogFooter className="mt-4">
-              <DialogClose asChild>
-                <Button variant="outline">Batal</Button>
-              </DialogClose>
-              <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700">
-                Simpan
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+
+        </div>
+
+
       </div>
-
-      {/* Tabel Obat */}
-      <div className="overflow-x-auto rounded-lg shadow">
-        <table className="min-w-full bg-white text-sm text-left">
-          <thead className="bg-gray-100 text-gray-600">
-            <tr>
-              <th className="px-6 py-3">No</th>
-              <th className="px-6 py-3">Nama Obat</th>
-              <th className="px-6 py-3">Kategori</th>
-              <th className="px-6 py-3">Stok</th>
-              <th className="px-6 py-3">Harga</th>
-              <th className="px-6 py-3">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dummyData.map((obat, index) => (
-              <tr key={obat.id} className="border-t hover:bg-gray-50">
-                <td className="px-6 py-4">{index + 1}</td>
-                <td className="px-6 py-4">{obat.nama}</td>
-                <td className="px-6 py-4">{obat.kategori}</td>
-                <td className="px-6 py-4">{obat.stok}</td>
-                <td className="px-6 py-4">Rp{obat.harga.toLocaleString()}</td>
-                <td className="px-6 py-4 flex gap-2">
-                  <Button size="sm" variant="outline">
-                    <Pencil className="w-4 h-4" />
-                  </Button>
-                  <Button size="sm" variant="destructive">
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </>
-  );
-}
+    );
+  }

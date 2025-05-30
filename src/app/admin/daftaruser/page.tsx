@@ -1,27 +1,8 @@
 import React from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Pencil, Trash2, Plus, Search } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-  DialogFooter
-} from "@/components/ui/dialog"
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-
-
-
+import { Pencil, Trash2, Plus, Search, User } from "lucide-react";
 
 const dummyUsers = [
   {
@@ -42,14 +23,32 @@ const dummyUsers = [
     id: 3,
     nama: "Customer",
     email: "customer@example.com",
-    role: "customer",
+    role: "Customer",
     status: "Nonaktif",
   },
 ];
 
+// StatCard komponen, mirip contoh sebelumnya
+function StatCardJumlahUser({ jumlah }: { jumlah: number }) {
+  return (
+    <div className="flex items-center gap-4 p-6 bg-white rounded-xl shadow-sm border w-full md:w-[260px] mb-6">
+      <div className="p-4 rounded-full bg-blue-100">
+        <User className="text-blue-600 w-6 h-6" />
+      </div>
+      <div>
+        <p className="text-sm text-muted-foreground">Jumlah Pengguna</p>
+        <h3 className="text-2xl font-bold">{jumlah}</h3>
+      </div>
+    </div>
+  );
+}
+
 export default function DaftarUsers() {
   return (
-    <>
+    <div className="p-4 max-w-[1240px] mx-auto">
+      {/* StatCard */}
+      <StatCardJumlahUser jumlah={dummyUsers.length} />
+
       {/* Judul */}
       <h1 className="text-2xl font-bold mb-4">Daftar Pengguna</h1>
 
@@ -61,75 +60,19 @@ export default function DaftarUsers() {
             <Search className="w-4 h-4" />
           </Button>
         </div>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700">
-              <Plus className="w-4 h-4" />
+        <Link href="/admin/daftaruser/tambah" passHref>
+          <Button asChild className="flex items-center gap-2 bg-cyan-500 text-white hover:bg-cyan-600">
+            <span>
+              <Plus className="w-4 h-4 inline mr-1" />
               Tambah User
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>Tambah Pengguna</DialogTitle>
-              <DialogDescription>
-                Masukkan informasi untuk pengguna baru.
-              </DialogDescription>
-            </DialogHeader>
-
-            <form className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Nama</label>
-                <Input placeholder="Nama lengkap" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Email</label>
-                <Input type="email" placeholder="Email pengguna" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Role</label>
-                <Select>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Pilih Role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Admin" className="hover:bg-blue-100 duration-200 hover:text-black focus:bg-blue-100 ">Admin</SelectItem>
-                    <SelectItem value="Kasir" className="hover:bg-blue-100 duration-200 hover:text-black focus:bg-blue-100 "> Kasir</SelectItem>
-                    <SelectItem value="Customer" className="hover:bg-blue-100 duration-200 hover:text-black focus:bg-blue-100 ">Customer</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Status</label>
-                <Select>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Pilih Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Aktif" className="hover:bg-blue-100 duration-200 hover:text-black focus:bg-blue-100">Aktif</SelectItem>
-                    <SelectItem value="Nonaktif" className="hover:bg-blue-100 duration-200 hover:text-black focus:bg-blue-100 ">Nonaktif</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-            </form>
-
-            <DialogFooter className="mt-4">
-              <DialogClose asChild>
-                <Button variant="outline">Batal</Button>
-              </DialogClose>
-              <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700">
-                Simpan
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
+            </span>
+          </Button>
+        </Link>
       </div>
 
       {/* Tabel */}
-      <div className="overflow-x-auto rounded-lg shadow">
-        <table className="min-w-full bg-white text-sm text-left">
+      <div className="overflow-x-auto w-full rounded-lg shadow">
+        <table className="min-w-[1204px] bg-white text-sm text-left">
           <thead className="bg-gray-100 text-gray-600">
             <tr>
               <th className="px-6 py-3">No</th>
@@ -149,10 +92,11 @@ export default function DaftarUsers() {
                 <td className="px-6 py-4">{user.role}</td>
                 <td className="px-6 py-4">
                   <span
-                    className={`px-2 py-1 rounded text-xs font-medium ${user.status === "Aktif"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
-                      }`}
+                    className={`px-2 py-1 rounded text-xs font-medium ${
+                      user.status === "Aktif"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    }`}
                   >
                     {user.status}
                   </span>
@@ -170,6 +114,6 @@ export default function DaftarUsers() {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }

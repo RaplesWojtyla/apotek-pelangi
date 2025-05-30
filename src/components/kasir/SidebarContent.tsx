@@ -1,3 +1,5 @@
+'use client'
+
 import { Category } from "@/action/category.action";
 import {
 	Accordion,
@@ -8,8 +10,17 @@ import {
 import { UserButton } from "@clerk/nextjs";
 import { ArrowLeftRight, BookImage, Layers } from "lucide-react";
 import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
 
-const SidebarContent = ({ categories, userName }: { categories: Category[], userName: string }) => {
+const SidebarContent = ({
+	categories,
+	isLoading,
+	userName,
+}: {
+	categories: Category[];
+	isLoading: boolean;
+	userName: string;
+}) => {
 	return (
 		<div className="flex flex-col max-h-full">
 			{/* Logo / Header */}
@@ -38,9 +49,11 @@ const SidebarContent = ({ categories, userName }: { categories: Category[], user
 					<span>Semua Produk</span>
 				</Link>
 
-				{categories.map(category => (
+				{isLoading ? (
+					<p className="text-sm text-gray-500">Memuat kategori...</p>
+				) : categories.map((category) => (
 					<Accordion key={category.id} type="multiple" className="w-full">
-						<AccordionItem value="kategori-obat">
+						<AccordionItem value={`kategori-${category.id}`}>
 							<AccordionTrigger className="hover:no-underline">
 								<div className="flex items-center text-gray-800 hover:text-cyan-600 space-x-2 text-sm">
 									<Layers size={16} />
@@ -48,10 +61,13 @@ const SidebarContent = ({ categories, userName }: { categories: Category[], user
 								</div>
 							</AccordionTrigger>
 							<AccordionContent className="ml-6 space-y-1 text-sm">
-								{category.jenis_barang.map(jB => (
-									<p key={jB.id}>
-										{jB.nama_jenis}
-									</p>
+								{category.jenis_barang.map((jB) => (
+									<div key={jB.id}>
+										<p className="block text-gray-700 hover:text-cyan-600 transition cursor-pointer mb-1">
+											{jB.nama_jenis}
+										</p>
+										<Separator />
+									</div>
 								))}
 							</AccordionContent>
 						</AccordionItem>
@@ -70,6 +86,6 @@ const SidebarContent = ({ categories, userName }: { categories: Category[], user
 			</div>
 		</div>
 	);
-}
+};
 
-export default SidebarContent
+export default SidebarContent;
