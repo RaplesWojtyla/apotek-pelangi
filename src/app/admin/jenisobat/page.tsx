@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus } from "lucide-react";
 
 const categories = [
   { label: "Semua Kategori", icon: "/logo.png" },
@@ -40,10 +41,8 @@ export default function ProdukPage() {
         {/* Header Kategori */}
         <h1 className="text-2xl font-bold mb-6 px-2 md:px-0">Kategori</h1>
 
-        {/* Kategori horizontal dengan item + untuk tambah kategori */}
         <div className="overflow-x-auto mb-8 px-2 md:px-0">
           <div className="flex space-x-6 w-max min-w-full pb-4">
-            {/* Item Tambah Kategori sebagai gambar + modal */}
             <Dialog>
               <DialogTrigger asChild>
                 <div className="w-24 h-24 bg-blue-50 border border-blue-200 rounded-full flex items-center justify-center shadow-sm cursor-pointer text-4xl font-bold text-blue-600 select-none">
@@ -109,9 +108,12 @@ export default function ProdukPage() {
 
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="default" className="text-sm">
-                Tambah Jenis
-              </Button>
+              <Button asChild className="flex items-center gap-2 bg-cyan-500 text-white hover:bg-cyan-600">
+            <span>
+              <Plus className="w-4 h-4 inline mr-1" />
+              Tambah Jenis
+            </span>
+          </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>

@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ClipboardList } from "lucide-react"; // icon statcard
+import { ClipboardList, Plus, Search } from "lucide-react"; 
 
 const fakturPembelian = [
   {
@@ -76,15 +76,25 @@ function StatCardJumlahPembelian({ jumlah }: { jumlah: number }) {
 export default function LogPembelianPage() {
   return (
     <div className="p-4 max-w-[1240px] mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Log Pembelian Obat</h1>
+      <h1 className="text-2xl font-bold mb-4">Log Pembelian</h1>
       {/* StatCard */}
       <StatCardJumlahPembelian jumlah={fakturPembelian.length} />
 
 
 
-      <div className="flex items-center gap-2 mb-4">
-        <Input placeholder="Cari vendor atau user..." className="max-w-md" />
-        <Button className="bg-blue-600 text-white hover:bg-blue-700">Cari</Button>
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <Input placeholder="Cari log penmbelian..." className="w-full md:w-64" />
+          <Button variant="outline" size="icon">
+            <Search className="w-4 h-4" />
+          </Button>
+        </div>
+          <Button asChild className="flex items-center gap-2 bg-cyan-500 text-white hover:bg-cyan-600">
+            <span>
+              <Plus className="w-4 h-4 inline mr-1" />
+              Tambah Pembelian
+            </span>
+          </Button>
       </div>
 
       <div className="overflow-x-auto rounded-lg border">
