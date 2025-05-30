@@ -46,11 +46,11 @@ function StatCardJumlahUser({ jumlah }: { jumlah: number }) {
 export default function DaftarUsers() {
   return (
     <div className="p-4 max-w-[1240px] mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Daftar Pengguna</h1>
       {/* StatCard */}
       <StatCardJumlahUser jumlah={dummyUsers.length} />
 
       {/* Judul */}
-      <h1 className="text-2xl font-bold mb-4">Daftar Pengguna</h1>
 
       {/* Search + Tambah */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
