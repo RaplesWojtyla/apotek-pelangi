@@ -1,90 +1,265 @@
+'use client'
+
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { CreditCard } from "lucide-react";
+import { useCartContext } from "@/context/CartContext";
+import { useUser } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
+import { DbUser, getUserByClerkId } from "@/action/user.action";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { Textarea } from "@/components/ui/textarea";
+import { Loader2, MoveRight } from "lucide-react";
+import Image from "next/image";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function PembayaranPage() {
-  return (
-    <div className="min-h-screen bg-white text-gray-900">
+interface CheckoutFormData {
+	namaPenerima: string
+	nomorTelepon: string
+	alamatPengiriman: string
+	metodePembayaran: string
+	keterangan?: string
+}
 
-      <div className="p-4 md:p-10 max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+export default function CheckoutPage() {
+	const { checkoutItems, clearCheckoutItemsHandler, fetchAndUpdateCartCount: updateCartBadge } = useCartContext()
+	const { user: clerkUser, isSignedIn } = useUser()
+	const router = useRouter()
 
-        <Card className="bg-gray-100 p-6 md:p-10 space-y-6 shadow-lg rounded-lg">
-          <h2 className="text-xl font-semibold">
-            Pesanan anda telah diterima. Silahkan lakukan pembayaran
-          </h2>
+	const [dbUser, setDbUser] = useState<DbUser>(null)
+	const [formData, setFormData] = useState<CheckoutFormData>({
+		namaPenerima: "",
+		nomorTelepon: "",
+		alamatPengiriman: "",
+		metodePembayaran: "",
+		keterangan: ""
+	})
 
-          <div className="mb-6">
-            <p className="font-medium text-lg">Korey Doyle</p>
-            <p className="text-sm text-gray-600">No Telepon: 084860342321</p>
-          </div>
+	const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true)
+	const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-          <hr className="border-gray-300" />
+	useEffect(() => {
+		const fetchDbUser = async () => {
+			if (isSignedIn && clerkUser) {
+				setIsLoadingUser(true)
+				try {
+					const userFromDb = await getUserByClerkId(clerkUser.id)
 
-          <div className="grid md:grid-cols-4 gap-4 text-sm text-gray-600 my-6">
-            <div className="mb-3">
-              <p className="text-gray-500">Kode Invoice:</p>
-              <p className="font-semibold text-gray-900">INV-00002</p>
-            </div>
-            <div className="mb-3">
-              <p className="text-gray-500">Tanggal Transaksi:</p>
-              <p className="font-semibold text-gray-900">22 Mei 2025</p>
-            </div>
-            <div className="mb-3">
-              <p className="text-gray-500">Total:</p>
-              <p className="font-semibold text-gray-900">Rp 164.673,00</p>
-            </div>
-            <div className="mb-3">
-              <p className="text-gray-500">Metode Pembayaran:</p>
-              <p className="font-semibold text-gray-900">GOPAY</p>
-            </div>
-          </div>
+					if (userFromDb) {
+						setDbUser(userFromDb)
 
-          <hr className="border-gray-300" />
+						setFormData(prev => ({
+							...prev,
+							namaPenerima: userFromDb.nama || clerkUser.fullName || "",
+							nomorTelepon: userFromDb.no_hp || clerkUser.phoneNumbers?.[0]?.phoneNumber || "",
+							alamatPengiriman: userFromDb.alamat || ""
+						}))
+					}
+				} catch (error) {
+					console.error("[fetchDbUser] gagal mengambil data user dari DB: ", error)
+					toast.error("Gagal memuat data pengguna")
+				} finally {
+					setIsLoadingUser(false)
+				}
+			}
+		}
 
-          <div className="grid md:grid-cols-2 gap-6 my-6">
-            <div>
-              <h3 className="text-gray-900 font-semibold mb-3">Detail Pesanan</h3>
+		fetchDbUser()
+	}, [isSignedIn, clerkUser])
 
-              <div className="flex justify-between text-sm text-gray-600 mb-2">
-                <span>Subtotal</span>
-                <span>Rp 164.673,00</span>
-              </div>
+	useEffect(() => {
+		if (!isLoadingUser && checkoutItems.length === 0) {
+			toast.error("Tidak ada item untuk checkout. Mengarahkan kembali ke keranjang.", { duration: 3000 })
+			router.replace('/customer/cart')
+		}
+	}, [checkoutItems, isLoadingUser, router])
 
-              <div className="flex justify-between text-sm text-gray-600 mb-2">
-                <span>Diskon</span>
-                <span>Rp 0,00</span>
-              </div>
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+		const { name, value } = e.target
+		setFormData(prev => ({
+			...prev,
+			[name]: value
+		}))
+	}
 
-              <hr className="border-gray-300 my-3" />
+	const handlePaymentMethodChange = (paymentMethod: string) => {
+		setFormData(prev => ({
+			...prev,
+			metodePembayaran: paymentMethod
+		}))
+	}
 
-              <div className="flex justify-between font-semibold text-gray-900">
-                <span>Total</span>
-                <span>Rp 164.673,00</span>
-              </div>
-            </div>
+	const subTotal = checkoutItems.reduce((acc, item) => acc + (item.hargaJual * item.jumlah), 0)
+	const grandTotal = subTotal
 
-            <div>
-              <h3 className="text-gray-900 font-semibold mb-3">Status Pembayaran</h3>
-              <div className="flex items-center gap-2 text-sm">
-                <CreditCard className="text-blue-600" size={18} />
-                <Badge className="bg-yellow-400 text-black font-medium">
-                  Menunggu Pembayaran
-                </Badge>
-              </div>
-            </div>
-          </div>
+	const handleBooking = async () => {
+		if (!isSignedIn) {
+			toast.error("Anda harus login untuk melanjutkan.");
+			return;
+		}
+		if (checkoutItems.length === 0) {
+			toast.error("Keranjang checkout kosong.");
+			return;
+		}
+		if (!formData.namaPenerima.trim()) {
+			toast.error("Nama penerima wajib diisi.");
+			return;
+		}
+		if (!formData.nomorTelepon.trim()) {
+			toast.error("Nomor telepon wajib diisi.");
+			return;
+		}
+		if (!formData.metodePembayaran) {
+			toast.error("Metode pembayaran wajib dipilih.");
+			return;
+		}
 
-          <div className="pt-4">
-            <Button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6">
-              Bayar Sekarang
-            </Button>
-          </div>
-        </Card>
-      </div>
+		setIsSubmitting(true)
 
-    </div>
+		const payload = {
+			items: checkoutItems.map(item => ({
+				id_cart: item.idCart,
+				id_barang:  item.idBarang,
+				jumlah: item.jumlah,
 
-  );
+			})),
+			namaPenerima: formData.namaPenerima,
+			nomorTelepon: formData.nomorTelepon,
+			metodePembayaran: formData.metodePembayaran,
+			alamat: formData.alamatPengiriman,
+			keterangan: formData.keterangan
+		}
+	}
+
+	return (
+		<div className="min-h-screen bg-gray-100 p-4 md:p-10">
+			<h1 className="text-3xl font-bold mb-6">Pembayaran</h1>
+
+			{checkoutItems.length > 0 ? (
+				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+					{/* Form: Info Penerima + Metode Pembayaran */}
+					<div className="lg:col-span-2 space-y-6">
+						<Card className="p-6 space-y-6">
+							<div>
+								<h2 className="text-xl font-bold mb-4">Informasi Penerima</h2>
+								<div className="space-y-4">
+									<div>
+										<label htmlFor="namaPenerima" className="font-medium">Nama Penerima</label>
+										<Input
+											id="namaPenerima"
+											placeholder="Masukkan nama penerima"
+											value={formData.namaPenerima}
+											onChange={handleInputChange}
+											className="mt-1"
+											disabled={isSubmitting}
+										/>
+									</div>
+									<div>
+										<label htmlFor="nomorTelepon" className="font-medium">Nomor Telepon</label>
+										<Input
+											id="nomorTelepon"
+											className="mt-1"
+											placeholder="Masukkan nomor telepon"
+											value={formData.nomorTelepon}
+											onChange={handleInputChange}
+											disabled={isSubmitting}
+										/>
+									</div>
+									<div>
+										<label htmlFor="keterangan" className="font-medium block mb-1">Catatan Tambahan (Opsional)</label>
+										<Textarea
+											id="keterangan"
+											name="keterangan"
+											value={formData.keterangan || ""}
+											onChange={handleInputChange}
+											placeholder="Catatan untuk penjual..."
+											className="mt-1"
+											disabled={isSubmitting}
+										/>
+									</div>
+								</div>
+							</div>
+
+							{/* Metode Pembayaran */}
+							<div>
+								<h2 className="text-xl font-bold mb-4">Pilih Metode Pembayaran</h2>
+								<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+									{["DANA", "GOPAY", "QRIS", "TRANSFER_BANK"].map(method => (
+										<Button
+											key={method}
+											variant={formData.metodePembayaran === method ? "default" : "outline"}
+											className="justify-between w-full py-8"
+											onClick={() => handlePaymentMethodChange(method)}
+											disabled={isSubmitting}
+										>
+											{method.replace("_", " ")} <MoveRight />
+										</Button>
+									))}
+								</div>
+								{formData.metodePembayaran && (
+									<p className="text-sm mt-2">Metode Pembayaran: <strong>{formData.metodePembayaran}</strong></p>
+								)}
+							</div>
+						</Card>
+					</div>
+
+					{/* Ringkasan Order */}
+					<div className="space-y-4">
+						<Card className="p-6">
+							<h2 className="text-xl font-bold">Order</h2>
+							<div>
+								<ScrollArea className="h-72 pr-4">
+									{checkoutItems.map(item => (
+										<div key={item.idBarang}>
+											<div
+												className="flex items-center gap-3"
+											>
+												<Image
+													src={`/${item.fotoBarang}`}
+													alt={`Img: ${item.namaBarang}`}
+													width={40}
+													height={40}
+													className="rounded object-cover"
+												/>
+												<div className="flex-grow">
+													<p className="text-sm font-medium">{item.namaBarang}</p>
+													<p className="text-xs text-gray-600">Rp {item.hargaJual.toLocaleString('id-ID')} x {item.jumlah}</p>
+												</div>
+												<p className="text-sm font-semibold">Rp {(item.hargaJual * item.jumlah).toLocaleString('id-ID')}</p>
+											</div>
+											<Separator className="my-3" />
+										</div>
+									))}
+								</ScrollArea>
+							</div>
+							<div className="flex justify-between">
+								<span>Subtotal</span>
+								<span className="font-semibold">Rp {grandTotal.toLocaleString('id-ID')}</span>
+							</div>
+							<div className="flex justify-between">
+								<span>Biaya lainnya</span>
+								<span className="font-semibold">Rp 0,00</span>
+							</div>
+							<div className="flex justify-between text-lg font-bold">
+								<span>Total</span>
+								<span>Rp {grandTotal.toLocaleString('id-ID')}</span>
+							</div>
+						</Card>
+
+						<Button
+							className="w-full text-white font-semibold text-lg py-4 cursor-pointer"
+							disabled={isSubmitting || checkoutItems.length === 0}
+						>
+							{isSubmitting && <Loader2 className="animate-spin mr-2 size-5" />}
+							{isSubmitting ? "Memproses..." : "Buat Pesanan & Bayar"}
+						</Button>
+					</div>
+				</div>
+			) : (
+				!isLoadingUser && <p className="text-center text-xl text-gray-600">Tidak ada item untuk di-checkout atau halaman di-refresh. Silakan kembali ke keranjang.</p>
+			)}
+		</div>
+	);
 }
