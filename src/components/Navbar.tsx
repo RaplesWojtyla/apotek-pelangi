@@ -42,7 +42,7 @@ export const Navbar = () => {
 					) : (
 						<>
 							<Button
-								className="text-sm text-cyan-500 font-medium mr-0 cursor-pointer"
+								className="hidden md:flex text-sm text-cyan-500 font-medium mr-0 cursor-pointer"
 								variant="link"
 								asChild
 							>
@@ -51,7 +51,7 @@ export const Navbar = () => {
 								</SignInButton>
 							</Button>
 
-							<Button className="text-sm bg-cyan-500 text-white rounded-full hover:bg-cyan-600 transition cursor-pointer">
+							<Button className="hidden md:flex text-sm bg-cyan-500 text-white rounded-full hover:bg-cyan-600 transition cursor-pointer">
 								<SignUpButton mode="modal" fallbackRedirectUrl="/sign-in/callback">
 									<span>Daftar</span>
 								</SignUpButton>
@@ -61,10 +61,6 @@ export const Navbar = () => {
 
 					{/* Mobile Menu */}
 					<div className="md:hidden flex items-center space-x-1">
-						<Link href={'/customer/notification'} aria-label="Notifikasi">
-							<Bell className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
-						</Link>
-
 						<Sheet open={isOpen} onOpenChange={setIsOpen}>
 							<SheetTrigger asChild>
 								<Button variant="ghost" size="icon" aria-label="Menu">
