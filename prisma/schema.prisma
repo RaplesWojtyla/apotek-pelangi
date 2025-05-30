@@ -47,6 +47,13 @@ enum StatusFaktur {
     SELESAI
 }
 
+enum MetodePembayaran {
+    DANA
+    GOPAY
+    QRIS
+    TRANSFER_BANK
+}
+
 enum TipeSumber {
     FAKTUR_PEMBELIAN
     FAKTUR_PENJUALAN
@@ -202,14 +209,17 @@ model Cart {
 }
 
 model FakturPenjualan {
-    id             String       @id @default(cuid())
-    id_user        String
-    tanggal_faktur DateTime     @default(now())
-    alamat         String?
-    status         StatusFaktur
-    total          Int
-    keterangan     String?
-    createdAt      DateTime     @default(now())
+    id                String           @id @default(cuid())
+    id_user           String
+    tanggal_faktur    DateTime         @default(now())
+    nama_penerima     String
+    nomor_telepon     String
+    alamat            String?
+    metode_pembayaran MetodePembayaran
+    status            StatusFaktur
+    total             Int
+    keterangan        String?
+    createdAt         DateTime         @default(now())
 
     detail_faktur_penjualan DetailFakturPenjualan[]
 
@@ -256,16 +266,16 @@ model DetailFakturPembelian {
 }
 
 model Notifikasi {
-    id             String   @id @default(cuid())
-    id_user        String
-    id_sumber      String?     
-    tipe_sumber    TipeSumber?
-    judul          String
-    pesan          String
-    sudah_dibaca   Boolean  @default(false)
-    createdAt      DateTime @default(now())
+    id           String      @id @default(cuid())
+    id_user      String
+    id_sumber    String?
+    tipe_sumber  TipeSumber?
+    judul        String
+    pesan        String
+    sudah_dibaca Boolean     @default(false)
+    createdAt    DateTime    @default(now())
 
-    user           User   @relation(fields: [id_user], references: [id], onDelete: Cascade)
+    user User @relation(fields: [id_user], references: [id], onDelete: Cascade)
 
     @@index([id_user])
 }
