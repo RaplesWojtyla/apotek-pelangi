@@ -8,18 +8,20 @@ import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { DbUser, getUserByClerkId } from "@/action/user.action";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, MoveRight } from "lucide-react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { CheckoutPayload, processCheckout } from "@/action/customer/checkout.action";
+import { MetodePembayaran } from "@prisma/client";
 
 interface CheckoutFormData {
 	namaPenerima: string
 	nomorTelepon: string
 	alamatPengiriman: string
-	metodePembayaran: string
+	metodePembayaran: MetodePembayaran | null
 	keterangan?: string
 }
 
@@ -27,13 +29,14 @@ export default function CheckoutPage() {
 	const { checkoutItems, clearCheckoutItemsHandler, fetchAndUpdateCartCount: updateCartBadge } = useCartContext()
 	const { user: clerkUser, isSignedIn } = useUser()
 	const router = useRouter()
+	const pathname = usePathname()
 
 	const [dbUser, setDbUser] = useState<DbUser>(null)
 	const [formData, setFormData] = useState<CheckoutFormData>({
 		namaPenerima: "",
 		nomorTelepon: "",
 		alamatPengiriman: "",
-		metodePembayaran: "",
+		metodePembayaran: null,
 		keterangan: ""
 	})
 
@@ -70,7 +73,7 @@ export default function CheckoutPage() {
 	}, [isSignedIn, clerkUser])
 
 	useEffect(() => {
-		if (!isLoadingUser && checkoutItems.length === 0) {
+		if (!isLoadingUser && checkoutItems.length === 0 && !isSubmitting) {
 			toast.error("Tidak ada item untuk checkout. Mengarahkan kembali ke keranjang.", { duration: 3000 })
 			router.replace('/customer/cart')
 		}
@@ -78,13 +81,14 @@ export default function CheckoutPage() {
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		const { name, value } = e.target
+
 		setFormData(prev => ({
 			...prev,
 			[name]: value
 		}))
 	}
 
-	const handlePaymentMethodChange = (paymentMethod: string) => {
+	const handlePaymentMethodChange = (paymentMethod: MetodePembayaran) => {
 		setFormData(prev => ({
 			...prev,
 			metodePembayaran: paymentMethod
@@ -118,19 +122,55 @@ export default function CheckoutPage() {
 
 		setIsSubmitting(true)
 
-		const payload = {
+		const payload: CheckoutPayload = {
 			items: checkoutItems.map(item => ({
 				id_cart: item.idCart,
-				id_barang:  item.idBarang,
+				id_barang: item.idBarang,
 				jumlah: item.jumlah,
-
+				harga_saat_checkout: item.hargaJual,
+				sumber: item.sumber
 			})),
 			namaPenerima: formData.namaPenerima,
 			nomorTelepon: formData.nomorTelepon,
 			metodePembayaran: formData.metodePembayaran,
-			alamat: formData.alamatPengiriman,
+			alamatPengiriman: formData.alamatPengiriman,
 			keterangan: formData.keterangan
 		}
+
+		try {
+			const res = await processCheckout(payload)
+
+			if (res.success && res.fakturId) {
+				toast.success(res.message || "Pesanan berhasil dibuat", {
+					duration: 4200
+				})
+
+				clearCheckoutItemsHandler()
+				await updateCartBadge()
+				router.push('/customer/invoice')
+			} else {
+				toast.error(res.message || "Gagal membuat pesanan", {
+					duration: 4000
+				})
+			}
+		} catch (error: any) {
+			console.error(`[handleBooking] Error: ${error}`);
+
+			toast.error(error.message || "Terjadi kesalahan.")
+		} finally {
+			setIsSubmitting(false)
+		}
+	}
+
+	if ((isLoadingUser || (isSignedIn && checkoutItems.length === 0 && !pathname.startsWith('/customer/cart'))) && !isSubmitting) {
+		return (
+			<div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
+				<Loader2 className="h-16 w-16 animate-spin text-cyan-500" />
+				<p className="text-xl font-semibold text-muted-foreground mt-4">
+					Sedang memuat data checkout...
+				</p>
+			</div>
+		);
 	}
 
 	return (
@@ -149,6 +189,7 @@ export default function CheckoutPage() {
 										<label htmlFor="namaPenerima" className="font-medium">Nama Penerima</label>
 										<Input
 											id="namaPenerima"
+											name="namaPenerima"
 											placeholder="Masukkan nama penerima"
 											value={formData.namaPenerima}
 											onChange={handleInputChange}
@@ -160,6 +201,8 @@ export default function CheckoutPage() {
 										<label htmlFor="nomorTelepon" className="font-medium">Nomor Telepon</label>
 										<Input
 											id="nomorTelepon"
+											name="nomorTelepon"
+											type="number"
 											className="mt-1"
 											placeholder="Masukkan nomor telepon"
 											value={formData.nomorTelepon}
@@ -191,7 +234,7 @@ export default function CheckoutPage() {
 											key={method}
 											variant={formData.metodePembayaran === method ? "default" : "outline"}
 											className="justify-between w-full py-8"
-											onClick={() => handlePaymentMethodChange(method)}
+											onClick={() => handlePaymentMethodChange(method as MetodePembayaran)}
 											disabled={isSubmitting}
 										>
 											{method.replace("_", " ")} <MoveRight />
@@ -250,6 +293,7 @@ export default function CheckoutPage() {
 
 						<Button
 							className="w-full text-white font-semibold text-lg py-4 cursor-pointer"
+							onClick={handleBooking}
 							disabled={isSubmitting || checkoutItems.length === 0}
 						>
 							{isSubmitting && <Loader2 className="animate-spin mr-2 size-5" />}
@@ -258,7 +302,7 @@ export default function CheckoutPage() {
 					</div>
 				</div>
 			) : (
-				!isLoadingUser && <p className="text-center text-xl text-gray-600">Tidak ada item untuk di-checkout atau halaman di-refresh. Silakan kembali ke keranjang.</p>
+				!isLoadingUser && !isSubmitting && <p className="text-center text-xl text-gray-600">Tidak ada item untuk di-checkout atau halaman di-refresh. Silakan kembali ke keranjang.</p>
 			)}
 		</div>
 	);
