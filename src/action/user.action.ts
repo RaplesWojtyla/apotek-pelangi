@@ -5,6 +5,8 @@ import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { LevelUser, StatusUser } from "@prisma/client";
 import { revalidatePath } from "next/cache"
 
+export type DbUser = Awaited<ReturnType<typeof getUserByClerkId>>
+
 export const syncUser = async () => {
 	try {
 		const user = await currentUser();

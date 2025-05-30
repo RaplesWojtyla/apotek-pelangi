@@ -9,9 +9,9 @@ import { CartItem } from "@/action/customer/cart.action";
 import toast from "react-hot-toast";
 import { Loader2, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-// import { SkeletonCart } from "@/components/skeleton/SkeletonCart";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { useCartContext } from "@/context/CartContext";
+import { ItemForCheckout, useCartContext } from "@/context/CartContext";
+import { SkeletonCart } from "@/components/skeleton/SkeletonCart";
 
 export default function CartPage() {
 	const [cartItems, setCartItems] = useState<CartItem[]>([])
@@ -19,7 +19,8 @@ export default function CartPage() {
 	const [isLoading, setIsLoading] = useState<boolean>(true)
 	const [isUpdating, setIsUpdating] = useState<string | null>(null)
 	const [activeTab, setActiveTab] = useState<string>("semua")
-	const { fetchAndUpdateCartCount } = useCartContext()
+	const [isCheckoutLoading, setIsCheckoutLoading] = useState<boolean>(false)
+	const { fetchAndUpdateCartCount, setCheckoutItemsHandler } = useCartContext()
 	const router = useRouter()
 
 	const isCartItems = cartItems && cartItems.length > 0
@@ -269,6 +270,50 @@ export default function CartPage() {
 		}
 	}
 
+	const handleProceedToChecout = () => {
+		setIsCheckoutLoading(true)
+		let checkoutItemsContext: ItemForCheckout[] = []
+
+		const transformToCheckoutItem = ((item: CartItem): ItemForCheckout => ({
+			idCart: item.id,
+			idBarang: item.id_barang,
+			namaBarang: item.barang.nama_barang,
+			jumlah: item.jumlah,
+			hargaJual: item.barang.harga_jual,
+			fotoBarang: item.barang.foto_barang,
+			sumber: 'MANUAL',
+			idResep: item.id_resep,
+			totalStock: item.totalStock
+		}))
+
+		if (activeTab === 'semua') {
+			const manualItems = availableManualProducts.filter(
+				item => selectedManualProductIds.has(item.id)
+			).map(transformToCheckoutItem)
+
+			const resepItems = availableResepProducts.map(transformToCheckoutItem)
+
+			checkoutItemsContext = [...manualItems, ...resepItems]
+		} else if (activeTab === 'obat resep') {
+			checkoutItemsContext = availableManualProducts.filter(
+				item => selectedManualProductIds.has(item.id)
+			).map(transformToCheckoutItem)
+		} else if (activeTab === 'obat-resep') {
+			checkoutItemsContext = availableResepProducts.map(transformToCheckoutItem)
+		}
+
+		if (checkoutItemsContext.length === 0) {
+			toast.error("Tidak ada produk yang dipilih untuk di-checkout.");
+			setIsCheckoutLoading(false)
+			return
+		}
+
+		setCheckoutItemsHandler(checkoutItemsContext)
+
+		router.push('/customer/checkout')
+		setIsCheckoutLoading(false)
+	}
+
 	const relevantManualProductsForSelectAll = (activeTab === 'semua' || activeTab === 'obat-satuan') ? availableManualProducts : []
 
 	const isSelectAllChecked = relevantManualProductsForSelectAll.length > 0 &&
@@ -290,12 +335,21 @@ export default function CartPage() {
 		? availableResepProducts.filter(item => item.totalStock > 0).reduce((acc, item) => acc + item.jumlah * item.barang.harga_jual, 0)
 		: 0
 
-	const grandTotal = selectedManualSubTotal + resepSubtotal
-	const numOfSelectedManualProducts = selectedManualProductIds.size
-	const numOfResepProduct = availableResepProducts.length
-	const totalProductsToPay = numOfSelectedManualProducts + numOfResepProduct
+	let productsToPayCount = 0
+	let currGrandTotal = 0
 
-	if (isLoading) return <p className="flex min-h-screen justify-center items-center gap-3"><Loader2 className="animate-spin size-5" /> Loading...</p>
+	if (activeTab === 'semua') {
+		productsToPayCount = selectedManualProductIds.size + availableResepProducts.length
+		currGrandTotal = selectedManualSubTotal + resepSubtotal
+	} else if (activeTab === 'obat-satuan') {
+		productsToPayCount = selectedManualProductIds.size
+		currGrandTotal = selectedManualSubTotal
+	} else if (activeTab === 'obat-resep') {
+		productsToPayCount = availableResepProducts.length
+		currGrandTotal = resepSubtotal
+	}
+
+	// if (isLoading) return <p className="flex min-h-screen justify-center items-center gap-3"><Loader2 className="animate-spin size-5" /> Loading...</p>
 
 	const renderCartItem = (item: CartItem) => (
 		<div
@@ -338,7 +392,7 @@ export default function CartPage() {
 			{/* Kiri: Checkbox dan Gambar */}
 			<div className="flex items-start sm:items-center flex-1">
 				<Checkbox
-					className="mr-4 mt-1 sm:mt-0 border-gray-400"
+					className="mr-4 mt-1 sm:mt-0 border-gray-400 cursor-pointer"
 					checked={item.sumber === 'RESEP' ? item.totalStock > 0 : selectedManualProductIds.has(item.id)}
 					onCheckedChange={item.sumber === 'MANUAL' ? () => handleToggleSelectManualProduct(item.id) : undefined}
 					disabled={item.totalStock < 1 || item.sumber === 'RESEP'}
@@ -368,7 +422,7 @@ export default function CartPage() {
 						<Button
 							variant="outline"
 							size="sm"
-							className="w-8 h-8 p-0 text-lg"
+							className="w-8 h-8 p-0 text-lg text-center cursor-pointer"
 							onClick={() => handleUpdateQty(item.id, item.jumlah - 1)}
 							disabled={item.sumber === 'RESEP' || item.totalStock < 1 || item.jumlah < 2 || isUpdating === item.id}
 						>
@@ -378,7 +432,7 @@ export default function CartPage() {
 						<Button
 							variant="outline"
 							size="sm"
-							className="w-8 h-8 p-0 text-lg"
+							className="w-8 h-8 p-0 text-lg text-center cursor-pointer"
 							onClick={() => handleUpdateQty(item.id, item.jumlah + 1)}
 							disabled={item.sumber === 'RESEP' || item.totalStock < 1 || item.jumlah + 1 > item.totalStock || isUpdating === item.id}
 						>
@@ -402,13 +456,13 @@ export default function CartPage() {
 				<h1 className="text-3xl font-bold mb-6">Keranjang</h1>
 				<Tabs defaultValue="semua" className="mb-6" onValueChange={setActiveTab}>
 					<TabsList className="flex flex-wrap gap-2 w-full sm:w-[805px]">
-						<TabsTrigger value="semua" className="flex-1 h-10 rounded-xl border border-gray-300 text-lg font-semibold data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
+						<TabsTrigger value="semua" className="flex-1 h-10 rounded-xl border border-gray-300 text-lg font-semibold data-[state=active]:bg-primary data-[state=active]:text-white cursor-pointer">
 							Semua
 						</TabsTrigger>
-						<TabsTrigger value="obat-satuan" className="flex-1 h-10 rounded-xl border border-gray-300 text-lg font-semibold data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
+						<TabsTrigger value="obat-satuan" className="flex-1 h-10 rounded-xl border border-gray-300 text-lg font-semibold data-[state=active]:bg-primary data-[state=active]:text-white cursor-pointer">
 							Obat Satuan
 						</TabsTrigger>
-						<TabsTrigger value="obat-resep" className="flex-1 h-10 rounded-xl border border-gray-300 text-lg font-semibold data-[state=active]:bg-cyan-600 data-[state=active]:text-white">
+						<TabsTrigger value="obat-resep" className="flex-1 h-10 rounded-xl border border-gray-300 text-lg font-semibold data-[state=active]:bg-primary data-[state=active]:text-white cursor-pointer">
 							Obat Resep
 						</TabsTrigger>
 					</TabsList>
@@ -416,11 +470,12 @@ export default function CartPage() {
 						<div className="flex items-center">
 							<Checkbox
 								id="select-all"
+								className="cursor-pointer"
 								checked={isSelectAllChecked}
 								onCheckedChange={checked => handleSelectAllManualProducts(Boolean(checked))}
 								disabled={isSelectAllDisabled || isLoading}
 							/>
-							<label htmlFor="select-all" className="text-sm ml-2 font-medium">
+							<label htmlFor="select-all" className="text-sm ml-2 font-medium cursor-pointer">
 								{activeTab === "obat-resep"
 									? "Obat Resep Wajib Dipilih Semua"
 									: `Pilih Semua Obat Satuan ${availableManualProducts.length > 0
@@ -430,116 +485,154 @@ export default function CartPage() {
 							</label>
 						</div>
 						{selectedManualProductIds.size > 0 && (activeTab === 'semua' || activeTab === 'obat-satuan') && (
-							<Button
-								variant={"ghost"}
-								className="text-red-500 under hover:text-red-700 hover:bg-red-300 text-sm font-medium transition ease-linear duration-300 cursor-pointer"
-								onClick={handleDeleteSelectedItems}
-								disabled={isLoading}
-							>
-								Hapus ({selectedManualProductIds.size}) item terpilih
-							</Button>
+							<AlertDialog>
+								<AlertDialogTrigger asChild>
+									<Button
+										variant={"ghost"}
+										className="text-red-500 under hover:text-red-700 hover:bg-red-300 text-sm font-medium transition ease-linear duration-300 cursor-pointer"
+										disabled={isLoading}
+									>
+										Hapus ({selectedManualProductIds.size}) item terpilih
+									</Button>
+								</AlertDialogTrigger>
+								<AlertDialogContent>
+									<AlertDialogHeader>
+										<AlertDialogTitle>Konfirmasi</AlertDialogTitle>
+										<AlertDialogDescription>Apakah anda yakin menghapus {selectedManualProductIds.size} item tersebut dari keranjang anda?</AlertDialogDescription>
+									</AlertDialogHeader>
+									<AlertDialogFooter>
+										<AlertDialogCancel>Batal</AlertDialogCancel>
+										<Button
+											variant={"destructive"}
+											className="hover:bg-red-700 transition duration-300"
+											onClick={handleDeleteSelectedItems}
+											disabled={isLoading}
+											asChild
+										>
+											<AlertDialogAction>Hapus</AlertDialogAction>
+										</Button>
+									</AlertDialogFooter>
+								</AlertDialogContent>
+							</AlertDialog>
 						)}
 					</div>
-					<TabsContent value="semua">
-						<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-							<div className="lg:col-span-2 space-y-4">
-								{cartItems && cartItems.length > 0 ? (
-									cartItems.map(item => renderCartItem(item))
-								) : (
-									<div className="h-full flex items-center justify-center">
-										<p className="text-2xl">Keranjang anda masih kosong</p>
-									</div>
-								)}
-							</div>
 
-							{/* Subtotal */}
-							<div className="bg-white border border-gray-300 shadow-sm rounded-2xl p-4 sm:p-6 h-fit">
-								<h4 className="font-semibold text-base">
-									Sub Total ({numOfSelectedManualProducts + numOfResepProduct} Produk akan dibayar)
-								</h4>
-								<hr className="my-4" />
-								{numOfSelectedManualProducts > 0 && (
-									<div className="flex justify-between text-sm mb-1">
-										<span>Obat Satuan ({numOfSelectedManualProducts} item):</span>
-										<span className="font-medium">Rp {selectedManualSubTotal.toLocaleString("id-ID")}</span>
+					{isLoading ? (
+						<SkeletonCart />
+					) : (
+						<>
+							<TabsContent value="semua">
+								<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+									<div className="lg:col-span-2 space-y-4">
+										{cartItems && cartItems.length > 0 ? (
+											cartItems.map(item => renderCartItem(item))
+										) : (
+											<div className="h-full flex items-center justify-center">
+												<p className="text-2xl">Keranjang anda masih kosong</p>
+											</div>
+										)}
 									</div>
-								)}
-								{numOfResepProduct > 0 && (
-									<div className="flex justify-between text-sm mb-1">
-										<span>Obat Resep ({numOfResepProduct} item):</span>
-										<span className="font-medium">Rp {resepSubtotal.toLocaleString("id-ID")}</span>
-									</div>
-								)}
-								<hr className="my-2" />
-								<div className="flex justify-between text-base sm:text-lg mb-4">
-									<span>Total Harga :</span>
-									<span className="font-bold">Rp {grandTotal.toLocaleString("id-ID")}</span>
-								</div>
-								<Button
-									className="w-full bg-black text-white text-sm font-semibold h-10 rounded-full"
-									disabled={totalProductsToPay === 0}
-								>
-									Bayar Sekarang ({totalProductsToPay})
-								</Button>
-							</div>
-						</div>
-					</TabsContent>
-					<TabsContent value="obat-satuan">
-						<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-							<div className="lg:col-span-2 space-y-4">
-								{manualProducts.length > 0 ? (
-									manualProducts.map(item => renderCartItem(item))
-								) : (
-									<div className="h-full flex items-center justify-center">
-										<p className="text-2xl">Keranjang anda masih kosong</p>
-									</div>
-								)}
-							</div>
 
-							{/* Subtotal */}
-							<div className="bg-white border border-gray-300 shadow-sm rounded-2xl p-4 sm:p-6 h-fit">
-								<h4 className="font-semibold text-base">
-									Sub Total ({numOfSelectedManualProducts} Produk)
-								</h4>
-								<hr className="my-4" />
-								<div className="flex justify-between text-sm sm:text-base mb-4">
-									<span>Total Harga :</span>
-									<span className="font-bold">Rp {selectedManualSubTotal.toLocaleString("id-ID")}</span>
-								</div>
-								<Button className="w-full bg-black text-white text-sm font-semibold h-10 rounded-full">
-									Bayar sekarang
-								</Button>
-							</div>
-						</div>
-					</TabsContent>
-					<TabsContent value="obat-resep">
-						<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-							<div className="lg:col-span-2 space-y-4">
-								{resepProducts.length > 0 ? (
-									resepProducts.map(item => renderCartItem(item))
-								) : (
-									<div className="h-full flex items-center justify-center">
-										<p className="text-2xl">Keranjang anda masih kosong</p>
+									{/* Subtotal */}
+									<div className="bg-white border border-gray-300 shadow-sm rounded-2xl p-4 sm:p-6 h-fit">
+										<h4 className="font-semibold text-base">
+											Sub Total ({productsToPayCount} Produk akan dibayar)
+										</h4>
+										<hr className="my-4" />
+										{selectedManualProductIds.size > 0 && (
+											<div className="flex justify-between text-sm mb-1">
+												<span>Obat Satuan ({selectedManualProductIds.size} item):</span>
+												<span className="font-medium">Rp {selectedManualSubTotal.toLocaleString("id-ID")}</span>
+											</div>
+										)}
+										{resepProducts.length > 0 && (
+											<div className="flex justify-between text-sm mb-1">
+												<span>Obat Resep ({resepProducts.length} item):</span>
+												<span className="font-medium">Rp {resepSubtotal.toLocaleString("id-ID")}</span>
+											</div>
+										)}
+										<hr className="my-2" />
+										<div className="flex justify-between text-base sm:text-lg mb-4">
+											<span>Total Harga :</span>
+											<span className="font-bold">Rp {currGrandTotal.toLocaleString("id-ID")}</span>
+										</div>
+										<Button
+											className="w-full text-white text-sm font-semibold h-10 rounded-full cursor-pointer"
+											onClick={handleProceedToChecout}
+											disabled={currGrandTotal === 0 || isCheckoutLoading}
+										>
+											{isCheckoutLoading && <Loader2 className="size-4 animate-spin" />} Bayar Sekarang
+										</Button>
 									</div>
-								)}
-							</div>
-
-							{/* Subtotal */}
-							<div className="bg-white border border-gray-300 shadow-sm rounded-2xl p-4 sm:p-6 h-fit">
-								<h4 className="font-semibold text-base">
-									Sub Total ({numOfResepProduct} Produk)
-								</h4>
-								<hr className="my-4" />
-								<div className="flex justify-between text-sm sm:text-base mb-4">
-									<span>Total Harga :</span>
-									<span className="font-bold">Rp{resepSubtotal.toLocaleString("id-ID")}</span>
 								</div>
-								<Button className="w-full bg-black text-white text-sm font-semibold h-10 rounded-full">
-									Bayar sekarang
-								</Button>
-							</div>
-						</div>
-					</TabsContent>
+							</TabsContent>
+							<TabsContent value="obat-satuan">
+								<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+									<div className="lg:col-span-2 space-y-4">
+										{manualProducts.length > 0 ? (
+											manualProducts.map(item => renderCartItem(item))
+										) : (
+											<div className="h-full flex items-center justify-center">
+												<p className="text-2xl">Keranjang anda masih kosong</p>
+											</div>
+										)}
+									</div>
+
+									{/* Subtotal */}
+									<div className="bg-white border border-gray-300 shadow-sm rounded-2xl p-4 sm:p-6 h-fit">
+										<h4 className="font-semibold text-base">
+											Sub Total ({selectedManualProductIds.size} Produk)
+										</h4>
+										<hr className="my-4" />
+										<div className="flex justify-between text-sm sm:text-base mb-4">
+											<span>Total Harga :</span>
+											<span className="font-bold">Rp {selectedManualSubTotal.toLocaleString("id-ID")}</span>
+										</div>
+										<Button
+											variant={'default'}
+											className="w-full text-white text-sm font-semibold h-10 rounded-full"
+											onClick={() => router.push('/customer/checkout')}
+											disabled={selectedManualProductIds.size === 0 || selectedManualSubTotal === 0 || isCheckoutLoading}
+										>
+											{isCheckoutLoading && <Loader2 className="size-4 animate-spin" />} Bayar sekarang
+										</Button>
+									</div>
+								</div>
+							</TabsContent>
+							<TabsContent value="obat-resep">
+								<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+									<div className="lg:col-span-2 space-y-4">
+										{resepProducts.length > 0 ? (
+											resepProducts.map(item => renderCartItem(item))
+										) : (
+											<div className="h-full flex items-center justify-center">
+												<p className="text-2xl">Keranjang anda masih kosong</p>
+											</div>
+										)}
+									</div>
+
+									{/* Subtotal */}
+									<div className="bg-white border border-gray-300 shadow-sm rounded-2xl p-4 sm:p-6 h-fit">
+										<h4 className="font-semibold text-base">
+											Sub Total ({availableResepProducts.length} Produk)
+										</h4>
+										<hr className="my-4" />
+										<div className="flex justify-between text-sm sm:text-base mb-4">
+											<span>Total Harga :</span>
+											<span className="font-bold">Rp{resepSubtotal.toLocaleString("id-ID")}</span>
+										</div>
+										<Button
+											className="w-full text-white text-sm font-semibold h-10 rounded-full"
+											onClick={() => router.push('/customer/checkout')}
+											disabled={availableResepProducts.length === 0 || isCheckoutLoading}
+										>
+											{isCheckoutLoading && <Loader2 className="size-4 animate-spin" />} Bayar sekarang
+										</Button>
+									</div>
+								</div>
+							</TabsContent>
+						</>
+					)}
 				</Tabs>
 			</div>
 		</div>

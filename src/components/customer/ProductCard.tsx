@@ -1,63 +1,74 @@
 'use client'
 
-import { Heart, ShoppingCart } from "lucide-react";
+import { Heart, Loader2, ShoppingCart } from "lucide-react";
 import { Product } from "@/action/product.action";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useCartContext } from "@/context/CartContext";
+import { useState } from "react";
 
 export default function ProductCard({ product }: { product: Product }) {
 	const router = useRouter()
 	const { fetchAndUpdateCartCount } = useCartContext()
+	const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false)
 
 	const handleDetail = (id: string) => {
 		router.push(`/customer/catalog/${id}`)
 	}
 
-	async function handleAddToCart() {
-		const res = fetch('/api/customer/cart', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				idBarang: product.id,
-				amount: 1,
-				sumber: 'MANUAL'
+	const handleAddToCart = async () => {
+		setIsAddingToCart(true)
+
+		try {
+			const res = fetch('/api/customer/cart', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					idBarang: product.id,
+					amount: 1,
+					sumber: 'MANUAL'
+				})
+			}).then(async (res) => {
+				if (!res.ok) {
+					const err: any = await res.json().catch()
+
+					throw new Error(err.error || 'Gagal menambahkan data ke dalam keranjang!')
+				}
+
+				await fetchAndUpdateCartCount(false)
+				return res.json()
 			})
-		}).then(async (res) => {
-			if (!res.ok) {
-				const err: any = await res.json().catch()
 
-				throw new Error(err.error || 'Gagal menambahkan data ke dalam keranjang!')
-			}
+			await toast.promise(res, {
+				loading: "Menambahkan ke keranjang...",
+				success: () => {
+					router.refresh()
 
-			await fetchAndUpdateCartCount(false)
-			return res.json()
-		})
+					return "Berhasil ditambahkan ke keranjang!"
+				},
+				error: (err: any) => err.message || "Gagal menambahkan ke keranjang!"
+			}, {
+				style: {
+					minWidth: '250px'
+				},
+				success: {
+					duration: 3000,
+					icon: '🛒'
+				},
+				error: {
+					duration: 4000,
+					icon: '❌'
+				}
+			})
 
-		toast.promise(res, {
-			loading: "Menambahkan ke keranjang...",
-			success: () => {
-				router.refresh()
-
-				return "Berhasil ditambahkan ke keranjang!"
-			},
-			error: (err: any) => err.message || "Gagal menambahkan ke keranjang!"
-		}, {
-			style: {
-				minWidth: '250px'
-			},
-			success: {
-				duration: 3000,
-				icon: '🛒'
-			},
-			error: {
-				duration: 4000,
-				icon: '❌'
-			}
-		})
+		} catch (error) {
+			console.log(`[handleAddToCart] Error: ${error}`);
+		} finally {
+			setIsAddingToCart(false)
+		}
 	}
 
 	return (
@@ -100,14 +111,20 @@ export default function ProductCard({ product }: { product: Product }) {
 			<div className="flex w-full gap-2">
 				<Button
 					className="flex-1 bg-cyan-500 text-white text-sm rounded-md hover:bg-cyan-600 cursor-pointer"
+					disabled={isAddingToCart}
 				>
 					Beli Sekarang
 				</Button>
 				<Button
 					className="bg-white border border-cyan-500 rounded-md hover:bg-cyan-50 text-cyan-600 cursor-pointer"
 					onClick={handleAddToCart}
+					disabled={isAddingToCart}
 				>
-					<ShoppingCart size={16} />
+					{isAddingToCart ? (
+						<Loader2 className="animate-spin" />
+					) : (
+						<ShoppingCart size={16} />
+					)}
 				</Button>
 			</div>
 		</div>

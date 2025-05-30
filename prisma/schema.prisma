@@ -205,7 +205,7 @@ model FakturPenjualan {
     id             String       @id @default(cuid())
     id_user        String
     tanggal_faktur DateTime     @default(now())
-    alamat         String
+    alamat         String?
     status         StatusFaktur
     total          Int
     keterangan     String?

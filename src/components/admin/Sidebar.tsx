@@ -33,9 +33,9 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 w-full lg:ml-64 p-4">
+        {/* <div className="flex-1 w-full lg:ml-64 p-4">
           {children}
-        </main>
+        </div> */}
       </div>
     </>
   );

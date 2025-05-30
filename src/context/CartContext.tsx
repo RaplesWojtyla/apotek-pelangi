@@ -2,12 +2,29 @@
 
 import { CartItem } from "@/action/customer/cart.action"
 import { useUser } from "@clerk/nextjs"
+import { SumberCart } from "@prisma/client"
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react"
+
+
+export interface ItemForCheckout {
+	idCart: string
+	idBarang: string
+	namaBarang: string
+	jumlah: number
+	hargaJual: number
+	fotoBarang?: string
+	idResep?: string | null
+	sumber: SumberCart
+	totalStock: number
+}
 
 interface CartContextType {
 	cartItemsCount: number
 	fetchAndUpdateCartCount: (showLoading?: boolean) => Promise<void>
 	isLoadingCartCount: boolean
+	checkoutItems: ItemForCheckout[]
+	setCheckoutItemsHandler: (items: ItemForCheckout[]) => void
+	clearCheckoutItemsHandler: () => void 
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -15,6 +32,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 export const CartProvider = ({ children }: { children: ReactNode }) => {
 	const [cartItemsCount, setCartItemsCount] = useState<number>(0)
 	const [isLoadingCartCount, setIsLoadingCartCount] = useState<boolean>(true)
+	const [checkoutItems, setCheckoutItems] = useState<ItemForCheckout[]>([])
 	const { isSignedIn, user } = useUser()
 
 	const fetchAndUpdateCartCount = useCallback(async (showLoading = true) => {
@@ -53,9 +71,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 		}
 	}, [isSignedIn, user, fetchAndUpdateCartCount])
 
+	const setCheckoutItemsHandler = (items: ItemForCheckout[]) => setCheckoutItems(items)
+	const clearCheckoutItemsHandler = () => setCheckoutItems([])
 
 	return (
-		<CartContext.Provider value={{ cartItemsCount, fetchAndUpdateCartCount, isLoadingCartCount }}>
+		<CartContext.Provider value={{
+			cartItemsCount, 
+			fetchAndUpdateCartCount,
+			isLoadingCartCount, 
+			checkoutItems, 
+			setCheckoutItemsHandler, 
+			clearCheckoutItemsHandler 
+		}}>
 			{children}
 		</CartContext.Provider>
 	)
