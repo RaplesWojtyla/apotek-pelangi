@@ -12,8 +12,10 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Plus, Search } from "lucide-react";
+import Link from "next/link";
 
+// Dummy data
 const fakturPenjualan = [
   {
     id: "FP001",
@@ -34,6 +36,7 @@ const fakturPenjualan = [
   },
 ];
 
+// Komponen StatCard seperti StatCardJumlahPembelian
 function StatCard({
   title,
   value,
@@ -44,11 +47,13 @@ function StatCard({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm border w-full sm:w-[280px]">
-      <div className="p-3 rounded-full bg-blue-100 text-blue-600">{icon}</div>
+    <div className="flex items-center gap-4 p-6 bg-white rounded-xl shadow-sm border w-full sm:w-[280px]">
+      <div className="p-4 rounded-full bg-blue-100 text-blue-600">
+        {icon}
+      </div>
       <div>
         <p className="text-sm text-muted-foreground">{title}</p>
-        <h3 className="text-xl font-bold">{value}</h3>
+        <h3 className="text-2xl font-bold">{value}</h3>
       </div>
     </div>
   );
@@ -61,31 +66,41 @@ export default function LogPenjualanPage() {
 
   return (
     <div className="p-4 max-w-[1240px] mx-auto mb-10">
-      <h1 className="text-xl sm:text-2xl font-bold mb-4">Log Penjualan Kasir</h1>
+      <h1 className="text-2xl font-bold mb-4">Log Penjualan</h1>
 
       {/* Stat Cards */}
       <div className="flex flex-col sm:flex-row flex-wrap gap-4 mb-6">
         <StatCard
           title="Total Faktur Penjualan"
           value={totalFaktur}
-          icon={<ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />}
+          icon={<ShoppingCart className="w-6 h-6" />}
         />
         <StatCard
           title="Total Omzet"
           value={`Rp${totalOmzet.toLocaleString()}`}
-          icon={<ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />}
+          icon={<ShoppingCart className="w-6 h-6" />}
         />
         <StatCard
           title="Transaksi Selesai"
           value={totalSelesai}
-          icon={<ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />}
+          icon={<ShoppingCart className="w-6 h-6" />}
         />
       </div>
 
-      {/* Search Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-4">
-        <Input placeholder="Cari kasir atau faktur..." className="w-full sm:max-w-md" />
-        <Button className="bg-blue-600 text-white hover:bg-blue-700 w-full sm:w-auto">Cari</Button>
+      {/* Search & Tambah */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <Input placeholder="Cari log penjualan" className="w-full md:w-64" />
+          <Button variant="outline" size="icon">
+            <Search className="w-4 h-4" />
+          </Button>
+        </div>
+          <Button asChild className="flex items-center gap-2 bg-cyan-500 text-white hover:bg-cyan-600">
+            <span>
+              <Plus className="w-4 h-4 inline mr-1" />
+              Tambah Penjualan
+            </span>
+          </Button>
       </div>
 
       {/* Tabel */}

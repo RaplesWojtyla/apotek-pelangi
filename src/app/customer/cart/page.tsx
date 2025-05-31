@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { ItemForCheckout, useCartContext } from "@/context/CartContext";
 import { SkeletonCart } from "@/components/skeleton/SkeletonCart";
+import { SumberCart } from "@prisma/client";
 
 export default function CartPage() {
 	const [cartItems, setCartItems] = useState<CartItem[]>([])
@@ -274,6 +275,10 @@ export default function CartPage() {
 		setIsCheckoutLoading(true)
 		let checkoutItemsContext: ItemForCheckout[] = []
 
+		let sumber: SumberCart
+		if (activeTab === 'semua' || activeTab === 'obat-satuan') sumber = 'MANUAL'
+		else sumber = 'RESEP'
+
 		const transformToCheckoutItem = ((item: CartItem): ItemForCheckout => ({
 			idCart: item.id,
 			idBarang: item.id_barang,
@@ -281,7 +286,7 @@ export default function CartPage() {
 			jumlah: item.jumlah,
 			hargaJual: item.barang.harga_jual,
 			fotoBarang: item.barang.foto_barang,
-			sumber: 'MANUAL',
+			sumber: sumber,
 			idResep: item.id_resep,
 			totalStock: item.totalStock
 		}))
