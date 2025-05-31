@@ -36,7 +36,7 @@ export const CatalogSidebar = () => {
 	return (
 		<>
 			{/* Mobile (Menu Button) */}
-			<div className="lg:hidden p-4">
+			<div className="lg:hidden fixed top-17 left-2 z-50">
 				<Sheet>
 					<SheetTrigger className="bg-cyan-600 text-white px-4 py-2 rounded-lg shadow">
 						☰
@@ -45,10 +45,10 @@ export const CatalogSidebar = () => {
 						<SheetHeader hidden>
 							<SheetTitle>Mobile Sidebar</SheetTitle>
 						</SheetHeader>
-						<SidebarContent 
-						categories={categories} 
-						isLoading={isLoading} 
-						userName={user?.firstName ?? "GUEST"} />
+						<SidebarContent
+							categories={categories}
+							isLoading={isLoading}
+							userName={user?.firstName ?? "GUEST"} />
 					</SheetContent>
 				</Sheet>
 			</div>
@@ -57,11 +57,11 @@ export const CatalogSidebar = () => {
 			<div className="hidden lg:block p-4 w-64 lg:flex-shrink-0">
 				<Card className="w-full overflow-hidden shadow-lg rounded-xl">
 					<CardContent className="p-4 h-full overflow-y-auto max-h-[80vh]">
-						<SidebarContent 
-						categories={categories} 
-						isLoading={isLoading} 
-						userName={user?.firstName ?? "GUEST"} 
-					/>
+						<SidebarContent
+							categories={categories}
+							isLoading={isLoading}
+							userName={user?.firstName ?? "GUEST"}
+						/>
 					</CardContent>
 				</Card>
 			</div>
