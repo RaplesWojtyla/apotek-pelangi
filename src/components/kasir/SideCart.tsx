@@ -1,18 +1,30 @@
 "use client";
 
 import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import Keranjang from "./Keranjang";
+import Keranjang from "./Keranjang"; 
 import { ShoppingCartIcon } from "lucide-react";
 import { useState } from "react";
 
-const CartSidebar = () => {
+
+import { CartItem } from '@/app/kasir/page'; 
+
+
+const CartSidebar = ({
+    items,
+    onUpdateQty,
+    onRemoveItem
+}: {
+    items: CartItem[];
+    onUpdateQty: (id: string, newQty: number) => void;
+    onRemoveItem: (id: string) => void;
+}) => {
     const [open, setOpen] = useState(false);
 
     return (
@@ -32,7 +44,12 @@ const CartSidebar = () => {
                         <SheetHeader>
                             <SheetTitle>🛒 Keranjang</SheetTitle>
                         </SheetHeader>
-                        <Keranjang />
+                        {/* Pass the received props down to Keranjang */}
+                        <Keranjang
+                            items={items}
+                            onUpdateQty={onUpdateQty}
+                            onRemoveItem={onRemoveItem}
+                        />
                     </SheetContent>
                 </Sheet>
             </div>
@@ -42,11 +59,15 @@ const CartSidebar = () => {
                 <aside className="lg:fixed top-[56px] right-0 w-[400px] min-h-screen bg-white border-l shadow-md max-h-[calc(100vh-4.5rem)] overflow-y-auto z-40">
                     <div className="p-4 h-full">
                         <h2 className="text-2xl font-bold mb-4 text-cyan-600">🛒 Keranjang</h2>
-                        <Keranjang />
+                        {/* Pass the received props down to Keranjang */}
+                        <Keranjang
+                            items={items}
+                            onUpdateQty={onUpdateQty}
+                            onRemoveItem={onRemoveItem}
+                        />
                     </div>
                 </aside>
             </div>
-
         </>
     );
 };
