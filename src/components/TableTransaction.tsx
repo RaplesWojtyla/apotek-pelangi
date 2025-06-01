@@ -1,14 +1,3 @@
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-
 const invoices = [
   {
     invoice: "INV001",
@@ -57,7 +46,6 @@ const invoices = [
 export default function TableTransaction() {
   return (
      <div className="w-full lg:w-1/3 bg-white p-4 rounded-xl shadow h-[300px] overflow-auto">
-          <h2 className="text-sm font-semibold mb-2">Daftar Transaksi</h2>
           <table className="min-w-[600px] w-full text-sm text-left">
             <thead className="bg-gray-100 text-xs uppercase">
               <tr>
