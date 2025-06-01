@@ -28,10 +28,6 @@ export default function ListTebusResep() {
             >
                 + Upload Resep Baru
             </Link>
-
-            {resepList.length === 0 ? (
-                <p className="text-gray-600">Belum ada resep yang diupload.</p>
-            ) : (
                 <ul className="space-y-4">
                     {resepList.map(({ id, namaFile, tanggalUpload, status }) => (
                         <li key={id} className="border border-gray-300 rounded-md p-4 flex justify-between items-center">
@@ -46,7 +42,7 @@ export default function ListTebusResep() {
                                     }`}>Status: {status}</p>
                             </div>
                             <Link
-                                href={`/customer/tebusresep/list/${id}`}
+                                href={`/customer/tebusresep/list/detail`}
                                 className="text-cyan-600 hover:underline font-semibold"
                             >
                                 Lihat Detail
@@ -54,7 +50,6 @@ export default function ListTebusResep() {
                         </li>
                     ))}
                 </ul>
-            )}
         </div>
     );
 }
