@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 
-
 export default function ProductCard({ product, onAddToCart }: { product: Product, onAddToCart: (product: Product) => void }) {
     const router = useRouter()
 

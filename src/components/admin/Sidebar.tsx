@@ -11,7 +11,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
   return (
     <>
       {/* Sidebar Mobile Trigger */}
-      <div className="lg:hidden fixed top-3 left-4 z-50">
+      <div className="lg:hidden fixed top-17 left-2 z-50">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger className="bg-cyan-600 text-white px-3 py-2 rounded-md shadow flex items-center gap-2">
             <Menu size={20} />
@@ -24,7 +24,7 @@ export default function AdminSidebar({ children }: { children?: React.ReactNode 
       </div>
 
       {/* Main Layout */}
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="hidden md:flex min-h-screen bg-gray-50">
         {/* Sidebar Desktop */}
         <aside className="hidden lg:block fixed pt-10 inset-y-0 left-0 w-64 bg-white border-r shadow-sm z-40">
           <div className="h-full p-4 overflow-y-auto">

@@ -10,7 +10,7 @@ import {
 
 export default function CatalogPagination() {
 	return (
-		<Pagination>
+		<Pagination className="mt-4">
 			<PaginationContent>
 				<PaginationItem>
 					<PaginationPrevious href="#" />

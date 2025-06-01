@@ -77,8 +77,8 @@ export const NavbarCustomer = () => {
 				</div>
 				<div className="md:hidden">
 					<Button variant="ghost" size="icon" asChild aria-label="Lokasi">
-						<Link href="">
-							<MapPinned className="w-6 h-6 text-cyan-500 hover:text-cyan-700" />
+						<Link href="/customer/cart" aria-label="Keranjang">
+							<ShoppingCart className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
 						</Link>
 					</Button>
 
@@ -108,13 +108,17 @@ export const NavbarCustomer = () => {
 											<PackageSearch size={18} />
 											<span>Katalog</span>
 										</Link>
-										<Link href="/customer/catalog" onClick={() => setIsOpen(false)} className="flex items-center space-x-2 text-gray-700 hover:text-cyan-600">
+										<Link href="/customer/history" onClick={() => setIsOpen(false)} className="flex items-center space-x-2 text-gray-700 hover:text-cyan-600">
 											<History size={18} />
 											<span>Riwayat Transaksi</span>
 										</Link>
 										<Link href="/customer/cart" onClick={() => setIsOpen(false)} className="flex items-center space-x-2 text-gray-700 hover:text-cyan-600">
 											<ShoppingCart size={18} />
 											<span>Keranjang</span>
+										</Link>
+										<Link href="/customer/" onClick={() => setIsOpen(false)} className="flex items-center space-x-2 text-gray-700 hover:text-cyan-600">
+											<MapPinned size={18} />
+											<span>Alamat</span>
 										</Link>
 									</div>
 									<Separator />

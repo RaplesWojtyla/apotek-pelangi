@@ -15,15 +15,14 @@ const Unauthorized = () => {
         <div>
           <h1 className="text-5xl font-bold text-red-800">404</h1>
           <h2 className="text-xl font-semibold text-gray-700 mt-2">
-            OOPS! WE DON'T KNOW WHO ARE YOU
+            OOPS! KAMU TIDAK BERHAK MASUK KE HALAMAN INI!
           </h2>
           <p className="text-gray-500 mt-4 max-w-md">
-            Sorry, but you are not allowed to access 
-            the page you are looking for.
+            Maaf, tapi kamu tidak punya hak untuk mengakses halamman yang kamu tuju.
           </p>
           <Link href="/sign-in/callback">
             <span className="text-cyan-500 font-medium hover:underline mt-4 inline-block">
-              Back to homepage
+              kembali ke homepage
             </span>
           </Link>
         </div>

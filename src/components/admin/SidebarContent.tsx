@@ -35,6 +35,7 @@ export default function SidebarContent() {
           <SidebarLink href="/admin/daftarobat" icon={<ListOrdered size={16} />} label="Produk" />
           <SidebarLink href="/admin/jenisobat" icon={<ShoppingCart size={16} />} label="Kategori" />
           <SidebarLink href="/admin/daftaruser" icon={<Users size={16} />} label="Pengguna" />
+          <SidebarLink href="/admin/daftarkasir" icon={<Users size={16} />} label="Kasir" />
           <SidebarLink href="/admin/logpembelian" icon={<FileText size={16} />} label="Log Pembelian" />
           <SidebarLink href="/admin/logpenjualan" icon={<FileText size={16} />} label="Log Penjualan" />
         </div>
