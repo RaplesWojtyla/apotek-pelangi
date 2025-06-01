@@ -1,55 +1,6 @@
-"use client";
-
-import { useState } from "react";
 import TutorTebus from "@/components/TutorTebus";
 
 export default function TebusResep() {
-  const [file, setFile] = useState<File | null>(null);
-  const [fileName, setFileName] = useState("");
-  const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      if (!selectedFile.type.startsWith("image/")) {
-        setMessage("⚠️ Hanya gambar yang diizinkan (jpg/png)");
-        setFile(null);
-        setFileName("");
-        return;
-      }
-      if (selectedFile.size > MAX_FILE_SIZE) {
-        setMessage("⚠️ Ukuran file maksimal 5MB");
-        setFile(null);
-        setFileName("");
-        return;
-      }
-
-      setFile(selectedFile);
-      setFileName(selectedFile.name);
-      setMessage("");
-    } else {
-      setFile(null);
-      setFileName("");
-      setMessage("");
-    }
-  };
-
-  const handleSubmit = () => {
-    setIsLoading(true);
-    setMessage("");
-
-    // Simulasi proses submit
-    setTimeout(() => {
-      setIsLoading(false);
-      setShowSuccess(true);
-      setFile(null);
-      setFileName("");
-    }, 2000);
-  };
 
   return (
     <div className="min-h-screen bg-white p-4 md:p-8 max-w-3xl mx-auto">
@@ -69,7 +20,6 @@ export default function TebusResep() {
           id="file-upload"
           type="file"
           accept="image/*"
-          onChange={handleFileChange}
           className="absolute opacity-0 w-full h-full cursor-pointer"
         />
         <div className="text-6xl mb-2 select-none">📷</div>
@@ -77,12 +27,12 @@ export default function TebusResep() {
         <p className="mt-1 text-xs text-gray-400">Format: jpg/png, Max 5MB</p>
       </label>
 
-      {/* File info */}
+      {/* File info
       {fileName && (
         <div className="mb-4 text-sm text-gray-700 text-center">
           <span className="font-semibold">File:</span> {fileName}
         </div>
-      )}
+      )} */}
 
       {/* Optional Note */}
       <textarea
@@ -91,20 +41,14 @@ export default function TebusResep() {
         rows={4}
       />
 
-      {/* Notification */}
-      {message && (
-        <div className="mb-4 text-sm text-center text-red-600 font-semibold">{message}</div>
-      )}
-
       {/* Submit Button */}
       <div className="text-center mb-6">
         <button
-          disabled={isLoading}
-          onClick={handleSubmit}
-          className={`bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-md transition-all duration-200 transform ${isLoading ? "cursor-not-allowed opacity-70" : "hover:-translate-y-0.5 active:scale-95"
-            } flex items-center justify-center mx-auto gap-2`}
-        >
-          {isLoading && (
+          className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-md transition-all"
+        > Tebus Resep Obat
+        {/* {`bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-md transition-all duration-200 transform ${isLoading ? "cursor-not-allowed opacity-70" : "hover:-translate-y-0.5 active:scale-95"
+            } flex items-center justify-center mx-auto gap-2`} */}
+          {/* {isLoading && (
             <svg
               className="animate-spin h-5 w-5 text-white"
               xmlns="http://www.w3.org/2000/svg"
@@ -126,7 +70,7 @@ export default function TebusResep() {
               />
             </svg>
           )}
-          {isLoading ? "Memproses..." : "Tebus Resep Obat"}
+          {isLoading ? "Memproses..." : "Tebus Resep Obat"} */}
         </button>
       </div>
 
