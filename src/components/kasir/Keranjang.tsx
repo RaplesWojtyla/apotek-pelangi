@@ -5,12 +5,17 @@ import { Button } from '@/components/ui/button'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { CartItem } from '@/app/kasir/page' 
 
-export default function Keranjang() {
-  const [items, setItems] = useState([
-    { id: 1, name: 'Paracetamol', price: 5000, qty: 1 },
-    { id: 2, name: 'Vitamin C', price: 5000, qty: 2 }
-  ])
+export default function Keranjang({
+  items, 
+  onUpdateQty, 
+  onRemoveItem 
+}: {
+  items: CartItem[];
+  onUpdateQty: (id: string, newQty: number) => void;
+  onRemoveItem: (id: string) => void;
+}) {
   const [bayar, setBayar] = useState(0)
   const [metode, setMetode] = useState('tunai')
 
@@ -20,54 +25,48 @@ export default function Keranjang() {
   return (
     <div className="p-1">
       <ul className="divide-y divide-gray-200 mb-4 max-h-64 overflow-y-auto">
-        {items.map((item, index) => (
-          <li key={item.id} className="py-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="font-medium text-sm">{item.name}</p>
-                <div className="flex items-center gap-2 mt-1">
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    onClick={() => {
-                      let updated = [...items]
-                      updated[index].qty = Math.max(1, updated[index].qty - 1)
-                      setItems(updated)
-                    }}
+        {items.length === 0 ? ( 
+          <li className="py-4 text-center text-gray-500">Keranjang kosong</li>
+        ) : (
+          items.map((item) => (
+            <li key={item.id} className="py-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="font-medium text-sm">{item.nama_barang}</p> {/* Menggunakan item.nama_barang */}
+                  <div className="flex items-center gap-2 mt-1">
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      onClick={() => onUpdateQty(item.id, item.qty - 1)}
+                      disabled={item.qty <= 1} 
+                    >
+                      -
+                    </Button>
+                    <span className="w-6 text-center">{item.qty}</span>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      onClick={() => onUpdateQty(item.id, item.qty + 1)}
+                    >
+                      +
+                    </Button>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-semibold text-gray-700">
+                    Rp{(item.qty * item.price).toLocaleString()}
+                  </p>
+                  <button
+                    className="text-xs text-red-500 hover:underline"
+                    onClick={() => onRemoveItem(item.id)}
                   >
-                    -
-                  </Button>
-                  <span className="w-6 text-center">{item.qty}</span>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    onClick={() => {
-                      let updated = [...items]
-                      updated[index].qty += 1
-                      setItems(updated)
-                    }}
-                  >
-                    +
-                  </Button>
+                    Hapus
+                  </button>
                 </div>
               </div>
-              <div className="text-right">
-                <p className="text-sm font-semibold text-gray-700">
-                  Rp{(item.qty * item.price).toLocaleString()}
-                </p>
-                <button
-                  className="text-xs text-red-500 hover:underline"
-                  onClick={() => {
-                    let filtered = items.filter((_, i) => i !== index)
-                    setItems(filtered)
-                  }}
-                >
-                  Hapus
-                </button>
-              </div>
-            </div>
-          </li>
-        ))}
+            </li>
+          ))
+        )}
       </ul>
 
       <div className="border-t pt-4 space-y-3 text-sm">
