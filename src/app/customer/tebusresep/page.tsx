@@ -13,12 +13,10 @@ export default function TebusResep() {
 
       {/* Upload Box */}
       <label
-        htmlFor="file-upload"
         className="border-2 border-cyan-400 border-dashed rounded-lg h-64 flex flex-col items-center justify-center mb-4 cursor-pointer overflow-hidden relative hover:border-cyan-600 transition-colors px-4 text-center"
       >
         <input
-          id="file-upload"
-          type="file"
+         type="file"
           accept="image/*"
           className="absolute opacity-0 w-full h-full cursor-pointer"
         />
