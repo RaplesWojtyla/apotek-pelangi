@@ -47,13 +47,6 @@ enum StatusFaktur {
     SELESAI
 }
 
-enum MetodePembayaran {
-    DANA
-    GOPAY
-    QRIS
-    TRANSFER_BANK
-}
-
 enum TipeSumber {
     FAKTUR_PEMBELIAN
     FAKTUR_PENJUALAN
@@ -215,9 +208,10 @@ model FakturPenjualan {
     nama_penerima     String
     nomor_telepon     String
     alamat            String?
-    metode_pembayaran MetodePembayaran
+    metode_pembayaran String
     status            StatusFaktur
     total             Int
+    snap_token        String
     keterangan        String?
     createdAt         DateTime         @default(now())
 

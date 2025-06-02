@@ -15,13 +15,12 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CheckoutPayload, processCheckout } from "@/action/customer/checkout.action";
-import { MetodePembayaran } from "@prisma/client";
 
 interface CheckoutFormData {
 	namaPenerima: string
 	nomorTelepon: string
 	alamatPengiriman: string
-	metodePembayaran: MetodePembayaran | null
+	metodePembayaran: string | null
 	keterangan?: string
 }
 
@@ -88,7 +87,7 @@ export default function CheckoutPage() {
 		}))
 	}
 
-	const handlePaymentMethodChange = (paymentMethod: MetodePembayaran) => {
+	const handlePaymentMethodChange = (paymentMethod: string) => {
 		setFormData(prev => ({
 			...prev,
 			metodePembayaran: paymentMethod
@@ -103,18 +102,34 @@ export default function CheckoutPage() {
 			toast.error("Anda harus login untuk melanjutkan.");
 			return;
 		}
+
 		if (checkoutItems.length === 0) {
 			toast.error("Keranjang checkout kosong.");
 			return;
 		}
+
 		if (!formData.namaPenerima.trim()) {
 			toast.error("Nama penerima wajib diisi.");
 			return;
 		}
-		if (!formData.nomorTelepon.trim()) {
+
+		const trimmedPhoneNumber = formData.nomorTelepon.trim()
+
+		if (!trimmedPhoneNumber) {
 			toast.error("Nomor telepon wajib diisi.");
 			return;
 		}
+
+		if (!trimmedPhoneNumber.startsWith('08')) {
+			toast.error("Nomor telepon harus diawali dengan '08'.");
+			return;
+		}
+
+		if (trimmedPhoneNumber.length < 9) {
+			toast.error("Nomor telepon minimal harus 9 digit.");
+			return;
+		}
+
 		if (!formData.metodePembayaran) {
 			toast.error("Metode pembayaran wajib dipilih.");
 			return;
@@ -147,7 +162,7 @@ export default function CheckoutPage() {
 
 				clearCheckoutItemsHandler()
 				await updateCartBadge()
-				router.push('/customer/invoice')
+				router.push(`/customer/invoice/${res.fakturId}`)
 			} else {
 				toast.error(res.message || "Gagal membuat pesanan", {
 					duration: 4000
@@ -167,7 +182,7 @@ export default function CheckoutPage() {
 			<div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
 				<Loader2 className="h-16 w-16 animate-spin text-cyan-500" />
 				<p className="text-xl font-semibold text-muted-foreground mt-4">
-					Sedang memuat data checkout...
+					Sedang memuat data...
 				</p>
 			</div>
 		);
@@ -229,15 +244,20 @@ export default function CheckoutPage() {
 							<div>
 								<h2 className="text-xl font-bold mb-4">Pilih Metode Pembayaran</h2>
 								<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-									{["DANA", "GOPAY", "QRIS", "TRANSFER_BANK"].map(method => (
+									{[
+										{ method: "DANA", value: "dana"},
+										{ method: "GOPAY", value: "gopay"},
+										{ method: "QRIS", value: "other_qris"},
+										{ method: "BANK TRANSFER", value: "bank_transfer"},
+									].map(methodObj => (
 										<Button
-											key={method}
-											variant={formData.metodePembayaran === method ? "default" : "outline"}
+											key={methodObj.method}
+											variant={formData.metodePembayaran === methodObj.value ? "default" : "outline"}
 											className="justify-between w-full py-8"
-											onClick={() => handlePaymentMethodChange(method as MetodePembayaran)}
+											onClick={() => handlePaymentMethodChange(methodObj.value)}
 											disabled={isSubmitting}
 										>
-											{method.replace("_", " ")} <MoveRight />
+											{methodObj.method} <MoveRight />
 										</Button>
 									))}
 								</div>
