@@ -3,8 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import Navbar from "@/components/Navbar";
-import { CreditCard, HeartCrack } from "lucide-react";
+import { CreditCard } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { redirect, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
