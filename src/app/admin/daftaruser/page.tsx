@@ -36,21 +36,58 @@ function StatCardJumlahUser({ jumlah }: { jumlah: number }) {
         <User className="text-blue-600 w-6 h-6" />
       </div>
       <div>
-        <p className="text-sm text-muted-foreground">Jumlah Pengguna</p>
+        <p className="text-sm text-muted-foreground">Jumlah Customer</p>
         <h3 className="text-2xl font-bold">{jumlah}</h3>
       </div>
     </div>
   );
 }
+function StatCard({
+  title,
+  value,
+  icon,
+}: {
+  title: string;
+  value: string | number;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center gap-4 p-6 bg-white rounded-xl shadow-sm border w-full sm:w-[280px]">
+      <div className="p-4 rounded-full bg-blue-100 text-blue-600">
+        {icon}
+      </div>
+      <div>
+        <p className="text-sm text-muted-foreground">{title}</p>
+        <h3 className="text-2xl font-bold">{value}</h3>
+      </div>
+    </div>
+  );
+}
+
 
 export default function DaftarUsers() {
   return (
     <div className="p-4 max-w-[1240px] mx-auto">
       <h1 className="text-2xl font-bold mb-4">Daftar Pengguna</h1>
       {/* StatCard */}
-      <StatCardJumlahUser jumlah={dummyUsers.length} />
+      <div className="flex flex-col sm:flex-row flex-wrap gap-4 mb-6">
+  <StatCard
+    title="Total Pengguna"
+    value={dummyUsers.length}
+    icon={<User className="w-6 h-6" />}
+  />
+  <StatCard
+    title="Jumlah Kasir"
+    value={dummyUsers.filter((u) => u.role === "Kasir").length}
+    icon={<User className="w-6 h-6" />}
+  />
+  <StatCard
+    title="Jumlah Customer"
+    value={dummyUsers.filter((u) => u.role === "Customer").length}
+    icon={<User className="w-6 h-6" />}
+  />
+</div>
 
-      {/* Judul */}
 
       {/* Search + Tambah */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">

@@ -10,7 +10,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
+import { MoreVertical } from "lucide-react"
 import Link from "next/link"
 
 export default function TambahObatPage() {
@@ -120,10 +135,66 @@ export default function TambahObatPage() {
 
       {/* Tombol Simpan */}
       <div className="flex justify-end">
-        <Button className="bg-primary text-white hover:bg-primary/90 px-6 py-3 text-base rounded-lg">
+        <Button className="bg-primary text-white hover:bg-primary/90 px-6 py-3 text-base rounded-lg mb-8">
           Simpan Obat
         </Button>
       </div>
+
+      {/* Tambah Batch Obat */}
+      <section className="bg-card p-6 rounded-xl shadow-sm border mb-8">
+        <h2 className="text-lg font-semibold mb-6">Batch Obat</h2>
+
+        {/* Toolbar: Search + Tambah */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+          <Input
+            type="text"
+            placeholder="Cari batch..."
+            className="w-full md:w-64 h-10 text-sm"
+          />
+          <Button className="bg-primary text-white hover:bg-primary/90 px-6 py-2.5 text-sm rounded-lg">
+            + Tambah Batch
+          </Button>
+        </div>
+
+        {/* Tabel Batch */}
+        <div className="rounded-md border overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[140px]">ID Batch</TableHead>
+                <TableHead>Tanggal Kedaluwarsa</TableHead>
+                <TableHead>Stok</TableHead>
+                <TableHead>Harga Beli</TableHead>
+                <TableHead className="text-center w-[80px]">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {/* Contoh row statis */}
+              <TableRow>
+                <TableCell>BATCH001</TableCell>
+                <TableCell>2026-05-01</TableCell>
+                <TableCell>50</TableCell>
+                <TableCell>Rp 2.500</TableCell>
+                <TableCell className="text-center">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="p-1 rounded hover:bg-muted">
+                        <MoreVertical className="h-5 w-5" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>Lihat</DropdownMenuItem>
+                      <DropdownMenuItem>Edit</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+      </section>
     </div>
+
+
   )
 }
