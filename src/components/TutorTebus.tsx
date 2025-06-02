@@ -19,25 +19,43 @@ export default function TutorTebus() {
           Cara Menebus Resep
         </AccordionTrigger>
         <AccordionContent className="bg-white px-4 py-4">
-          <h2 className="font-bold mb-2">Cara Menebus Resep</h2>
-          <ul className="space-y-2">
+          <h2 className="font-bold mb-2 text-lg">Langkah-langkah Menebus Resep Secara Online</h2>
+          <ul className="space-y-3">
             <li className="flex items-start">
               <div className="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium mr-3">
                 1
               </div>
-              <span>lorem ipsum</span>
+              <span>Klik pada <b>Unggah Foto Resep</b> dan pilih file gambar resep dari perangkat Anda.</span>
             </li>
             <li className="flex items-start">
               <div className="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium mr-3">
-                1
+                2
               </div>
-              <span>lorem ipsum</span>
+              <span>Isi kolom <b>Tambahkan Catatan</b> jika ada informasi tambahan (opsional).</span>
             </li>
             <li className="flex items-start">
               <div className="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium mr-3">
-                1
+                3
               </div>
-              <span>lorem ipsum</span>
+              <span>Tekan tombol <b>Tebus Resep Obat</b> untuk mengirimkan permintaan Anda.</span>
+            </li>
+            <li className="flex items-start">
+              <div className="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium mr-3">
+                4
+              </div>
+              <span>Tunggu konfirmasi dari apotek terkait ketersediaan obat dan validasi resep.</span>
+            </li>
+            <li className="flex items-start">
+              <div className="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium mr-3">
+                5
+              </div>
+              <span>Setelah disetujui, obat akan otomatis masuk ke <b>keranjang</b>.</span>
+            </li>
+            <li className="flex items-start">
+              <div className="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center text-sm font-medium mr-3">
+                6
+              </div>
+              <span>Buka <b>keranjang</b> dan lakukan pembayaran melalui tombol <b>Checkout</b>.</span>
             </li>
           </ul>
         </AccordionContent>

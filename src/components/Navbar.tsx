@@ -76,7 +76,7 @@ export const Navbar = () => {
 									<div className="space-y-6">
 										<div className="space-y-2">
 											<Link
-												href="/customer"
+												href="/sign-in/callback"
 												onClick={() => setIsOpen(false)}
 												className="flex items-center space-x-2 text-gray-700 hover:text-cyan-600"
 											>
