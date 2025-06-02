@@ -10,8 +10,8 @@ import TableTransaction from "@/components/TableTransaction";
 
 export default function DashboardAdmin() {
 	return (
-		<div className="pl-2 max-w-screen">
-			<h1 className="text-2xl font-bold mb-6">Dashboard Admin</h1>
+		<div className="p-4 max-w-screen mt-4">
+			<h1 className="text-2xl font-bold mb-4">Dashboard Admin</h1>
 
 			{/* Stat Cards */}
 			<div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">

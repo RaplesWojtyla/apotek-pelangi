@@ -95,12 +95,6 @@ export default function LogPenjualanPage() {
             <Search className="w-4 h-4" />
           </Button>
         </div>
-          <Button asChild className="flex items-center gap-2 bg-cyan-500 text-white hover:bg-cyan-600">
-            <span>
-              <Plus className="w-4 h-4 inline mr-1" />
-              Tambah Penjualan
-            </span>
-          </Button>
       </div>
 
       {/* Tabel */}
