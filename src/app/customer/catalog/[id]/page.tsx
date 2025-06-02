@@ -14,7 +14,7 @@ export default function page() {
     const [productDetail, setProductDetail] = useState<ProductDetail>()
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [jumlah, setJumlah] = useState<number>(1)
-    const params = useParams()
+    const {id} = useParams()
     const { id } = params
     const router = useRouter()
 

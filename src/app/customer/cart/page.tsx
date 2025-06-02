@@ -147,6 +147,8 @@ export default function CartPage() {
 						].sort((a, b) => a.createdAt < b.createdAt ? 1 : -1))
 					}
 				}
+
+				toast.error(err.message || "Gagal mengubah kuantitas produk")
 			} else {
 				if (newQty === 0) {
 					toast.success("Item berasil dihapus.")

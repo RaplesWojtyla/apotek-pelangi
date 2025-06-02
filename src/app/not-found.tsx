@@ -1,5 +1,8 @@
+'use client'
+
 import React from 'react';
 import { Button } from '@/components/ui/button'; 
+import { redirect } from 'next/navigation';
 
 export default function NotFoundPage() {
 
@@ -10,7 +13,10 @@ export default function NotFoundPage() {
             <p className="mb-6 max-w-md">
                 Halaman yang kamu cari mungkin telah dihapus, namanya berubah, atau sedang tidak tersedia.
             </p>
-            <Button>
+            <Button 
+                onClick={() => redirect('/sign-in/callback')}
+                className='cursor-pointer'
+            >
                 Kembali ke Beranda
             </Button>
         </div>

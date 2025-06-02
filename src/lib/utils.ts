@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import midtransClient from "midtrans-client"
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
@@ -28,3 +29,9 @@ export const generatePagination = (totalPages: number, currPage: number) => {
 		totalPages
 	]
 }
+
+export const snap = new midtransClient.Snap({
+	isProduction: false,
+	serverKey: process.env.MIDTRANS_SERVER_KEY,
+	clientKey: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY
+})
