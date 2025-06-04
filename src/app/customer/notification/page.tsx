@@ -36,7 +36,7 @@ const mockNotifications: Notification[] = [
 
 export default function NotificationPage() {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6">
+    <div className="max-w-3xl mx-auto px-4 py-6 pt-16 min-h-screen">
       <h1 className="text-2xl font-bold mb-4 text-gray-800">Notifikasi</h1>
 
       <div className="bg-white shadow rounded-lg divide-y">

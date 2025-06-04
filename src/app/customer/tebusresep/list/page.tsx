@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import DetailTebusResepDialogCustomer from "@/components/DetailTebusCust";
 
 interface Resep {
     id: number;
@@ -41,12 +42,7 @@ export default function ListTebusResep() {
                                             : "text-red-600"
                                     }`}>Status: {status}</p>
                             </div>
-                            <Link
-                                href={`/customer/tebusresep/list/detail`}
-                                className="text-cyan-600 hover:underline font-semibold"
-                            >
-                                Lihat Detail
-                            </Link>
+                            <DetailTebusResepDialogCustomer />
                         </li>
                     ))}
                 </ul>
