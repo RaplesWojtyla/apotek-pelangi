@@ -3,7 +3,8 @@
 import { prisma } from "@/lib/prisma"
 import { getDbUserId } from "../user.action"
 import { SumberCart } from "@prisma/client"
-import { currentUser } from "@clerk/nextjs/server"
+import { auth, currentUser } from "@clerk/nextjs/server"
+import { updateSellingInvoiceStatus } from "./sellingInvoice.action"
 import { snap } from "@/lib/utils"
 
 interface CheckoutItemDetail {
@@ -18,11 +19,12 @@ interface CheckoutItemDetail {
 export interface CheckoutPayload {
 	items: CheckoutItemDetail[]
 	namaPenerima: string
-	nomorTelepon: string 
+	nomorTelepon: string
 	alamatPengiriman?: string
 	metodePembayaran: string
 	keterangan?: string
 }
+
 interface MidtransItemDetail {
 	id: string
 	name: string
@@ -56,7 +58,7 @@ export const processCheckout = async (payload: CheckoutPayload) => {
 	const { items, namaPenerima, nomorTelepon, alamatPengiriman, metodePembayaran, keterangan } = payload
 
 	if (!items || items.length === 0) throw new Error("Tidak ada item untuk dipesan")
-	
+
 	const total = items.reduce((acc, item) => acc + item.harga_saat_checkout * item.jumlah, 0)
 
 	try {
@@ -75,7 +77,7 @@ export const processCheckout = async (payload: CheckoutPayload) => {
 				}
 			})
 
-			
+
 			let midtransParams: MidtransParams = {
 				"transaction_details": {
 					"order_id": fakturPenjualan.id,
@@ -90,14 +92,14 @@ export const processCheckout = async (payload: CheckoutPayload) => {
 				"enabled_payments": [metodePembayaran],
 				"item_details": []
 			}
-			
+
 
 			const dataDetailFakturPenjualan = items.map(item => ({
 				id_faktur_penjualan: fakturPenjualan.id,
 				id_barang: item.id_barang,
 				jumlah: item.jumlah,
 				id_resep: item.id_resep
-			})) 
+			}))
 
 
 			await tx.detailFakturPenjualan.createMany({
@@ -163,14 +165,24 @@ export const processCheckout = async (payload: CheckoutPayload) => {
 							nama_barang: true
 						}
 					})
-					
+
 					throw new Error(`Stok untuk ${barangInfo?.nama_barang || 'item'} tidak mencukupi (${item.jumlah} dibutuhkan). Transaksi dibatalkan`)
 				}
 			}
 
+			const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/tokenizer`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(midtransParams)
+			})
+
+			if (!res.ok) throw new Error("Gagal membuat token pembayaran.")
+
+			const data = await res.json()
 
 			const cartIds = items.map(item => item.id_cart)
-
 			await tx.cart.deleteMany({
 				where: {
 					id: { in: cartIds },
@@ -190,17 +202,6 @@ export const processCheckout = async (payload: CheckoutPayload) => {
 				}
 			})
 
-			const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/tokenizer`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(midtransParams)
-			})
-
-			if (!res.ok) throw new Error("Gagal membuat token pembayaran.")
-			
-			const data = await res.json()
 
 			const updatedFakturPenjualan = await tx.fakturPenjualan.update({
 				where: { id: fakturPenjualan.id },
@@ -208,6 +209,9 @@ export const processCheckout = async (payload: CheckoutPayload) => {
 			})
 
 			return updatedFakturPenjualan
+		}, {
+			maxWait: 12500,
+			timeout: 12500
 		})
 
 		return {
@@ -220,7 +224,158 @@ export const processCheckout = async (payload: CheckoutPayload) => {
 
 		return {
 			success: false,
-			message: "Internal server error"
+			message: "Server Timeout"
+		}
+	}
+}
+
+export const transactionSuccess = async (order_id: string) => {
+	const { userId } = await auth()
+
+	if (!userId) return {
+		success: false,
+		message: "Pengguna tidak terautentikasi.",
+		data: null
+	}
+
+	try {
+		let midtransStatusResponse
+		try {
+			midtransStatusResponse = await snap.transaction.status(order_id)
+		} catch (error: any) {
+			console.error(`[transactionSuccess] Midtrans status check error for order_id ${order_id}:`, error.message);
+
+			if (error.ApiResponse.status_code && error.ApiResponse.status_code === '404') {
+				return {
+					success: false,
+					message: "Transaksi tidak ditemukan",
+					status: error.ApiResponse.status_code,
+					data: null
+				};
+			}
+
+			return {
+				success: false,
+				message: "Gagal memverifikasi status pembayaran.",
+				data: null
+			};
+		}
+
+		const { transaction_status, fraud_status } = midtransStatusResponse
+		const isPaymentConfirmedByMidtrans = (transaction_status === 'capture' && fraud_status === 'accept') || transaction_status === 'settlement'
+
+		if (!isPaymentConfirmedByMidtrans) {
+			console.warn(`[transactionSuccess] Payment for order_id ${order_id} not confirmed. Midtrans Status: ${transaction_status}, Fraud Status: ${fraud_status}`);
+
+			const currInvoice = await prisma.fakturPenjualan.findUnique({
+				where: { id: order_id }
+			})
+
+			if (transaction_status === 'pending') {
+				return {
+					success: false,
+					message: "Pembayaran Anda masih tertunda. Silakan selesaikan pembayaran.",
+					data: currInvoice,
+					isPending: true
+				}
+			}
+
+			return {
+				success: false,
+				message: `Status pembayaran: ${transaction_status}. Pembayaran belum dikonfirmasi berhasil.`,
+				data: currInvoice
+			}
+		}
+
+		const res = await updateSellingInvoiceStatus(order_id, 'PEMBAYARAN_BERHASIL')
+
+		if (!res.success) return {
+			success: false,
+			message: res.message || "Terjadi kesalahan saat memperbarui status!",
+			data: null
+		};
+
+		return {
+			success: true,
+			message: "Transaksi berhasil!",
+			data: res.data
+		}
+	} catch (error: any) {
+		console.error(`[transactionSuccess] Error: ${error.message || error}`);
+
+		return {
+			success: false,
+			message: error.message || "Transaksi gagal - Terjadi kesalahan pada server",
+			data: null
+		};
+	}
+}
+
+export const failedTransaction = async (order_id: string) => {
+	const { userId } = await auth()
+
+	if (!userId) throw new Error("Pengguna tidak terautentikasi")
+
+	try {
+		const res = await prisma.$transaction(async tx => {
+			const updatedFakturPenjualan = await tx.fakturPenjualan.update({
+				where: { id: order_id },
+				data: {
+					status: 'PEMBAYARAN_GAGAL'
+				},
+				include: {
+					detail_faktur_penjualan: {
+						select: {
+							id_barang: true,
+							jumlah: true
+						}
+					}
+				}
+			})
+
+			const stocksUpdatePromise = updatedFakturPenjualan.detail_faktur_penjualan.map(async item => {
+				const targetBatch = await tx.stokBarang.findFirst({
+					where: {
+						id_barang: item.id_barang
+					},
+					orderBy: [
+						{ tanggal_kadaluarsa: 'asc' },
+						{ jumlah: 'asc' }
+					]
+				})
+
+				if (targetBatch) {
+					await tx.stokBarang.update({
+						where: {
+							id: targetBatch.id
+						},
+						data: {
+							jumlah: { increment: item.jumlah }
+						}
+					})
+				} else {
+					console.warn(`[stocksUpdate] StokBarang tidak ditemukan untuk id_barang: ${item.id_barang} saat mencoba mengembalikan stok.`)
+					throw new Error(`StokBarang tidak ditemukan untuk id_barang: ${item.id_barang}`)
+				}
+			})
+
+			await Promise.all(stocksUpdatePromise)
+
+			return updatedFakturPenjualan
+		})
+
+		return {
+			success: true,
+			message: "Pembayaran Gagal",
+			data: res
+		}
+	} catch (error: any) {
+		console.error(`[failedTransaction] Error: ${error.message || error}`)
+
+		return {
+			success: false,
+			message: error.message || "Gagal memperbarui status transaksi.",
+			data: null
 		}
 	}
 }
