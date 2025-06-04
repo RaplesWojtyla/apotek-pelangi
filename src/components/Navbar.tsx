@@ -7,6 +7,7 @@ import { Bell, LayoutDashboard, Menu } from 'lucide-react'
 import { Button } from './ui/button'
 import { Separator } from './ui/separator'
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
+import NotificationDropdown from './Notification'
 
 export const Navbar = () => {
 	const { isSignedIn } = useUser()
@@ -34,9 +35,7 @@ export const Navbar = () => {
 									<Separator orientation="vertical" className="w-px h-5 bg-gray-300 mr-4" />
 								</div>
 							</nav>
-							<Link href={'/customer/notification'} aria-label="Notifikasi">
-								<Bell className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
-							</Link>
+							<NotificationDropdown />
 							<UserButton />
 						</>
 					) : (

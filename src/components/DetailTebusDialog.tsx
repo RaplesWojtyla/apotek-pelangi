@@ -8,21 +8,40 @@ export default function DetailTebusResepDialog() {
   type Status = "diajukan" | "menunggu" | "konfirmasi" | "ditolak";
   const [status, setStatus] = useState<Status>("menunggu");
   const [open, setOpen] = useState(false);
+  const [keranjang, setKeranjang] = useState<{ nama: string; jumlah: number }[]>([]);
+  const [selected, setSelected] = useState("");
+  const [jumlah, setJumlah] = useState(1);
 
-  // Step dan labelnya
+  const katalog = [
+    "Paracetamol 500mg",
+    "Amoxicillin 250mg",
+    "Vitamin C 100mg",
+  ];
+
   const steps = [
     { key: "diajukan", label: "Resep Diajukan" },
     { key: "menunggu", label: "Menunggu Konfirmasi" },
     { key: "selesai", label: status === "ditolak" ? "Ditolak" : "Dikonfirmasi" },
   ];
 
-  // Tentukan step aktif (index)
   const currentStepIndex =
-    status === "diajukan"
-      ? 0
-      : status === "menunggu"
-      ? 1
-      : 2;
+    status === "diajukan" ? 0 : status === "menunggu" ? 1 : 2;
+
+  const tambahKeKeranjang = () => {
+    if (!selected || jumlah < 1) return;
+    const sudahAda = keranjang.find((b) => b.nama === selected);
+    if (sudahAda) {
+      setKeranjang(
+        keranjang.map((b) =>
+          b.nama === selected ? { ...b, jumlah: b.jumlah + jumlah } : b
+        )
+      );
+    } else {
+      setKeranjang([...keranjang, { nama: selected, jumlah }]);
+    }
+    setSelected("");
+    setJumlah(1);
+  };
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -38,7 +57,6 @@ export default function DetailTebusResepDialog() {
             Detail Penebusan Resep
           </Dialog.Title>
 
-          {/* Foto Resep */}
           <div className="mb-6 flex justify-center">
             <img
               src="/"
@@ -47,13 +65,10 @@ export default function DetailTebusResepDialog() {
             />
           </div>
 
-          {/* Progress Step */}
           <div className="flex flex-col relative ml-4 mb-8">
             {steps.map((step, idx) => {
               const isActive = idx === currentStepIndex;
               const isDone = idx < currentStepIndex;
-
-              // Warna merah jika step terakhir dan status ditolak
               const isRejected = status === "ditolak" && idx === 2;
 
               return (
@@ -96,40 +111,63 @@ export default function DetailTebusResepDialog() {
             })}
           </div>
 
-          {/* Info Detail */}
           <div className="border rounded-md p-4 mb-6">
-            <p>
-              <span className="font-semibold">Nama File:</span> nama_file_resep.pdf
-            </p>
-            <p>
-              <span className="font-semibold">Tanggal Upload:</span> 2025-06-03
-            </p>
-            <p>
-              <span className="font-semibold">Status:</span>{" "}
-              {status === "ditolak"
-                ? "Ditolak"
-                : status === "konfirmasi"
-                ? "Dikonfirmasi"
-                : status === "menunggu"
-                ? "Menunggu Konfirmasi"
-                : "Diajukan"}
-            </p>
-            <p>
-              <span className="font-semibold">Catatan:</span>{" "}
-              {status === "ditolak" ? "Resep ditolak karena alasan tertentu." : "Tidak ada catatan."}
-            </p>
+            <p><span className="font-semibold">Nama File:</span> nama_file_resep.pdf</p>
+            <p><span className="font-semibold">Tanggal Upload:</span> 2025-06-03</p>
+            <p><span className="font-semibold">Status:</span> {status === "ditolak" ? "Ditolak" : status === "konfirmasi" ? "Dikonfirmasi" : status === "menunggu" ? "Menunggu Konfirmasi" : "Diajukan"}</p>
+            <p><span className="font-semibold">Catatan:</span> {status === "ditolak" ? "Resep ditolak karena alasan tertentu." : "Tidak ada catatan."}</p>
           </div>
 
-          {/* Tombol Konfirmasi/Tolak muncul hanya saat status menunggu */}
           {status === "menunggu" && (
             <div className="flex gap-4 justify-end">
-              <Button variant="destructive" onClick={() => setStatus("ditolak")}>
-                Tolak
-              </Button>
-              <Button variant="default" onClick={() => setStatus("konfirmasi")}>
-                Konfirmasi
-              </Button>
+              <Button variant="destructive" onClick={() => setStatus("ditolak")}>Tolak</Button>
+              <Button onClick={() => setStatus("konfirmasi")}>Konfirmasi</Button>
             </div>
+          )}
+
+          {status === "konfirmasi" && (
+            <>
+              <div className="mb-4">
+                <h4 className="font-semibold mb-2">Tambah Barang</h4>
+                <div className="flex gap-2">
+                  <select
+                    value={selected}
+                    onChange={(e) => setSelected(e.target.value)}
+                    className="border px-2 py-1 rounded w-full"
+                  >
+                    <option value="">Pilih barang</option>
+                    {katalog.map((item) => (
+                      <option key={item} value={item}>{item}</option>
+                    ))}
+                  </select>
+                  <input
+                    type="number"
+                    min={1}
+                    value={jumlah}
+                    onChange={(e) => setJumlah(Number(e.target.value))}
+                    className="w-20 border px-2 py-1 rounded"
+                  />
+                  <Button onClick={tambahKeKeranjang}>Tambah</Button>
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <h4 className="font-semibold mb-2">Keranjang</h4>
+                {keranjang.length === 0 ? (
+                  <p className="text-sm text-gray-500">Belum ada barang.</p>
+                ) : (
+                  <ul className="list-disc ml-5 text-sm">
+                    {keranjang.map((item, idx) => (
+                      <li key={idx}>{item.nama} (x{item.jumlah})</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <div className="flex justify-end">
+                <Button>Konfirmasi</Button>
+              </div>
+            </>
           )}
 
           <Dialog.Close asChild>
