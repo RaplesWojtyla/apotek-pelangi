@@ -25,7 +25,9 @@ const CustomerLayout = ({ children }: { children: ReactNode }) => {
 	return (
 		<CartProvider>
 			<NavbarCustomer />
-			{ children }
+			<div className='mt-14'>
+				{ children }
+			</div>
 			<Footer />
 		</CartProvider>
 	)

@@ -10,11 +10,11 @@ import { DbUser, getUserByClerkId } from "@/action/user.action";
 import toast from "react-hot-toast";
 import { useRouter, usePathname } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, MoveRight } from "lucide-react";
+import { ClockAlertIcon, Loader2, MoveRight } from "lucide-react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CheckoutPayload, processCheckout } from "@/action/customer/checkout.action";
+import { CheckoutPayload, processCheckout } from "@/action/customer/transaction.action";
 
 interface CheckoutFormData {
 	namaPenerima: string
@@ -163,6 +163,21 @@ export default function CheckoutPage() {
 				clearCheckoutItemsHandler()
 				await updateCartBadge()
 				router.push(`/customer/invoice/${res.fakturId}`)
+			} else if (res.message === 'Server Timeout') {
+				toast.error(res.message, {
+					duration: 6000,
+					style: {
+						border: '1px solid #ED0505',
+						padding: '16px',
+						color: '#A20000',
+						background: '#FFAAAA'
+					},
+					iconTheme: {
+						primary: '#ED0505',
+						secondary: '#FFFAEE',
+					},
+					icon: <ClockAlertIcon size={30} />
+				})
 			} else {
 				toast.error(res.message || "Gagal membuat pesanan", {
 					duration: 4000
@@ -245,10 +260,10 @@ export default function CheckoutPage() {
 								<h2 className="text-xl font-bold mb-4">Pilih Metode Pembayaran</h2>
 								<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 									{[
-										{ method: "DANA", value: "dana"},
-										{ method: "GOPAY", value: "gopay"},
-										{ method: "QRIS", value: "other_qris"},
-										{ method: "BANK TRANSFER", value: "bank_transfer"},
+										{ method: "DANA", value: "dana" },
+										{ method: "GOPAY", value: "gopay" },
+										{ method: "QRIS", value: "other_qris" },
+										{ method: "BANK TRANSFER", value: "bank_transfer" },
 									].map(methodObj => (
 										<Button
 											key={methodObj.method}

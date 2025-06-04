@@ -8,104 +8,136 @@ import { useUser } from "@clerk/nextjs";
 import { redirect, useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { InvoiceSkeleton } from "@/components/skeleton/InvoiceSkeleton";
-import { getSellingInvoiceById, SellingInvoice } from "@/action/customer/sellingInvoice.action";
+import { SellingInvoice } from "@/action/customer/sellingInvoice.action";
 import toast from "react-hot-toast";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { transactionSuccess } from "@/action/customer/transaction.action";
 
 
-export default function PembayaranPage() {
+export default function SuccessPage() {
 	const [isLoading, setIsLoading] = useState<boolean>(true)
 	const [invoice, setInvoice] = useState<SellingInvoice>()
+	const [isPaymentVerified, setIsPaymentVerified] = useState<boolean>(false)
+	const [verificationMessage, setVerificationMessage] = useState<string>()
+
 	const { isSignedIn, user, isLoaded } = useUser()
 	const router = useRouter()
 	const params = useParams()
-	const { id } = params
+	const { order_id } = params
 
 	if (isLoaded && !isSignedIn) {
 		return redirect('/unauthorized')
 	}
 
 	useEffect(() => {
-		if (!isLoaded || !isSignedIn) return
+		if (!isLoaded) return
 
-		if (!id) {
+		if (!isSignedIn) {
+			return redirect('/unauthorized')
+		}
+
+		if (!order_id) {
 			toast.error("Kode Invoice tidak valid!")
 			router.push('/customer/cart')
 			setIsLoading(false)
 			return
 		}
 
-		const fetchInvoiceData = async () => {
+		const verifyAndFetchInvoice = async () => {
 			setIsLoading(true)
 			try {
-				const data = await getSellingInvoiceById(id.toString())
+				const verificationResult = await transactionSuccess(order_id.toString())
 
-				if (!data.success) {
-					toast.error(data.message || "Invoice tidak ditemukan atau Anda tidak memiliki akses.")
-					router.push('/customer/cart')
-					return
-				}
-
-				if (data.data) {
-					setInvoice(data.data)
+				if (verificationResult.success && verificationResult.data) {
+					setInvoice(verificationResult.data)
+					setIsPaymentVerified(true)
+					setVerificationMessage(verificationResult.message)
 				} else {
-					toast.error("Data invoice tidak ditemukan.")
-					router.push('/customer/cart')
-					return
+					setIsPaymentVerified(false)
+					setVerificationMessage(verificationResult.message || "Gagal memverifiksi pembayaran")
+					setInvoice(verificationResult.data)
+
+					if (verificationResult.isPending) {
+						toast("Anda belum melakukan pembayaran!", {
+							duration: 5000,
+							style: {
+								border: '1px solid #CB8802',
+								padding: '16px',
+								color: '#B47902',
+								background: '#FFE2A6'
+							},
+							iconTheme: {
+								primary: '#713200',
+								secondary: '#FFFAEE',
+							},
+							icon: <OctagonAlertIcon size={30} />,
+						})
+						router.replace(`/customer/invoice/${order_id}`)
+					} else if (verificationResult.status === '404') {
+						toast.error(verificationResult.message || "Transaksi tidak ditemukan.", {
+							duration: 5000,
+							style: {
+								border: '1px solid #ED0505',
+								padding: '16px',
+								color: '#A20000',
+								background: '#FFAAAA'
+							},
+							iconTheme: {
+								primary: '#ED0505',
+								secondary: '#FFFAEE',
+							},
+						})
+						router.replace(`/customer/invoice/${order_id}`)
+					} else {
+						toast.error(verificationResult.message || "Pembayaran tidak berhasil dikonfirmasi", {
+							duration: 5000,
+							style: {
+								border: '1px solid #ED0505',
+								padding: '16px',
+								color: '#A20000',
+								background: '#FFAAAA'
+							},
+							iconTheme: {
+								primary: '#ED0505',
+								secondary: '#FFFAEE',
+							},
+						})
+						router.replace(`/customer/invoice/${order_id}`)
+					}
 				}
 			} catch (error: any) {
-				console.error(`[fetchInvoiceData] Error: ${error.message || error}`)
-				toast.error("Terjadi kesalahan saat mengambil data invoice.")
+				console.error(`[verifyAndFetchInvoice] Error: ${error.message || error}`);
+				toast.error("Terjadi kesalahan saat memverifikasi invoice.")
+				setIsPaymentVerified(false)
+				setVerificationMessage("Terjadi kesalahan pada server")
 				router.push('/customer')
 			} finally {
 				setIsLoading(false)
 			}
 		}
 
-		fetchInvoiceData()
-	}, [id, isLoaded, isSignedIn, router])
+		verifyAndFetchInvoice()
+	}, [order_id, isLoaded, isSignedIn, router])
 
 	if (!isLoaded || isLoading) return <InvoiceSkeleton />
 
-	if (isLoaded && !invoice) {
+	if (!isPaymentVerified || !invoice) {
 		return (
-			<div className="flex flex-col items-center justify-center h-screen">
-				<p className="text-xl text-gray-700">Data invoice tidak dapat dimuat.</p>
-				<Button onClick={() => router.push('/customer/dashboard')} className="mt-4">
-					Kembali ke Dashboard
+			<div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6 text-center">
+				<h2 className="text-2xl font-semibold text-red-600 mb-4">Verifikasi Pembayaran Tidak Berhasil</h2>
+				<p className="text-gray-700 mb-6 max-w-md">
+					{verificationMessage || "Status pembayaran tidak dapat dikonfirmasi sebagai berhasil. Mohon periksa kembali status transaksi Anda."}
+				</p>
+				{order_id && (
+					<Button onClick={() => router.push(`/customer/invoice/${order_id}`)} className="mb-2 cursor-pointer">
+						Cek Status Invoice
+					</Button>
+				)}
+				<Button onClick={() => router.push('/customer/history')} variant="outline" className="cursor-pointer">
+					Lihat Riwayat Transaksi
 				</Button>
 			</div>
 		)
-	}
-
-	const handlePayment = (snap_token: string) => {
-		window.snap.pay(snap_token, {
-			onSuccess: (res) => {
-				router.push(`/customer/invoice/success/${res.order_id}`)
-			},
-			onPending: () => {
-				toast.error("Harap segera melakukan pembayaran", {
-					duration: 4500,
-					style: {
-						border: '1px solid #CB8802',
-						paddingTop: '16px',
-						color: '#B47902',
-						background: '#FFE2A6'
-					},
-					iconTheme: {
-						primary: '#713200',
-						secondary: '#FFFAEE',
-					},
-					icon: <OctagonAlertIcon size={30} />,
-				})
-			},
-			onError: (res) => {
-				redirect(`/customer/invoice/failed?order_id=${invoice?.id}`)
-			},
-			onClose: () => {
-
-			},
-		})
 	}
 
 	return (
@@ -116,7 +148,7 @@ export default function PembayaranPage() {
 
 				<Card className="bg-white p-6 sm:p-8 md:p-10 space-y-8 shadow-xl rounded-xl border border-slate-200">
 					<h2 className="text-2xl font-semibold text-cyan-700">
-						Pesanan anda telah diterima. Silahkan lakukan pembayaran
+						Pembayaran Berhasil! Pesanan anda akan segera dikemas!
 					</h2>
 
 
@@ -185,7 +217,7 @@ export default function PembayaranPage() {
 										{invoice?.status}
 									</Badge>
 								)}
-								{invoice?.status === 'SELESAI' && (
+								{invoice?.status === 'PEMBAYARAN_BERHASIL' && (
 									<Badge className="bg-green-100 text-green-700 px-3 py-1.5 text-sm font-medium border border-cyan-200 rounded-md">
 										{invoice?.status}
 									</Badge>
@@ -197,9 +229,9 @@ export default function PembayaranPage() {
 					<div className="pt-6 border-t border-slate-200 mt-4">
 						<Button
 							className="w-full cursor-pointer md:w-auto text-white font-semibold py-3 px-6 sm:px-8 rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-150 ease-in-out"
-							onClick={() => handlePayment(invoice?.snap_token!)}
+							onClick={() => router.push('/customer')}
 						>
-							Bayar Sekarang
+							Kembali ke Dashboard
 						</Button>
 					</div>
 				</Card>

@@ -15,9 +15,9 @@ export async function GET(req: Request) {
 	await syncUser()
 	const dbUser = await getUserByClerkId(user.id);
 
-	let dest = "/customer";
-	if (dbUser?.role === "ADMIN") dest = "/admin";
-	else if (dbUser?.role === "KASIR") dest = "/kasir";
+	let dest =`${process.env.NEXT_PUBLIC_APP_URL}/customer`;
+	if (dbUser?.role === "ADMIN") dest =`${process.env.NEXT_PUBLIC_APP_URL}/admin`;
+	else if (dbUser?.role === "KASIR") dest =`${process.env.NEXT_PUBLIC_APP_URL}/kasir`;
 
 	const url = new URL(dest, req.url)
 	
