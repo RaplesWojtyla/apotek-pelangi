@@ -120,7 +120,7 @@ export const processCheckout = async (payload: CheckoutPayload) => {
 					}
 				})
 
-				if (!product) break
+				if (!product) throw new Error("Produk tidak ditemukan.")
 
 				midtransParams.item_details.push({
 					"id": product.id,
@@ -222,9 +222,22 @@ export const processCheckout = async (payload: CheckoutPayload) => {
 	} catch (error: any) {
 		console.error(`[processCheckout] Error: ${error}`)
 
+		let userFriendlyMessage = "Terjadi kesalahan server saat memproses pesanan Anda. Silakan coba lagi nanti.";
+
+		if (error instanceof Error && error.message) {
+			if (error.message.startsWith("Stok untuk") && error.message.includes("tidak mencukupi")) {
+				userFriendlyMessage = error.message;
+			} else if (error.message === "Gagal membuat token pembayaran.") {
+				userFriendlyMessage = "Gagal memproses pembayaran. Silakan coba lagi.";
+			} else if (error.message.toLowerCase().includes("timeout") || error.message.toLowerCase().includes("timed out")) {
+				userFriendlyMessage = "Waktu pemrosesan pesanan habis. Silakan coba lagi.";
+			}
+		}
+
 		return {
 			success: false,
-			message: "Server Timeout"
+			message: userFriendlyMessage,
+			fakturId: null
 		}
 	}
 }
