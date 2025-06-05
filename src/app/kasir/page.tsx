@@ -73,7 +73,7 @@ export default function DashboardKasirPage() {
           take={take}
           onAddToCart={handleAddToCartForKasir} 
         />
-        <ProductPagination />
+        {/* <ProductPagination totalPages={7} /> */}
       </div>
 
       <div className="hidden lg:block w-[380px] flex-shrink-0">
