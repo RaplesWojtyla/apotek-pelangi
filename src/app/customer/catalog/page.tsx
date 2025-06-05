@@ -1,16 +1,39 @@
 'use client'
+
 import SearchBar from "@/components/SearchBar";
 import CatalogSidebar from "@/components/customer/CatalogSidebar";
 import CatalogProducts from "@/components/customer/CatalogProduct";
 import { useSearchParams } from "next/navigation";
-import PaginationDemo from "@/components/Pagination";
+import CatalogPagination from "@/components/Pagination";
+import { useEffect, useState } from "react";
+import { getCatalogTotalPages } from "@/action/product.action";
+import toast from "react-hot-toast";
 
 export default function page() {
+	const [isLoading, setIsLoading] = useState<boolean>(true)
+	const [totalPages, setTotalPages] = useState<number>(1)
 	const searchParams = useSearchParams()
 	const search = String(searchParams.get('matcher') ?? '')
 	const page = Number(searchParams.get('page') ?? 1)
-	const totalPages: number = 8
 	const take: number = 8
+
+	useEffect(() => {
+		try {
+			setIsLoading(true)
+			const fetchTotalPages = async () => {
+				const data = await getCatalogTotalPages(search, take)
+				setTotalPages(data)
+			}
+			
+			fetchTotalPages()
+		} catch (error) {
+			console.error(`[fetchTotalPages] Error: ${error}`);
+
+			toast.error("Gagal memuat halaman katalog produk!")
+		} finally {
+			setIsLoading(false)
+		}
+	}, [search, page])
 
 	return (
 		<div className="flex bg-gray-100 min-h-screen pt-15">
@@ -23,7 +46,7 @@ export default function page() {
 					currPage={page}
 					take={take}
 				/>
-				<PaginationDemo />
+				<CatalogPagination totalPages={totalPages} />
 			</div>
 		</div>
 	)

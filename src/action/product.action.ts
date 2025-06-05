@@ -116,7 +116,7 @@ export const getProductDetail = async (id: string) => {
 	}
 }
 
-export const getCatalogPages = async (matcher: string, take: number) => {
+export const getCatalogTotalPages = async (matcher: string, take: number) => {
 	try {
 		const products = await prisma.barang.findMany({
 			where: {
@@ -129,7 +129,7 @@ export const getCatalogPages = async (matcher: string, take: number) => {
 
 		const totalPages: number = Math.ceil(products.length / take)
 
-		return totalPages
+		return totalPages === 0 ? 1 : totalPages
 	} catch (error) {
 		console.error(`[getProductDetail] ERROR: ${error}`);
 
