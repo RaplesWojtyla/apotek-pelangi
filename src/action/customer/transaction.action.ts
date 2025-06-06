@@ -5,7 +5,7 @@ import { getDbUserId } from "../user.action"
 import { SumberCart } from "@prisma/client"
 import { auth, currentUser } from "@clerk/nextjs/server"
 import { updateSellingInvoiceStatus } from "./sellingInvoice.action"
-import { snap } from "@/lib/utils"
+import { snap } from "@/lib/midtrans"
 
 interface CheckoutItemDetail {
 	id_cart: string

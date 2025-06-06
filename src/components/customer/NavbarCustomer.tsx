@@ -9,11 +9,12 @@ import { Button } from '../ui/button';
 import { SheetContent, SheetTrigger } from '../ui/sheet';
 import { useCartContext } from '@/context/CartContext';
 import { useState } from 'react';
+import { Skeleton } from '../ui/skeleton';
 
 export const NavbarCustomer = () => {
 	const [isOpen, setIsOpen] = useState(false)
 	const { cartItemsCount, isLoadingCartCount } = useCartContext()
-	const { isSignedIn } = useUser()
+	const { isSignedIn, isLoaded } = useUser()
 
 	return (
 		<>
@@ -51,9 +52,6 @@ export const NavbarCustomer = () => {
 						</div>
 					</nav>
 					<nav className="hidden md:flex space-x-4">
-						<Link href="">
-							<MapPinned className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
-						</Link>
 						<div className="relative">
 							<Link href="/customer/cart" aria-label="Keranjang">
 								<ShoppingCart className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
@@ -72,7 +70,11 @@ export const NavbarCustomer = () => {
 						<button aria-label="Notifikasi">
 							<Bell className="w-6 h-6 text-cyan-500 hover:text-cyan-700" />
 						</button>
-						<UserButton />
+						{isLoaded ? (
+							<UserButton />
+						) : (
+							<Skeleton className='size-10 rounded-full' />
+						)}
 					</nav>
 				</div>
 				<div className="md:hidden">
@@ -117,7 +119,7 @@ export const NavbarCustomer = () => {
 											<span>Keranjang</span>
 										</Link>
 										<Link href="/customer/" onClick={() => setIsOpen(false)} className="flex items-center space-x-2 text-gray-700 hover:text-cyan-600">
-											<MapPinned size={18} />
+											{/* <MapPinned size={18} /> */}
 											<span>Alamat</span>
 										</Link>
 									</div>
