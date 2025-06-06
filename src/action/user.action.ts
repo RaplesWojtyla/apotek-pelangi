@@ -22,6 +22,7 @@ export const syncUser = async () => {
 				nama: user.fullName,
 				email: user.emailAddresses[0].emailAddress,
 				foto_profil: user.imageUrl,
+				// no_hp: user.phoneNumbers[0]?.phoneNumber || ""
 			},
 			create: {
 				clerkId: user.id,

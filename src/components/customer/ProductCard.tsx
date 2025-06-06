@@ -107,16 +107,23 @@ export default function ProductCard({ product }: { product: Product }) {
 			<div className="flex w-full gap-2 mt-auto">
 				{/* Tombol Beli Sekarang */}
 				<Button
-					className="flex-1 bg-cyan-500 text-white text-sm rounded-md hover:bg-cyan-600 transition disabled:opacity-50 px-2 py-2 whitespace-nowrap overflow-hidden text-ellipsis"
+					className="flex-1 bg-cyan-500 text-white text-sm rounded-md hover:bg-cyan-600 transition disabled:opacity-50 px-2 py-2 whitespace-nowrap overflow-hidden text-ellipsis cursor-pointer"
 					disabled={isAddingToCart}
 					title="Beli Sekarang"
 				>
-					<span className="block truncate">Beli Sekarang</span>
+					{isAddingToCart ? (
+						<>
+							<Loader2 className="size-4 animate-spin" />
+							Sedang proses...
+						</>
+					) : (
+						<span className="block truncate">Beli Sekarang</span>
+					)}
 				</Button>
 
 				{/* Tombol keranjang */}
 				<Button
-					className="w-10 h-10 bg-white border border-cyan-500 rounded-md hover:bg-cyan-50 text-cyan-600 flex items-center justify-center transition disabled:opacity-50"
+					className="w-10 h-10 bg-white border border-cyan-500 rounded-md hover:bg-cyan-50 text-cyan-600 flex items-center justify-center transition disabled:opacity-50 cursor-pointer"
 					onClick={handleAddToCart}
 					disabled={isAddingToCart}
 				>

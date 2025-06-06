@@ -1,4 +1,4 @@
-import { snap } from "@/lib/utils"
+import { snap } from "@/lib/midtrans";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
