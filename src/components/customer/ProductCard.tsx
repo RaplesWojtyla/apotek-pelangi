@@ -1,6 +1,6 @@
 'use client'
 
-import { Loader2, ShoppingCart } from "lucide-react";
+import { Loader2, Package, ShoppingCart } from "lucide-react";
 import { Product } from "@/action/product.action";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
@@ -72,42 +72,54 @@ export default function ProductCard({ product }: { product: Product }) {
 	}
 
 	return (
-		<div className="bg-white rounded-xl shadow-md p-4 flex flex-col items-center justify-between cursor-pointer hover:shadow-lg transition w-full min-h-[300px]">
-			{/* Gambar */}
+		<div className="bg-white rounded-2xl shadow-md p-5 flex flex-col items-center justify-between cursor-pointer hover:shadow-lg transition-all w-full min-h-[320px] relative group">
+			{/* stok habis */}
+				<div className="absolute top-0 left-0 w-full h-35 bg-black/60 flex items-center justify-center rounded-t-2xl z-10">
+					<span className="text-white font-bold text-sm uppercase tracking-wide">
+						Stok Habis
+					</span>
+				</div>
+			{/* gambar */}
 			<img
 				src={`/${product.foto_barang}`}
 				alt={product.nama_barang}
-				className="w-24 h-24 object-contain mb-3"
+				className="w-28 h-28 object-contain mb-4 transition-transform group-hover:scale-105"
 				onClick={() => handleDetail(product.id)}
 			/>
 
 			{/* Info Produk */}
-			<div className="w-full text-center">
+			<div className="w-full text-center mb-4">
 				<span
-					className="text-xs text-gray-500 mb-1 block"
+					className="text-[0.7rem] text-gray-400 uppercase tracking-wide mb-1 block"
 					onClick={() => handleDetail(product.id)}
 				>
 					Untuk: {product.jenis_barang.nama_jenis}
 				</span>
 
 				<h3
-					className="text-sm font-medium text-ellipsis overflow-hidden whitespace-nowrap mb-1"
+					className="text-base font-semibold text-gray-800 dark:text-white leading-tight mb-1 truncate"
 					onClick={() => handleDetail(product.id)}
 					title={product.nama_barang}
 				>
 					{product.nama_barang}
 				</h3>
 
-				<p className="text-sm text-gray-700 mb-3">
-					Rp {product.harga_jual.toLocaleString('id-ID')}
+				<p className="text-sm text-orange-600 font-medium mb-1">
+					Rp {product.harga_jual.toLocaleString("id-ID")}
 				</p>
+
+				{/* Stok */}
+				<div className="flex items-center justify-center gap-1 text-xs text-gray-500">
+					<Package size={14} />
+					<span>Stok: 90</span>
+				</div>
 			</div>
 
 			{/* Tombol Aksi */}
-			<div className="flex w-full gap-2 mt-auto">
+			<div className="flex w-full gap-2">
 				{/* Tombol Beli Sekarang */}
 				<Button
-					className="flex-1 bg-cyan-500 text-white text-sm rounded-md hover:bg-cyan-600 transition disabled:opacity-50 px-2 py-2 whitespace-nowrap overflow-hidden text-ellipsis cursor-pointer"
+					className="flex-1 bg-cyan-500 text-white text-xs md:text-sm rounded-lg hover:bg-cyan-600 transition-all disabled:opacity-50 px-2 py-2 whitespace-nowrap overflow-hidden text-ellipsis cursor-pointer"
 					disabled={isAddingToCart}
 					title="Beli Sekarang"
 				>
@@ -121,9 +133,9 @@ export default function ProductCard({ product }: { product: Product }) {
 					)}
 				</Button>
 
-				{/* Tombol keranjang */}
+				{/* Tombol Keranjang */}
 				<Button
-					className="w-10 h-10 bg-white border border-cyan-500 rounded-md hover:bg-cyan-50 text-cyan-600 flex items-center justify-center transition disabled:opacity-50 cursor-pointer"
+					className="w-10 h-10 bg-white border border-cyan-500 rounded-lg hover:bg-cyan-50 text-cyan-600 flex items-center justify-center transition disabled:opacity-50 cursor-pointer"
 					onClick={handleAddToCart}
 					disabled={isAddingToCart}
 				>

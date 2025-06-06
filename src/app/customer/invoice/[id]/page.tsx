@@ -109,18 +109,17 @@ export default function PembayaranPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-slate-100 text-slate-800 mt-12">
+		<div className="min-h-screen bg-slate-100 text-slate-800 mt-6">
 			<div className="p-4 md:p-8 lg:p-10 max-w-4xl mx-auto">
 				<h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-8 tracking-tight">Invoice</h1>
 
-
 				<Card className="bg-white p-6 sm:p-8 md:p-10 space-y-8 shadow-xl rounded-xl border border-slate-200">
-					<h2 className="text-2xl font-semibold text-cyan-700">
+					<h2 className="text-2xl font-bold text-cyan-700">
 						Pesanan anda telah diterima. Silahkan lakukan pembayaran
 					</h2>
 
 
-					<div className="mb-6 bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+					<div className="mb-2 bg-indigo-50 p-4 rounded-lg border border-indigo-100">
 
 						<p className="font-medium text-slate-700 text-lg">{user.fullName}</p>
 						<p className="text-sm text-slate-600 mt-1">No Telepon: {invoice?.nomor_telepon}</p>
@@ -128,7 +127,7 @@ export default function PembayaranPage() {
 
 					<hr className="border-slate-200" />
 
-					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-5 text-sm my-4">
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-5 text-sm my-2">
 						<div className="mb-3 sm:mb-0">
 							<p className="text-slate-500 mb-0.5">Kode Invoice:</p>
 							<HoverCard>
@@ -146,7 +145,7 @@ export default function PembayaranPage() {
 						</div>
 						<div className="mb-3 sm:mb-0">
 							<p className="text-slate-500 mb-0.5">Total:</p>
-							<p className="font-bold text-primary text-base">Rp {invoice?.total.toLocaleString('ID-id')}</p>
+							<p className="font-bold text-orange-600 text-base">Rp {invoice?.total.toLocaleString('ID-id')}</p>
 						</div>
 						<div className="mb-3 sm:mb-0">
 							<p className="text-slate-500 mb-0.5">Metode Pembayaran:</p>
@@ -156,7 +155,7 @@ export default function PembayaranPage() {
 
 					<hr className="border-slate-200" />
 
-					<div className="grid md:grid-cols-2 gap-x-8 gap-y-6 my-4">
+					<div className="grid md:grid-cols-2 gap-x-8 gap-y-6 my-2">
 						<div>
 							<h3 className="text-lg font-semibold text-slate-700 mb-3">Detail Pesanan</h3>
 							<div className="space-y-2.5">
@@ -169,7 +168,7 @@ export default function PembayaranPage() {
 									<span>Rp 0,00</span>
 								</div>
 								<hr className="border-slate-200 my-3" />
-								<div className="flex justify-between font-bold text-slate-800 text-base">
+								<div className="flex justify-between font-bold text-orange-600 text-base">
 									<span>Total</span>
 									<span>Rp {invoice?.total.toLocaleString('id-ID')}</span>
 								</div>
@@ -205,6 +204,5 @@ export default function PembayaranPage() {
 				</Card>
 			</div>
 		</div>
-
 	);
 }

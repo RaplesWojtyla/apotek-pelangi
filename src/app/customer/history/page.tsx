@@ -7,6 +7,7 @@ import { DetailSellingInvoices, getDetailSellingInvoices } from "@/action/custom
 import toast from "react-hot-toast";
 import { LoaderPinwheel } from "lucide-react";
 import clsx from "clsx";
+import SkeletonHistory from "@/components/skeleton/SkeletonHistory";
 
 export default function RiwayatTransaksiPage() {
 	const [historyTransactions, setHistoryTransactions] = useState<DetailSellingInvoices[]>([])
@@ -122,6 +123,7 @@ export default function RiwayatTransaksiPage() {
 					</div>
 				))}
 			</div>
+			<SkeletonHistory />
 		</div>
 	);
 }

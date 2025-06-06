@@ -1,6 +1,6 @@
 'use client'
 
-import {  SellingInvoice } from "@/action/customer/sellingInvoice.action"
+import { SellingInvoice } from "@/action/customer/sellingInvoice.action"
 import { failedTransaction } from "@/action/customer/transaction.action"
 import FailedInvoideSkeleton from "@/components/skeleton/FailedInvoiceSkeleton"
 import { Badge } from "@/components/ui/badge"
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { useUser } from "@clerk/nextjs"
-import { CreditCard } from "lucide-react"
+import { AlertCircle, CreditCard } from "lucide-react"
 import { redirect, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
@@ -80,25 +80,24 @@ export default function page() {
 	}
 
 	return (
-		<div className="min-h-screen bg-slate-100 text-slate-800 mt-12">
+		<div className="min-h-screen bg-slate-100 text-slate-800 mt-6">
 			<div className="p-4 md:p-8 lg:p-10 max-w-4xl mx-auto">
 				<h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-8 tracking-tight">Invoice</h1>
 
-				<Card className="bg-white p-6 sm:p-8 md:p-10 space-y-8 shadow-xl rounded-xl border border-slate-200">
-					<h2 className="text-2xl font-semibold text-red-400">
+				<Card className="bg-white p-6 sm:p-8 md:p-10 space-y-4 shadow-xl rounded-xl border border-slate-200">
+					<h2 className="text-2xl font-bold text-red-600 mb-2 tracking-tight flex items-center gap-2">
+						<AlertCircle className="w-6 h-6 text-red-600" />
 						Pesanan Gagal
 					</h2>
 
-
-					<div className="mb-6 bg-indigo-50 p-4 rounded-lg border border-indigo-100">
-
+					<div className="mb-2 bg-indigo-50 p-4 rounded-lg border border-indigo-100">
 						<p className="font-medium text-slate-700 text-lg">{user.fullName}</p>
 						<p className="text-sm text-slate-600 mt-1">No Telepon: {failedInvoice?.nomor_telepon}</p>
 					</div>
 
 					<hr className="border-slate-200" />
 
-					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-5 text-sm my-4">
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-5 text-sm my-2">
 						<div className="mb-3 sm:mb-0">
 							<p className="text-slate-500 mb-0.5">Kode Invoice:</p>
 							<HoverCard>
@@ -116,7 +115,7 @@ export default function page() {
 						</div>
 						<div className="mb-3 sm:mb-0">
 							<p className="text-slate-500 mb-0.5">Total:</p>
-							<p className="font-bold text-primary text-base">Rp {failedInvoice?.total.toLocaleString('ID-id')}</p>
+							<p className="font-bold text-orange-600 text-base">Rp {failedInvoice?.total.toLocaleString('ID-id')}</p>
 						</div>
 						<div className="mb-3 sm:mb-0">
 							<p className="text-slate-500 mb-0.5">Metode Pembayaran:</p>
@@ -126,7 +125,7 @@ export default function page() {
 
 					<hr className="border-slate-200" />
 
-					<div className="grid md:grid-cols-2 gap-x-8 gap-y-6 my-4">
+					<div className="grid md:grid-cols-2 gap-x-8 gap-y-6 my-2">
 						<div>
 							<h3 className="text-lg font-semibold text-slate-700 mb-3">Detail Pesanan</h3>
 							<div className="space-y-2.5">
@@ -139,7 +138,7 @@ export default function page() {
 									<span>Rp 0,00</span>
 								</div>
 								<hr className="border-slate-200 my-3" />
-								<div className="flex justify-between font-bold text-slate-800 text-base">
+								<div className="flex justify-between font-bold text-orange-600 text-base">
 									<span>Total</span>
 									<span>Rp {failedInvoice?.total.toLocaleString('id-ID')}</span>
 								</div>
@@ -177,7 +176,7 @@ export default function page() {
 					<div className="pt-6 border-t border-slate-200 mt-4">
 						<Button
 							variant={'outline'}
-							className="w-full cursor-pointer md:w-auto font-semibold py-3 px-6 sm:px-8 rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 transition-all duration-150 ease-in-out"
+							className="w-full bg-cyan-500 text-white cursor-pointer md:w-auto font-semibold py-3 px-6 sm:px-8 rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 transition-all duration-150 ease-in-out"
 							onClick={() => router.push('/customer/history')}
 						>
 							Histori Transaksi
