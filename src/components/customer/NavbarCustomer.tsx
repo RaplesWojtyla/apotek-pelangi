@@ -129,8 +129,6 @@ export const NavbarCustomer = () => {
 					</Sheet>
 				</div>
 			</header>
-			<div className="pt-2">
-			</div>
 		</>
 	);
 };

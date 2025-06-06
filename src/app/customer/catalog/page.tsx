@@ -36,7 +36,7 @@ export default function page() {
 	}, [search, page])
 
 	return (
-		<div className="flex bg-gray-100 min-h-screen pt-15">
+		<div className="flex bg-gray-100 min-h-screen">
 			<CatalogSidebar />
 			<div className="p-4 flex-1">
 				<SearchBar />
@@ -46,7 +46,9 @@ export default function page() {
 					currPage={page}
 					take={take}
 				/>
+				<div className="flex justify-center my-6">
 				<CatalogPagination totalPages={totalPages} />
+				</div>
 			</div>
 		</div>
 	)

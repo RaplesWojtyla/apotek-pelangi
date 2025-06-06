@@ -70,7 +70,7 @@ export default function TambahUserPage() {
           <Link href="/admin/daftaruser">
             <Button variant="outline">Batal</Button>
           </Link>
-          <Button className="bg-blue-600 text-white hover:bg-blue-700">Simpan</Button>
+          <Button className="bg-cyan-600 text-white hover:bg-cyan-700">Simpan</Button>
         </div>
       </div>
     </div>
