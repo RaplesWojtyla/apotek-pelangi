@@ -19,7 +19,7 @@ export const Kategori = async () => {
 		<section className="py-8 px-4">
 			<div className="max-w-6xl mx-auto">
 				<div className="flex justify-between items-center mb-4">
-					<h2 className="text-lg font-semibold">Kategori</h2>
+					<h2 className="text-2xl font-semibold">Kategori</h2>
 					<Link href={'/customer/catalog'} className="text-sm text-cyan-700 hover:underline">
 						Lihat Semua
 					</Link>
