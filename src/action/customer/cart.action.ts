@@ -7,6 +7,7 @@ import { SumberCart } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 
 export type CartItem = Awaited<ReturnType<typeof getCart>>[number]
+export type SimpleCartItem = Awaited<ReturnType<typeof getCartBySource>>['data'][number]
 
 export const getCart = async () => {
 	const dbUserId = await getDbUserId()
@@ -49,6 +50,46 @@ export const getCart = async () => {
 		return formattedCart
 	} catch (error) {
 		throw new Error("Gagal memuat keranjang anda")
+	}
+}
+
+export const getCartBySource = async ( source: SumberCart ) => {
+	const dbUserId = await getDbUserId()
+
+	if (!dbUserId) return {
+		success: false,
+		message: "Pengguna tidak terauntentikasi!",
+		data: []
+	}
+
+	try {
+		const cartItems = await prisma.cart.findMany({
+			where: {
+				id_user: dbUserId,
+				sumber: source
+			},
+			include: {
+				barang: {
+					select: {
+						nama_barang: true
+					}
+				}
+			}
+		})
+
+		return {
+			success: true,
+			message: "Berhasil mengambil data keranjang!",
+			data: cartItems
+		}
+	} catch (error) {
+		console.error(`[getCartBySource] Error: ${error}`)
+
+		return {
+			success: false,
+			message: "Terjadi kesalahan pada server. Harap coba lagi!",
+			data: []
+		}
 	}
 }
 
