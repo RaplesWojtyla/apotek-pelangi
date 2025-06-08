@@ -74,13 +74,64 @@ export const getProducts = async ({ page = 1, matcher = '', take = 16 }) => {
 						kategori_barang: true,
 					},
 				},
+				stok_barang: {
+					select: { jumlah: true }
+				}
 			}
 		})
 
-		return products
+		const formattedProducts = products.map(product => {
+			const totalStock = product.stok_barang.reduce((acc, item) => acc + item.jumlah, 0)
+
+			return {
+				...product,
+				totalStock: totalStock
+			}
+		})
+		
+		return formattedProducts
 	} catch (error) {
 		console.error("[getProducts] error:", error)
 		throw new Error("Gagal mengambil data produk.")
+	}
+}
+
+export const getRecommendedProducts = async (idJenisBarang: string, currIdBarang: string) => {
+	try {
+		const products = await prisma.barang.findMany({
+			where: {
+				id_jenis_barang: idJenisBarang,
+				id: {
+					not: currIdBarang
+				}
+			},
+			take: 4,
+			include: {
+				jenis_barang: {
+					include: {
+						kategori_barang: true
+					}
+				},
+				stok_barang: {
+					select: { jumlah: true }
+				}
+			}
+		})
+
+		const formattedProducts = products.map(product => {
+			const totalStock = product.stok_barang.reduce((acc, stock) => acc + stock.jumlah, 0)
+
+			return {
+				...product,
+				totalStock: totalStock
+			}
+		})
+
+		return formattedProducts
+	} catch (error) {
+		console.error(`[getRecommendedProducts] Error: ${error}`);
+
+		return []
 	}
 }
 

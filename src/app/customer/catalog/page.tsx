@@ -24,7 +24,7 @@ export default function page() {
 				const data = await getCatalogTotalPages(search, take)
 				setTotalPages(data)
 			}
-			
+
 			fetchTotalPages()
 		} catch (error) {
 			console.error(`[fetchTotalPages] Error: ${error}`);
@@ -47,7 +47,11 @@ export default function page() {
 					take={take}
 				/>
 				<div className="flex justify-center my-6">
-				<CatalogPagination totalPages={totalPages} />
+					{isLoading ? (
+						<p className="animate-pulse">Loading...</p>
+					) : (
+						<CatalogPagination totalPages={totalPages} />
+					)}
 				</div>
 			</div>
 		</div>

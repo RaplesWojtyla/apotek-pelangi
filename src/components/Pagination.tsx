@@ -18,8 +18,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
 		return `${pathname}?${params?.toString()}`
 	}
 
-	const allPages = generatePagination(totalPages, currentPage);
-	console.log(allPages);
+	const allPages = generatePagination(totalPages, currentPage)
 
 	return (
 		<>

@@ -2,7 +2,6 @@
 
 import { prisma } from "@/lib/prisma"
 import { getDbUserId } from "../user.action"
-import { NextResponse } from "next/server"
 import { SumberCart } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 

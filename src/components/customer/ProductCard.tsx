@@ -73,13 +73,14 @@ export default function ProductCard({ product }: { product: Product }) {
 
 	return (
 		<div className="bg-white rounded-2xl shadow-md p-5 flex flex-col items-center justify-between cursor-pointer hover:shadow-lg transition-all w-full min-h-[320px] relative group">
-			{/* stok habis */}
+			{product.totalStock < 1 && (
 				<div className="absolute top-0 left-0 w-full h-35 bg-black/60 flex items-center justify-center rounded-t-2xl z-10">
 					<span className="text-white font-bold text-sm uppercase tracking-wide">
 						Stok Habis
 					</span>
 				</div>
-			{/* gambar */}
+			)}
+
 			<img
 				src={`/${product.foto_barang}`}
 				alt={product.nama_barang}
@@ -111,7 +112,7 @@ export default function ProductCard({ product }: { product: Product }) {
 				{/* Stok */}
 				<div className="flex items-center justify-center gap-1 text-xs text-gray-500">
 					<Package size={14} />
-					<span>Stok: 90</span>
+					<span>Stok: {product.totalStock.toLocaleString()}</span>
 				</div>
 			</div>
 
