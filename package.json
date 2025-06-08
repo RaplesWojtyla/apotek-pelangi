@@ -29,6 +29,7 @@
     "@radix-ui/react-slot": "^1.2.2",
     "@radix-ui/react-tabs": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.6",
+    "@uploadthing/react": "^7.3.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.503.0",
@@ -40,6 +41,7 @@
     "recharts": "^2.15.3",
     "tailwind-merge": "^3.2.0",
     "tailwind-scrollbar": "^4.0.2",
+    "uploadthing": "^7.7.2",
     "use-debounce": "^10.0.4"
   },
   "devDependencies": {
@@ -61,6 +63,7 @@
       "@tailwindcss/oxide",
       "bcrypt",
       "esbuild",
+      "msgpackr-extract",
       "prisma",
       "sharp"
     ]

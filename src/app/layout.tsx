@@ -39,7 +39,36 @@ export default async function RootLayout({
 					<main className="min-h-[calc(100vh-10rem)]">
 						{children}
 					</main>
-					<Toaster />
+					<Toaster
+						toastOptions={{
+							success: {
+								duration: 3000, // Durasi 3 detik
+								iconTheme: {
+									primary: '#10B981', // Warna ikon
+									secondary: '#E2F9F3', // Warna latar belakang ikon
+								},
+								style: {
+									background: '#E2F9F3', // Latar belakang toast
+									color: '#047857',      // Warna teks
+									border: '1px solid #10B981', // Border
+									padding: '16px',
+								},
+							},
+							error: {
+								duration: 5000,
+								iconTheme: {
+									primary: '#EF4444',
+									secondary: '#FEE2E2',
+								},
+								style: {
+									background: '#FEE2E2',
+									color: '#B91C1C',
+									border: '1px solid #EF4444',
+									padding: '16px',
+								},
+							},
+						}}
+					/>
 				</body>
 			</html>
 		</ClerkProvider>
