@@ -46,7 +46,13 @@ export default function UploadResepForm() {
 		<>
 			{imgUrl ? (
 				<div className="p-4 border rounded-lg text-center bg-gray-50">
-					<Image src={imgUrl} alt="Preview Resep" width={200} height={200} className="mx-auto rounded-md mb-4" />
+					<Image 
+						src={imgUrl} 
+						alt="Preview Resep" 
+						width={200} 
+						height={200} 
+						className="mx-auto rounded-md mb-4" 
+					/>
 					<p className="text-sm text-gray-600 mb-4">Upload berhasil!</p>
 					<Button
 						variant="destructive"
