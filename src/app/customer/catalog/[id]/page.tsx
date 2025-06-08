@@ -1,28 +1,38 @@
 'use client'
 
-import { getProductDetail, ProductDetail } from "@/action/product.action";
+import { getProductDetail, getRecommendedProducts, Product, ProductDetail } from "@/action/product.action";
+import ProductCard from "@/components/customer/ProductCard";
 import ProductUnavailable from "@/components/customer/ProductUnavailable";
 import ProductDetailSkeleton from "@/components/skeleton/ProductDetailSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShoppingCart } from "lucide-react";
+import { useCartContext } from "@/context/CartContext";
+import { Loader2, ShoppingCart } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function page() {
     const [productDetail, setProductDetail] = useState<ProductDetail>()
+    const [recommendations, setRecommendations] = useState<Product[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false)
     const [jumlah, setJumlah] = useState<number>(1)
+    const { fetchAndUpdateCartCount } = useCartContext()
     const params = useParams()
     const { id } = params
     const router = useRouter()
 
     useEffect(() => {
-        const fetchDetail = async () => {
+        const fetchAllData = async () => {
             try {
                 const data = await getProductDetail(String(id));
-                setProductDetail(data);
+                setProductDetail(data)
+
+                if (data) {
+                    const recommendations = await getRecommendedProducts(data.id_jenis_barang, data.id)
+                    setRecommendations(recommendations)
+                }
             } catch (error) {
                 console.error(`[getProductDetail] error: ${error}`)
 
@@ -37,7 +47,7 @@ export default function page() {
                 setIsLoading(false)
             }
         };
-        fetchDetail();
+        fetchAllData();
     }, [id])
 
     if (isLoading) return <ProductDetailSkeleton />
@@ -45,6 +55,7 @@ export default function page() {
     const handleAddToCart = async () => {
         if (!productDetail?.detail_barang) return
 
+        setIsAddingToCart(true)
         try {
             const res = fetch('/api/customer/cart', {
                 method: 'POST',
@@ -59,10 +70,13 @@ export default function page() {
             }).then(async (res) => {
                 if (!res.ok) {
                     const err = await res.json().catch(() => ({ message: "Terjadi Kesalahan Pada Server" }))
+                    setIsAddingToCart(false)
 
                     throw new Error(err.message || "Gagal ditambahkan ke dalam keranjang!")
                 }
 
+                await fetchAndUpdateCartCount(false)
+                setIsAddingToCart(false)
                 return res.json()
             })
 
@@ -88,8 +102,9 @@ export default function page() {
                 }
             })
         } catch (error) {
-
-        }
+            console.error(`[productDetail]: [handleAddToCart] Error: ${error}`);
+            toast.error("Gagal menambah produk ke keranjang!")
+        } 
     }
 
     return (
@@ -155,15 +170,24 @@ export default function page() {
 
                                     <div className="flex w-full gap-2">
                                         <Button
-                                            className="w-1/2 bg-white border border-cyan-500 rounded-md hover:bg-cyan-50 text-cyan-600 text-sm py-2"
+                                            className="w-fit bg-white border border-cyan-500 rounded-md hover:bg-cyan-50 text-cyan-600 text-sm py-2"
                                             onClick={handleAddToCart}
-                                            disabled={productDetail.totalStock < 1}
+                                            disabled={productDetail.totalStock < 1 || isAddingToCart}
                                         >
-                                            <ShoppingCart size={16} className="mr-2" />
-                                            Masukkan Keranjang
+                                            {isAddingToCart ? (
+                                                <>
+                                                    <Loader2 className="animate-spin" size={16} />
+                                                    <span className="animate-pulse">Memasukkan ke dalam keranjang...</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <ShoppingCart size={16} />
+                                                    Masukkan Keranjang
+                                                </>
+                                            )}
                                         </Button>
                                         <Button
-                                            className="w-1/2 bg-cyan-500 text-white text-sm py-2 rounded-md hover:bg-cyan-600"
+                                            className="w-fit bg-cyan-500 text-white text-sm py-2 rounded-md hover:bg-cyan-600"
                                             onClick={() => { }}
                                             disabled={productDetail.totalStock < 1}
                                         >
@@ -200,36 +224,9 @@ export default function page() {
 
                         {/* Produk Rekomendasi */}
                         <div className="md:col-span-1 space-y-4">
-                            {[
-                                { name: "Flutamol", harga: 12000, kegunaan: "Obat flu dan demam" },
-                                { name: "Paracetamol", harga: 8000, kegunaan: "Pereda nyeri dan penurun demam" },
-                                { name: "Expan", harga: 15000, kegunaan: "Meredakan batuk berdahak" },
-                                { name: "Sanmol", harga: 9000, kegunaan: "Analgesik dan antipiretik" },
-                            ].map((item, i) => (
-                                <Card key={i} className="w-full relative">
-                                    <CardContent className="flex flex-col items-center gap-1 relative z-0">
-                                        <img
-                                            src="/Barang.png"
-                                            alt={item.name}
-                                            className="w-16 h-16 rounded"
-                                        />
-                                        <p className="text-base font-semibold text-center">{item.name}</p>
-                                        <p className="text-sm text-gray-600 text-center">{item.kegunaan}</p>
-                                        <p className="text-sm text-orange-700 font-semibold"> Rp {item.harga.toLocaleString("id-ID")}</p>
-                                        <div className="flex w-full gap-2 mt-2">
-                                            <Button
-                                                className="flex-1 bg-cyan-500 text-white text-sm py-1 rounded-md hover:bg-cyan-600"
-                                            >
-                                                Beli Sekarang
-                                            </Button>
-                                            <Button
-                                                className="p-2 bg-white border border-cyan-500 rounded-md hover:bg-cyan-50 text-cyan-600"
-                                            >
-                                                <ShoppingCart size={16} />
-                                            </Button>
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                            <h3 className="font-bold text-lg text-gray-800">Produk Serupa</h3>
+                            {recommendations.map(recommendation => (
+                                <ProductCard key={recommendation.id} product={recommendation} />
                             ))}
                         </div>
                     </>
