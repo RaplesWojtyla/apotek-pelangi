@@ -8,7 +8,7 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import { UserButton } from "@clerk/nextjs";
-import { ArrowLeftRight, BookImage, Layers } from "lucide-react";
+import { ArrowLeftRight, BookImage, Layers , FileClock } from "lucide-react";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 
@@ -78,10 +78,17 @@ const SidebarContent = ({
 
 				<Link
 					href="/kasir/daftar_transaksi"
-					className="flex items-center space-x-2 text-gray-800 font-semibold hover:text-cyan-600 text-sm"
+					className="flex items-center space-x-2 text-gray-800 font-semibold hover:text-cyan-600 text-sm mb-4"
 				>
 					<ArrowLeftRight size={16} />
 					<span>Daftar Transaksi</span>
+				</Link>
+				<Link
+					href="/kasir/history_transaksi"
+					className="flex items-center space-x-2 text-gray-800 font-semibold hover:text-cyan-600 text-sm"
+				>
+					<FileClock size={16} />
+					<span>History Transaksi</span>
 				</Link>
 			</div>
 		</div>
