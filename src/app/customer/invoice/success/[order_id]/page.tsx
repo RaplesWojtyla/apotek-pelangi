@@ -178,7 +178,7 @@ export default function SuccessPage() {
 						</div>
 						<div className="mb-3 sm:mb-0">
 							<p className="text-slate-500 mb-0.5">Total:</p>
-							<p className="font-bold text-primary text-base">Rp {invoice?.total.toLocaleString('ID-id')}</p>
+							<p className="font-bold text-orange-600 text-base">Rp {invoice?.total.toLocaleString('ID-id')}</p>
 						</div>
 						<div className="mb-3 sm:mb-0">
 							<p className="text-slate-500 mb-0.5">Metode Pembayaran:</p>
@@ -201,7 +201,7 @@ export default function SuccessPage() {
 									<span>Rp 0,00</span>
 								</div>
 								<hr className="border-slate-200 my-3" />
-								<div className="flex justify-between font-bold text-slate-800 text-base">
+								<div className="flex justify-between font-bold text-orange-600 text-base">
 									<span>Total</span>
 									<span>Rp {invoice?.total.toLocaleString('id-ID')}</span>
 								</div>
