@@ -45,7 +45,7 @@ function Button({
 
   switch (variant) {
     case 'outline':
-      className += 'border border-cyan-600 text-cyan-600 hover:bg-cyan-50';
+      className += 'border border-gray-200 text-gray-700 hover:bg-gray-100';
       break;
     case 'destructive':
       className += 'bg-red-600 text-white hover:bg-red-700';
