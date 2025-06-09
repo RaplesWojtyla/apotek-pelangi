@@ -2,9 +2,12 @@ import { getAllJenisBarang, getProductForEdit } from "@/action/admin/product.act
 import ViewObatClient from "@/components/admin/ViewObatClient";
 import { notFound } from "next/navigation";
 
-export default async function EditObatPage({ params }: { params: { id: string } }) {
+
+export default async function ViewObatPage({ params }: { params: Promise<{ id: string }> }) {
+	const { id } = await params
+
 	const [product, jenisBarangList] = await Promise.all([
-		getProductForEdit(params.id),
+		getProductForEdit(id),
 		getAllJenisBarang()
 	]);
 
