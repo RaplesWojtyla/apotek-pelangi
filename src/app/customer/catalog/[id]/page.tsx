@@ -1,6 +1,6 @@
 'use client'
 
-import { getProductDetail, getRecommendedProducts, Product, ProductDetail } from "@/action/product.action";
+import { getProductDetail, getRecommendedProducts, Product, ProductDetail } from "@/action/customer/product.action";
 import ProductCard from "@/components/customer/ProductCard";
 import ProductUnavailable from "@/components/customer/ProductUnavailable";
 import ProductDetailSkeleton from "@/components/skeleton/ProductDetailSkeleton";

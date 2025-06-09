@@ -1,7 +1,7 @@
 'use client'
 
 import { Loader2, Package, ShoppingCart } from "lucide-react";
-import { Product } from "@/action/product.action";
+import { Product } from "@/action/customer/product.action";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";

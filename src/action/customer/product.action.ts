@@ -6,54 +6,6 @@ export type Product = Awaited<ReturnType<typeof getProducts>>[number]
 export type ProductDetail = Awaited<ReturnType<typeof getProductDetail>>
 import { revalidatePath } from "next/cache"
 
-export const createProduct = async (
-	nama_barang: string,
-	harga_jual: number,
-	id_jenis_barang: string,
-	foto_barang: string,
-	detail: {
-		deskripsi?: string,
-		indikasi_umum?: string,
-		komposisi?: string,
-		dosis?: string,
-		aturan_pakai?: string,
-		perhatian?: string,
-		kontra_indikasi?: string,
-		efek_samping?: string,
-		golongan?: string,
-		kemasan?: string,
-		manufaktur?: string,
-		no_bpom?: string,
-	}
-) => {
-	try {
-		const barang = await prisma.barang.create({
-			data: {
-				nama_barang,
-				harga_jual,
-				foto_barang: foto_barang && foto_barang.trim() !== "" ? foto_barang : "Barang.png",
-				id_jenis_barang,
-				detail_barang: {
-					create: {
-						...detail
-					}
-				}
-			}
-		});
-		revalidatePath('/')
-
-		return {
-			success: true,
-			status: 201,
-			message: "Barang berhasil ditambahkan",
-			data: barang,
-		}
-	} catch (error) {
-		console.error("[createProduct] error:", error);
-		throw new Error("Gagal menambahkan produk");
-	}
-};
-
 
 export const getProducts = async ({ page = 1, matcher = '', take = 16 }) => {
 	const skip = (page - 1) * take

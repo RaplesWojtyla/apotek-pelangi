@@ -1,6 +1,6 @@
 'use client'
 
-import { getProducts, Product } from "@/action/product.action";
+import { getProducts, Product } from "@/action/customer/product.action";
 import ProductCard from "./ProductCard";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
