@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,6 +19,8 @@ import {
 	Package,
 	MoreVertical,
 	ChevronsUpDown,
+	Trash2,
+	Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -27,24 +29,31 @@ import {
 	DropdownMenuContent,
 	DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useDebouncedCallback } from "use-debounce";
+import Pagination from "../Pagination";
+import { deleteProduct } from "@/action/admin/product.action";
+import toast from "react-hot-toast";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 
-// Terima 'products' sebagai prop
-export default function DaftarObatClient({ products }: { products: any[] }) {
-	const [searchTerm, setSearchTerm] = useState("");
+
+export default function DaftarObatClient({ products, totalPages, totalProducts }: { products: any[], totalPages: number, totalProducts: number }) {
+	const searchParams = useSearchParams()
+	const pathname = usePathname()
+	const { push, replace } = useRouter()
+	const [isDeleting, startDeleteTransition] = useTransition()
+	const [isOpen, setIsOpen] = useState<boolean>(false)
+
+	const currPage = Number(searchParams.get("page") || 1)
+	const idx = (currPage - 1) * 10
+
 	const [sortConfig, setSortConfig] = useState<{
 		key: string;
 		direction: "asc" | "desc";
 	} | null>(null);
 
-	const filteredAndSortedData = useMemo(() => {
+	const sortedData = useMemo(() => {
 		let data = [...products];
-
-		// Filter berdasarkan searchTerm
-		if (searchTerm) {
-			data = data.filter(item =>
-				item.nama_barang.toLowerCase().includes(searchTerm.toLowerCase())
-			);
-		}
 
 		// Sorting
 		if (sortConfig !== null) {
@@ -58,7 +67,34 @@ export default function DaftarObatClient({ products }: { products: any[] }) {
 		}
 
 		return data;
-	}, [products, searchTerm, sortConfig]);
+	}, [products, sortConfig]);
+
+	const handleSearch = useDebouncedCallback(term => {
+		const params = new URLSearchParams(searchParams)
+		params.set("page", '1')
+
+		term ? params.set("search", term) : params.delete("search")
+
+		replace(`${pathname}?${params.toString()}`)
+	}, 300)
+
+	const handleDelete = async (id: string) => {
+		startDeleteTransition(async () => {
+			try {
+				const res = await deleteProduct(id)
+
+				if (res.success) {
+					toast.success(res.message)
+				} else {
+					toast.error(res.message)
+				}
+			} catch (error) {
+				toast.error("Terjadi gangguan pada server!")
+			} finally {
+				setIsOpen(false)
+			}
+		})
+	}
 
 	function handleSort(key: string) {
 		setSortConfig(prev => {
@@ -87,7 +123,7 @@ export default function DaftarObatClient({ products }: { products: any[] }) {
 				</div>
 				<div>
 					<p className="text-sm text-muted-foreground">Jumlah Produk</p>
-					<h3 className="text-2xl font-bold">{products.length}</h3>
+					<h3 className="text-2xl font-bold">{totalProducts}</h3>
 				</div>
 			</div>
 
@@ -97,8 +133,8 @@ export default function DaftarObatClient({ products }: { products: any[] }) {
 					<Input
 						placeholder="Cari produk..."
 						className="w-full md:w-64"
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
+						defaultValue={searchParams.get("search")?.toString()}
+						onChange={(e) => handleSearch(e.target.value)}
 					/>
 					<Button variant="outline" size="icon">
 						<Search className="w-4 h-4" />
@@ -134,9 +170,9 @@ export default function DaftarObatClient({ products }: { products: any[] }) {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{filteredAndSortedData.map((obat, index) => (
+						{sortedData.map((obat, index) => (
 							<TableRow key={obat.id}>
-								<TableCell>{index + 1}</TableCell>
+								<TableCell>{idx + index + 1}</TableCell>
 								{headers.map(h => (
 									<TableCell key={h.key}>
 										{h.key === 'harga_jual' ? `Rp${obat[h.key].toLocaleString('id-ID')}` : obat[h.key]}
@@ -145,21 +181,59 @@ export default function DaftarObatClient({ products }: { products: any[] }) {
 								<TableCell>
 									<DropdownMenu>
 										<DropdownMenuTrigger asChild>
-											<Button variant="ghost" size="icon">
+											<Button className="cursor-pointer" variant="ghost" size="icon">
 												<MoreVertical className="w-5 h-5" />
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent align="end">
-											<DropdownMenuItem asChild>
-												<Link href={`/admin/daftarobat/view/${obat.id_barang}`} className="flex items-center gap-2">
-													<Eye className="w-4 h-4" /> Lihat
-												</Link>
-											</DropdownMenuItem>
-											<DropdownMenuItem asChild>
-												<Link href={`/admin/daftarobat/edit/${obat.id_barang}`} className="flex items-center gap-2">
-													<Pencil className="w-4 h-4" /> Edit
-												</Link>
-											</DropdownMenuItem>
+											<Button
+												variant={'link'}
+												className="flex items-center justify-start gap-2 w-full hover:no-underline hover:text-primary/65 cursor-pointer"
+												onClick={() => push(`/admin/daftarobat/view/${obat.id_barang}`)}
+											>
+												<Eye className="w-4 h-4" /> Lihat
+											</Button>
+
+											<Button
+												variant={'link'}
+												className="flex items-center justify-start gap-2 w-full hover:no-underline hover:text-primary/65 cursor-pointer"
+												onClick={() => push(`/admin/daftarobat/edit/${obat.id_barang}`)}
+											>
+												<Pencil className="w-4 h-4" /> Edit
+											</Button>
+
+											<AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+												<AlertDialogTrigger asChild>
+													<Button variant={'link'} className="flex items-center justify-start gap-2 w-full text-red-500 hover:text-red-700 hover:no-underline cursor-pointer">
+														<Trash2 className="w-4 h-4" /> Delete
+													</Button>
+												</AlertDialogTrigger>
+												<AlertDialogContent>
+													<AlertDialogHeader>
+														<AlertDialogTitle>Anda Yakin Ingin Menghapus Produk Ini?</AlertDialogTitle>
+														<AlertDialogDescription>Data produk yang sudah dihapus tidak dapat dikembalikan lagi. Apakah Anda yakin ingin melanjutkan?</AlertDialogDescription>
+													</AlertDialogHeader>
+													<AlertDialogFooter>
+														<AlertDialogCancel>Batal</AlertDialogCancel>
+														<Button
+															variant={'destructive'}
+															className="flex items-center justify-start hover:bg-red-800 transition duration-300 gap-2 cursor-pointer"
+															onClick={() => handleDelete(obat.id_barang)}
+															disabled={isDeleting}
+														>
+															{isDeleting ? (
+																<>
+																	<Loader2 className="size-4 animate-spin" /> <span className="animate-pulse">Deleting...</span>
+																</>
+															) : (
+																<>
+																	<Trash2 className="w-4 h-4" /> Delete
+																</>
+															)}
+														</Button>
+													</AlertDialogFooter>
+												</AlertDialogContent>
+											</AlertDialog>
 										</DropdownMenuContent>
 									</DropdownMenu>
 								</TableCell>
@@ -167,6 +241,9 @@ export default function DaftarObatClient({ products }: { products: any[] }) {
 						))}
 					</TableBody>
 				</Table>
+			</div>
+			<div className="mt-6 flex justify-center">
+				<Pagination totalPages={totalPages} />
 			</div>
 		</div>
 	);

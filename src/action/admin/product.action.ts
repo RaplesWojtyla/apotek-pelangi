@@ -63,9 +63,18 @@ export const createProduct = async (formData: FormData) => {
 	}
 }
 
-export const getProducts = async () => {
+export const getProducts = async (page=1, matcher="", take=10) => {
+	const skip = (page - 1) * take
 	try {
 		const products = await prisma.barang.findMany({
+			skip,
+			take,
+			where: {
+				nama_barang: {
+					contains: matcher,
+					mode: 'insensitive'
+				}
+			},
 			include: {
 				jenis_barang: {
 					include: {
@@ -176,6 +185,30 @@ export const updateProduct = async (id: string, formData: FormData) => {
 	}
 }
 
+export const deleteProduct = async (id: string) => {
+	try {
+		await prisma.barang.delete({
+			where: {
+				id
+			}
+		})
+
+		revalidatePath('/admin/daftarobat')
+		
+		return {
+			success: true,
+			message: "Berhasil menghapus produk!"
+		}
+	} catch (error) {
+		console.error(`[deleteProduct] Error: ${error}`)
+
+		return {
+			success: false,
+			message: "Gagal menghapus produk!"
+		}
+	}
+}
+
 export const addStockBatch = async (formData: FormData) => {
 	const id_barang = formData.get("id_barang") as string
 	
@@ -209,3 +242,33 @@ export const addStockBatch = async (formData: FormData) => {
 	}
 }
 
+export const getTotalProducts = async () => {
+	try {
+		const totalProducts = await prisma.barang.count()
+
+		return totalProducts
+	} catch (error) {
+		console.error(`[Admin]: [getTotalProducts] Error: ${error}`)
+
+		return 0;
+	}
+}
+
+export const getProductsTotalPages = async (matcher="", take=10) => {
+	try {
+		const totalProducts = await prisma.barang.count({
+			where: {
+				nama_barang: {
+					contains: matcher,
+					mode: 'insensitive'
+				}
+			}
+		})
+
+		return Math.ceil(totalProducts / take)
+	} catch (error) {
+		console.error(`[admin]: [getProductsTotalPages] Error: ${error}`)
+
+		throw new Error("Gagal menghitung total halaman produk")
+	}
+}
