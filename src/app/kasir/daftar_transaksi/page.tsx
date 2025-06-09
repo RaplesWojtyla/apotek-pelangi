@@ -1,45 +1,53 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import toast from 'react-hot-toast';
+
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import DetailTebusResepDialog from '@/components/DetailTebusDialog';
-import TransaksiDetailDialog from '@/components/TransactionModal';
+import TabelTebusResep from '@/components/kasir/TabelTebusResep';
+import TabelTransaksiBiasa from '@/components/kasir/TabelTransaksiBiasa';
+import Pagination from '@/components/Pagination';
 
+import {
+  getFakturCustomerPaginated,
+  getFakturTotalPages,
+} from '@/action/kasir/faktur.action';
 
-export default function DaftarTransaksi() {
+export default function DaftarTransaksiPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [kategori, setKategori] = useState<'resep' | 'biasa'>('resep');
+  const [fakturList, setFakturList] = useState<any[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const renderBadge = (status: string) => {
-    const s = status.toLowerCase();
-    if (s === 'selesai' || s === 'berhasil') {
-      return <Badge variant="default">Selesai</Badge>;
-    } else if (s === 'menunggu') {
-      return <Badge variant="secondary">Menunggu</Badge>;
-    } else if (s === 'ditolak' || s === 'dibatalkan') {
-      return <Badge variant="destructive">Dibatalkan</Badge>;
+  const page = Number(searchParams.get('page') ?? 1);
+  const take = 8;
+
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const [faktur, total] = await Promise.all([
+        getFakturCustomerPaginated(page, take),
+        getFakturTotalPages(take),
+      ]);
+      setFakturList(faktur);
+      setTotalPages(total);
+    } catch (error) {
+      console.error('[FakturPagination] Error:', error);
+      toast.error('Gagal memuat data transaksi');
+    } finally {
+      setIsLoading(false);
     }
-    return <Badge>Unknown</Badge>;
   };
 
-  // Contoh data transaksi biasa (untuk dialog TransaksiDetailDialog)
-  const transaksiBiasaData = {
-    id: 'TX-002',
-    customer: 'Ny. Sari',
-    date: '2025-05-08',
-    total: 0,
-    status: 'dibatalkan',
-    kategori: 'biasa',
-    items: [
-      { nama: 'Item A', jumlah: 1, harga: 10000, gambar: '/item-a.png' },
-      // tambah item sesuai kebutuhan
-    ],
-  };
-
-  // Fungsi dummy update status (bisa dikembangkan)
-  const onUpdateStatus = (id: string, status: string) => {
-    console.log(`Update status transaksi ${id} menjadi ${status}`);
-  };
+  useEffect(() => {
+    if (kategori === 'biasa') {
+      fetchData();
+    }
+  }, [kategori, page]);
 
   return (
     <div className="bg-gray-100 min-h-screen p-6 max-w-5xl mx-auto space-y-8">
@@ -60,67 +68,21 @@ export default function DaftarTransaksi() {
         </Button>
       </div>
 
-      {kategori === 'resep' && (
-        <div className="bg-white shadow rounded-lg overflow-x-auto">
-          <table className="w-full min-w-[700px] text-sm">
-            <thead className="bg-gray-50 text-gray-700 font-semibold text-left">
-              <tr>
-                <th className="p-4">No</th>
-                <th className="p-4">ID Transaksi</th>
-                <th className="p-4">Nama Pengaju</th>
-                <th className="p-4">Tanggal Upload</th>
-                <th className="p-4">Status</th>
-                <th className="p-4">Catatan</th>
-                <th className="p-4">Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-t hover:bg-gray-50">
-                <td className="p-4">1</td>
-                <td className="p-4 font-medium">TX-001</td>
-                <td className="p-4">Tn. Budi</td>
-                <td className="p-4">2025-05-07</td>
-                <td className="p-4">{renderBadge('selesai')}</td>
-                <td className="p-4">Cepat eeee</td>
-                <td className="p-4">
-                  {/* Panggil dialog DetailTebusResepDialog di sini */}
-                  <DetailTebusResepDialog />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      )}
+      {kategori === 'resep' && <TabelTebusResep />}
 
       {kategori === 'biasa' && (
-        <div className="bg-white shadow rounded-lg overflow-x-auto">
-          <table className="w-full min-w-[700px] text-sm">
-            <thead className="bg-gray-50 text-gray-700 font-semibold text-left">
-              <tr>
-                <th className="p-4">No</th>
-                <th className="p-4">ID Transaksi</th>
-                <th className="p-4">Nama Pelanggan</th>
-                <th className="p-4">Tanggal</th>
-                <th className="p-4">Total</th>
-                <th className="p-4">Status</th>
-                <th className="p-4">Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-t hover:bg-gray-50">
-                <td className="p-4">1</td>
-                <td className="p-4 font-medium">{transaksiBiasaData.id}</td>
-                <td className="p-4">{transaksiBiasaData.customer}</td>
-                <td className="p-4">{transaksiBiasaData.date}</td>
-                <td className="p-4">Rp {transaksiBiasaData.total.toLocaleString()}</td>
-                <td className="p-4">{renderBadge(transaksiBiasaData.status)}</td>
-                <td className="p-4">
-                  <TransaksiDetailDialog/>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <>
+          {isLoading ? (
+            <p className="text-gray-600">Memuat data transaksi...</p>
+          ) : (
+            <>
+              <TabelTransaksiBiasa fakturList={fakturList} refreshData={fetchData} />
+              <div className="flex justify-center mt-6">
+                <Pagination totalPages={totalPages} />
+              </div>
+            </>
+          )}
+        </>
       )}
     </div>
   );
