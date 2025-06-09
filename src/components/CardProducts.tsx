@@ -1,5 +1,5 @@
 import ProductCard from "./customer/ProductCard";
-import { getProducts, Product } from "@/action/product.action";
+import { getProducts, Product } from "@/action/customer/product.action";
 
 export const CardProducts = async () => {
 	const products: Product[] = await getProducts({ take: 8 })

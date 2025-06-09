@@ -6,7 +6,7 @@ import CatalogProducts from "@/components/customer/CatalogProduct";
 import { useSearchParams } from "next/navigation";
 import CatalogPagination from "@/components/Pagination";
 import { useEffect, useState } from "react";
-import { getCatalogTotalPages } from "@/action/product.action";
+import { getCatalogTotalPages } from "@/action/customer/product.action";
 import toast from "react-hot-toast";
 
 export default function page() {
