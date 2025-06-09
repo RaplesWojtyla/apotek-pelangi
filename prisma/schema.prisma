@@ -151,7 +151,7 @@ model DetailBarang {
     no_bpom         String?
     createdAt       DateTime @default(now())
 
-    barang Barang @relation(fields: [id_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    barang Barang @relation(fields: [id_barang], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model StokBarang {

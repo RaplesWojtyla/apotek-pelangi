@@ -45,9 +45,9 @@ export default function ViewObatClient({ product, jenisBarangList }: { product: 
 								<SelectValue placeholder="Pilih golongan" />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value="Obat Bebas">Obat Bebas</SelectItem>
-								<SelectItem value="Obat Bebas Terbatas">Obat Bebas Terbatas</SelectItem>
-								<SelectItem value="Obat Keras">Obat Keras</SelectItem>
+								<SelectItem value="Obat bebas">Obat Bebas</SelectItem>
+								<SelectItem value="Obat bebas terbatas">Obat Bebas Terbatas</SelectItem>
+								<SelectItem value="Obat keras">Obat Keras</SelectItem>
 							</SelectContent>
 						</Select>
 					</div>
@@ -58,12 +58,12 @@ export default function ViewObatClient({ product, jenisBarangList }: { product: 
 								<SelectValue placeholder="Pilih jenis kemasan" />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value="Strip 10 tablet">Strip</SelectItem>
-								<SelectItem value="Box isi 10 strip">Box</SelectItem>
-								<SelectItem value="Botol 60 ml">Botol</SelectItem>
-								<SelectItem value="Tube 5 gram">Tube</SelectItem>
-								<SelectItem value="Sachet 5 gram">Sachet</SelectItem>
-								<SelectItem value="Kaplet dalam blister">Blister</SelectItem>
+								<SelectItem value="Strip">Strip</SelectItem>
+								<SelectItem value="Box">Box</SelectItem>
+								<SelectItem value="Botol">Botol</SelectItem>
+								<SelectItem value="Tube">Tube</SelectItem>
+								<SelectItem value="Sachet">Sachet</SelectItem>
+								<SelectItem value="Blister">Blister</SelectItem>
 							</SelectContent>
 						</Select>
 					</div>

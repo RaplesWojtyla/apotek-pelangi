@@ -70,7 +70,7 @@ export default function EditObatClient({ product, jenisBarangList }: { product: 
 	return (
 		<div className="min-h-screen px-4 py-6 md:px-6 lg:px-8 bg-background text-foreground">
 			<div className="mb-6 text-sm text-muted-foreground">
-				<Link href="/admin/daftarobat" className="hover:underline">Daftar Produk</Link>
+				<Link href="/admin/daftarobat" className="hover:underline">Daftar Produk</Link>{" "}
 				&gt; <span className="text-foreground font-medium">Edit: {product.nama_barang}</span>
 			</div>
 			<h1 className="text-3xl font-bold mb-8">Edit Produk</h1>
@@ -103,9 +103,9 @@ export default function EditObatClient({ product, jenisBarangList }: { product: 
 									<SelectValue placeholder="Pilih golongan" />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="Obat Bebas">Obat Bebas</SelectItem>
-									<SelectItem value="Obat Bebas Terbatas">Obat Bebas Terbatas</SelectItem>
-									<SelectItem value="Obat Keras">Obat Keras</SelectItem>
+									<SelectItem value="Obat bebas">Obat Bebas</SelectItem>
+									<SelectItem value="Obat bebas terbatas">Obat Bebas Terbatas</SelectItem>
+									<SelectItem value="Obat Keras">Obat keras</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>
@@ -116,12 +116,12 @@ export default function EditObatClient({ product, jenisBarangList }: { product: 
 									<SelectValue placeholder="Pilih jenis kemasan" />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="Strip 10 tablet">Strip</SelectItem>
-									<SelectItem value="Box isi 10 strip">Box</SelectItem>
-									<SelectItem value="Botol 60 ml">Botol</SelectItem>
-									<SelectItem value="Tube 5 gram">Tube</SelectItem>
-									<SelectItem value="Sachet 5 gram">Sachet</SelectItem>
-									<SelectItem value="Kaplet dalam blister">Blister</SelectItem>
+									<SelectItem value="Strip">Strip</SelectItem>
+									<SelectItem value="Box">Box</SelectItem>
+									<SelectItem value="Botol">Botol</SelectItem>
+									<SelectItem value="Tube">Tube</SelectItem>
+									<SelectItem value="Sachet">Sachet</SelectItem>
+									<SelectItem value="Blister">Blister</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>
