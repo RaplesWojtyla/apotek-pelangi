@@ -13,6 +13,7 @@ import {
 	getFakturCustomerPaginated,
 	getFakturTotalPages,
 } from '@/action/kasir/faktur.action';
+import SkeletonHistory from '@/components/skeleton/SkeletonHistory';
 
 export default function DaftarTransaksiPage() {
 	const router = useRouter();
@@ -73,7 +74,7 @@ export default function DaftarTransaksiPage() {
 			{kategori === 'biasa' && (
 				<>
 					{isLoading ? (
-						<p className="text-gray-600">Memuat data transaksi...</p>
+						<SkeletonHistory />
 					) : (
 						<>
 							<TabelTransaksiBiasa fakturList={fakturList} refreshData={fetchData} />
