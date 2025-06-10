@@ -71,7 +71,8 @@ model User {
 
     pengajuan_resep  PengajuanResep[]
     cart             Cart[]
-    faktur_penjualan FakturPenjualan[]
+    faktur_penjualan_customer FakturPenjualan[] @relation("FakturPenjualanCustomer")
+    faktur_penjualan_kasir FakturPenjualan[] @relation("FakturPenjualanKasir")
     faktur_pembelian FakturPembelian[]
     notifikasi       Notifikasi[]
     log_aktivitas    LogAktivitas[]
@@ -203,9 +204,10 @@ model Cart {
 }
 
 model FakturPenjualan {
-    id                String           @id @default(cuid())
+    id                String       @id @default(cuid())
     id_user           String
-    tanggal_faktur    DateTime         @default(now())
+    id_kasir          String?
+    tanggal_faktur    DateTime     @default(now())
     nama_penerima     String
     nomor_telepon     String
     alamat            String?
@@ -214,11 +216,12 @@ model FakturPenjualan {
     total             Int
     snap_token        String
     keterangan        String?
-    createdAt         DateTime         @default(now())
+    createdAt         DateTime     @default(now())
 
     detail_faktur_penjualan DetailFakturPenjualan[]
 
-    user User @relation(fields: [id_user], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    user  User  @relation("FakturPenjualanCustomer", fields: [id_user], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    kasir User? @relation("FakturPenjualanKasir", fields: [id_kasir], references: [id], onDelete: Restrict, onUpdate: Cascade)
 }
 
 model DetailFakturPenjualan {

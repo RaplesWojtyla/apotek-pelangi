@@ -6,6 +6,7 @@ import { SumberCart } from "@prisma/client"
 import { auth, currentUser } from "@clerk/nextjs/server"
 import { updateSellingInvoiceStatus } from "./sellingInvoice.action"
 import { snap } from "@/lib/midtrans"
+import { revalidatePath } from "next/cache"
 
 interface CheckoutItemDetail {
 	id_cart: string
@@ -210,10 +211,13 @@ export const processCheckout = async (payload: CheckoutPayload) => {
 
 			return updatedFakturPenjualan
 		}, {
-			maxWait: 12500,
-			timeout: 12500
+			maxWait: 22500,
+			timeout: 22500
 		})
 
+		revalidatePath('/admin/logpenjualan')
+		revalidatePath('/customer/history')
+		
 		return {
 			success: true,
 			fakturId: res.id,
@@ -308,6 +312,10 @@ export const transactionSuccess = async (order_id: string) => {
 			data: null
 		};
 
+		revalidatePath('/admin/logpenjualan')
+		revalidatePath('/kasir/daftar_transaksi')
+		revalidatePath('/customer/history')
+
 		return {
 			success: true,
 			message: "Transaksi berhasil!",
@@ -376,6 +384,11 @@ export const failedTransaction = async (order_id: string) => {
 
 			return updatedFakturPenjualan
 		})
+
+		revalidatePath('/admin/logpenjualan')
+		revalidatePath('/kasir/daftar_transaksi')
+		revalidatePath('/kasir/history_transaksi')
+		revalidatePath('/customer/history')
 
 		return {
 			success: true,
