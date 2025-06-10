@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma"
 
 export type Product = Awaited<ReturnType<typeof getProducts>>[number]
 export type ProductDetail = Awaited<ReturnType<typeof getProductDetail>>
-import { revalidatePath } from "next/cache"
+import { getDbUserId } from "../user.action"
 
 
 export const getProducts = async ({ page = 1, matcher = '', take = 16, id_jenis_barang = '' }) => {
@@ -149,5 +149,61 @@ export const getCatalogTotalPages = async (matcher: string = '', take: number, i
 		console.error(`[getProductDetail] ERROR: ${error}`);
 
 		throw new Error("Gagal memuat halaman katalog!")
+	}
+}
+
+export const getRecentlyPurchasedProducts = async () => {
+	const userId = await getDbUserId();
+	if (!userId) {
+		return []; 
+	}
+
+	try {
+		const purchaseDetails = await prisma.detailFakturPenjualan.findMany({
+			where: {
+				faktur_penjualan: {
+					id_user: userId,
+					status: {
+						in: ['SELESAI', 'PEMBAYARAN_BERHASIL']
+					}
+				}
+			},
+			orderBy: {
+				faktur_penjualan: {
+					tanggal_faktur: 'desc' 
+				}
+			},
+			distinct: ['id_barang'], 
+			take: 8, 
+			select: {
+				barang: { 
+					include: {
+						jenis_barang: {
+							include: {
+								kategori_barang: true,
+							},
+						},
+						stok_barang: {
+							select: { jumlah: true }
+						}
+					}
+				}
+			}
+		});
+
+		const products = purchaseDetails.map(detail => {
+			const totalStock = detail.barang.stok_barang.reduce((acc, stock) => acc + stock.jumlah, 0);
+			return {
+				...detail.barang,
+				totalStock
+			};
+		});
+
+		return products;
+
+	} catch (error) {
+		console.error("[getRecentlyPurchasedProducts] error:", error);
+		
+		return []; 
 	}
 }

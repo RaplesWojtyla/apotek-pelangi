@@ -64,9 +64,9 @@ export async function getFakturById(id: string) {
 // Fungsi yang diperbarui untuk mengambil faktur histori dengan filter status dan user ID
 export async function getFakturHistoryPaginated(page: number, take: number = 8) {
     const dbUserId = await getDbUserId();
-	if (!dbUserId) {
-		return []
-	}
+    if (!dbUserId) {
+        return []
+    }
 
     const skip = (page - 1) * take;
 
@@ -105,9 +105,9 @@ export async function getFakturHistoryPaginated(page: number, take: number = 8) 
 // Fungsi yang diperbarui untuk mendapatkan total halaman histori
 export async function getFakturHistoryTotalPages(take: number = 8) {
     const dbUserId = await getDbUserId();
-	if (!dbUserId) {
-		return 0
-	}
+    if (!dbUserId) {
+        return 0
+    }
 
     const total = await prisma.fakturPenjualan.count({
         where: {
@@ -141,7 +141,20 @@ export async function updateFakturStatus(
         | 'MENUNGGU_PENGAMBILAN'
         | 'JATUH_TEMPO'
 ) {
-    const dbUserId = await getDbUserId(); // Pastikan id kasir yang update adalah user yang sedang login
+    const dbUserId = await getDbUserId();
+
+    const faktur = await prisma.fakturPenjualan.findUnique({
+        where: {
+            id
+        },
+        select: {
+            id_user: true
+        }
+    })
+
+    if (!faktur) {
+        throw new Error("Faktur tidak ditemukan!")
+    }
 
     const result = await prisma.fakturPenjualan.update({
         where: { id },
@@ -150,6 +163,32 @@ export async function updateFakturStatus(
             status
         },
     });
+
+    if (status === 'SELESAI') {
+        await buatNotifikasi({
+            id_user: faktur.id_user,
+            id_sumber: id,
+            tipe_sumber: 'FAKTUR_PENJUALAN',
+            judul: 'Pesanan Selesai',
+            pesan: `Pesanan Anda #${id} telah selesai. Terima kasih telah berbelanja!`,
+        });
+    } else if (status === 'MENUNGGU_PENGAMBILAN') {
+        await buatNotifikasi({
+            id_user: faktur.id_user,
+            id_sumber: id,
+            tipe_sumber: 'FAKTUR_PENJUALAN',
+            judul: 'Pesanan Dikemas!',
+            pesan: `Pesanan Anda #${id} telah selesai dikemas. Silahkan lakukan pengambilan!`,
+        });
+    } else if (status === 'DIBATALKAN') {
+        await buatNotifikasi({
+            id_user: faktur.id_user,
+            id_sumber: id,
+            tipe_sumber: 'FAKTUR_PENJUALAN',
+            judul: 'Pesanan Dibatalkan',
+            pesan: `Pesanan Anda #${id} dibatalkan.`,
+        });
+    }
 
     revalidatePath('/kasir/daftar_transaksi');
     revalidatePath('/admin/logpenjualan');

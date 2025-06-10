@@ -10,11 +10,13 @@ import { SheetContent, SheetTrigger } from '../ui/sheet';
 import { useCartContext } from '@/context/CartContext';
 import { useState } from 'react';
 import { Skeleton } from '../ui/skeleton';
+import { useRouter } from 'next/navigation';
 
 export const NavbarCustomer = () => {
 	const [isOpen, setIsOpen] = useState(false)
 	const { cartItemsCount, isLoadingCartCount } = useCartContext()
 	const { isSignedIn, isLoaded } = useUser()
+	const router = useRouter()
 
 	return (
 		<>
@@ -51,7 +53,7 @@ export const NavbarCustomer = () => {
 							<Separator orientation="vertical" className="w-px h-5 bg-gray-300 mr-4" />
 						</div>
 					</nav>
-					<nav className="hidden md:flex space-x-4">
+					<nav className="hidden md:flex space-x-4 items-center">
 						<div className="relative">
 							<Link href="/customer/cart" aria-label="Keranjang">
 								<ShoppingCart className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
@@ -67,16 +69,22 @@ export const NavbarCustomer = () => {
 								</span>
 							)}
 						</div>
-						<button aria-label="Notifikasi">
-							<Bell className="w-6 h-6 text-cyan-500 hover:text-cyan-700" />
-						</button>
+						<Link 
+							href={'/customer/notification'}
+							aria-label="Notifikasi"
+							className='text-primary hover:text-cyan-700'
+						>
+							<Bell className="w-6 h-6" />
+						</Link>
 						{isLoaded ? (
 							<UserButton />
 						) : (
-							<Skeleton className='size-10 rounded-full' />
+							<Skeleton className='size-8 rounded-full bg-gray-200' />
 						)}
 					</nav>
 				</div>
+
+
 				<div className="md:hidden">
 					<Button variant="ghost" size="icon" asChild aria-label="Lokasi">
 						<Link href="/customer/cart" aria-label="Keranjang">
@@ -118,10 +126,6 @@ export const NavbarCustomer = () => {
 											<ShoppingCart size={18} />
 											<span>Keranjang</span>
 										</Link>
-										<Link href="/customer/" onClick={() => setIsOpen(false)} className="flex items-center space-x-2 text-gray-700 hover:text-cyan-600">
-											{/* <MapPinned size={18} /> */}
-											<span>Alamat</span>
-										</Link>
 									</div>
 									<Separator />
 									<UserButton />
@@ -135,4 +139,4 @@ export const NavbarCustomer = () => {
 	);
 };
 
-export default NavbarCustomer
+export default NavbarCustomer 

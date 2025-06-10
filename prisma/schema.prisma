@@ -69,13 +69,13 @@ model User {
     status        StatusUser @default(AKTIF)
     foto_profil   String     @default("avatar.png")
 
-    pengajuan_resep  PengajuanResep[]
-    cart             Cart[]
+    pengajuan_resep           PengajuanResep[]
+    cart                      Cart[]
     faktur_penjualan_customer FakturPenjualan[] @relation("FakturPenjualanCustomer")
-    faktur_penjualan_kasir FakturPenjualan[] @relation("FakturPenjualanKasir")
-    faktur_pembelian FakturPembelian[]
-    notifikasi       Notifikasi[]
-    log_aktivitas    LogAktivitas[]
+    faktur_penjualan_kasir    FakturPenjualan[] @relation("FakturPenjualanKasir")
+    faktur_pembelian          FakturPembelian[]
+    notifikasi                Notifikasi[]
+    log_aktivitas             LogAktivitas[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -271,7 +271,9 @@ model Notifikasi {
     judul        String
     pesan        String
     sudah_dibaca Boolean     @default(false)
-    createdAt    DateTime    @default(now())
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
     user User @relation(fields: [id_user], references: [id], onDelete: Cascade)
 
