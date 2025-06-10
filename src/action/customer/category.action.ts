@@ -5,28 +5,6 @@ import { revalidatePath } from "next/cache"
 
 export type Category = Awaited<ReturnType<typeof getCategories>>[number]
 
-export const createCategory = async (nama_kategori: string, foto_kategori?: string) => {
-	try {
-		const newCategory = await prisma.kategoriBarang.create({
-			data: {
-				nama_kategori,
-				foto_kategori: foto_kategori || "kategori.png",
-			},
-		})
-		revalidatePath('/admin')
-
-		return {
-			success: true,
-			status: 201,
-			message: "Kategori berhasil ditambahkan",
-			data: newCategory,
-		}
-	} catch (error) {
-		console.error("Gagal menambahkan kategori:", error)
-		throw new Error("Gagal menambahkan kategori.")
-	}
-}
-
 export const getCategories = async (take: number) => {
 	try {
 		const categories = await prisma.kategoriBarang.findMany({

@@ -5,13 +5,15 @@ import { Product } from "@/action/customer/product.action";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { useCartContext } from "@/context/CartContext";
+import { ItemForCheckout, useCartContext } from "@/context/CartContext";
 import { useState } from "react";
 
 export default function ProductCard({ product }: { product: Product }) {
 	const router = useRouter()
-	const { fetchAndUpdateCartCount } = useCartContext()
+	const { fetchAndUpdateCartCount, setCheckoutItemsHandler } = useCartContext()
+
 	const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false)
+	const [isBuyingNow, setIsBuyingNow] = useState<boolean>(false) 
 
 	const handleDetail = (id: string) => {
 		router.push(`/customer/catalog/${id}`)
@@ -71,6 +73,32 @@ export default function ProductCard({ product }: { product: Product }) {
 		}
 	}
 
+	const handleBuyNow = () => {
+		if (product.totalStock < 1) {
+			toast.error("Stok produk telah habis.")
+			return
+		}
+
+		setIsBuyingNow(true)
+		
+		const itemToCheckout: ItemForCheckout = {
+			idCart: product.id,
+			idBarang: product.id,
+			namaBarang: product.nama_barang,
+			fotoBarang: product.foto_barang,
+			sumber: 'MANUAL',
+			jumlah: 1,
+			hargaJual: product.harga_jual,
+			idResep: null,
+			totalStock: product.totalStock,
+		}
+
+		setCheckoutItemsHandler([itemToCheckout])
+		router.push('/customer/checkout')
+	}
+
+	const isDisabled = isAddingToCart || isBuyingNow || product.totalStock < 1
+
 	return (
 		<div className="bg-white rounded-2xl shadow-md p-5 flex flex-col items-center justify-between cursor-pointer hover:shadow-lg transition-all w-full min-h-[320px] relative group">
 			{product.totalStock < 1 && (
@@ -121,10 +149,11 @@ export default function ProductCard({ product }: { product: Product }) {
 				{/* Tombol Beli Sekarang */}
 				<Button
 					className="flex-1 bg-cyan-500 text-white text-xs md:text-sm rounded-lg hover:bg-cyan-600 transition-all disabled:opacity-50 px-2 py-2 whitespace-nowrap overflow-hidden text-ellipsis cursor-pointer"
-					disabled={isAddingToCart}
+					onClick={handleBuyNow}
+					disabled={isDisabled}
 					title="Beli Sekarang"
 				>
-					{isAddingToCart ? (
+					{isBuyingNow ? (
 						<>
 							<Loader2 className="size-4 animate-spin" />
 							Sedang proses...
@@ -138,7 +167,7 @@ export default function ProductCard({ product }: { product: Product }) {
 				<Button
 					className="w-10 h-10 bg-white border border-cyan-500 rounded-lg hover:bg-cyan-50 text-cyan-600 flex items-center justify-center transition disabled:opacity-50 cursor-pointer"
 					onClick={handleAddToCart}
-					disabled={isAddingToCart}
+					disabled={isDisabled}
 				>
 					{isAddingToCart ? (
 						<Loader2 className="animate-spin w-4 h-4" />
