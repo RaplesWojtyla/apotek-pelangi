@@ -1,8 +1,13 @@
 import React, { ReactNode } from "react";
 import NavbarKasir from "@/components/kasir/NavbarKasir";
 import CatalogSidebar from "@/components/kasir/CatalogSidebar";
+import { checkRole } from "@/lib/clerk";
+import { redirect } from "next/navigation";
 
-const KasirLayout = ({ children }: { children: ReactNode }) => {
+export default async function KasirLayout({ children }: { children: ReactNode }) {
+  if (!(await checkRole('KASIR'))) {
+    redirect('/unauthorized')
+  }
   return (
     <>
       <NavbarKasir />
@@ -15,5 +20,3 @@ const KasirLayout = ({ children }: { children: ReactNode }) => {
     </>
   );
 };
-
-export default KasirLayout;
