@@ -1,6 +1,6 @@
 'use client'
 
-import { Category } from "@/action/category.action";
+import { Category } from "@/action/customer/category.action";
 import {
 	Accordion,
 	AccordionContent,
@@ -10,6 +10,7 @@ import {
 import { Layers} from "lucide-react";
 import { Separator } from "../ui/separator";
 import { UserButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 const SidebarContent = ({ categories, isLoading, userName }: { categories: Category[], isLoading: boolean, userName: string }) => {
 	return (
@@ -47,11 +48,12 @@ const SidebarContent = ({ categories, isLoading, userName }: { categories: Categ
 							<AccordionContent className="ml-6 space-y-1 text-sm">
 								{category.jenis_barang.map(jB => (
 									<div key={jB.id}>
-										<p
+										<Link
+											href={`/customer/catalog?jenisId=${jB.id}&kategoriNama=${encodeURIComponent(category.nama_kategori)}&jenisNama=${encodeURIComponent(jB.nama_jenis)}`}
 											className="block text-gray-700 hover:text-cyan-600 transition cursor-pointer mb-1"
 										>
 											{jB.nama_jenis}
-										</p>
+										</Link>
 										<Separator />
 									</div>
 								))}

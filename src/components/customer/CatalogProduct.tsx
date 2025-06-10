@@ -7,9 +7,9 @@ import toast from "react-hot-toast";
 import SkeletonCard from "@/components/skeleton/SkeletonCard";
 
 const CatalogProducts = ({
-	search, currPage, take
+	search, currPage, take, jenisId
 }: {
-	search: string, currPage: number, take: number
+	search: string, currPage: number, take: number, jenisId: string
 }) => {
 	const [products, setProducts] = useState<Product[]>([])
 	const [isFetchingProducts, setIsFetchingProducts] = useState<boolean>(true)
@@ -19,7 +19,7 @@ const CatalogProducts = ({
 			setIsFetchingProducts(true)
 
 			try {
-				const data = await getProducts({ matcher: search, page: currPage, take: take })
+				const data = await getProducts({ matcher: search, page: currPage, take: take, id_jenis_barang: jenisId })
 
 				setProducts(data)
 			} catch (error) {
@@ -38,7 +38,7 @@ const CatalogProducts = ({
 		}
 
 		fetchProducts()
-	}, [search, currPage])
+	}, [search, currPage, jenisId])
 
 	if (isFetchingProducts) return <SkeletonCard />
 

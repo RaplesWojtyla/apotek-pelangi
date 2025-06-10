@@ -1,4 +1,4 @@
-import { Category, getCategories } from "@/action/category.action";
+import { Category, getCategories } from "@/action/customer/category.action";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 

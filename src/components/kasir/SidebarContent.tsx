@@ -1,6 +1,6 @@
 'use client'
 
-import { Category } from "@/action/category.action";
+import { Category } from "@/action/customer/category.action";
 import {
 	Accordion,
 	AccordionContent,

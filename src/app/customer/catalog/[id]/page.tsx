@@ -6,8 +6,8 @@ import ProductUnavailable from "@/components/customer/ProductUnavailable";
 import ProductDetailSkeleton from "@/components/skeleton/ProductDetailSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useCartContext } from "@/context/CartContext";
-import { Loader2, ShoppingCart } from "lucide-react";
+import { ItemForCheckout, useCartContext } from "@/context/CartContext";
+import { Loader2, ShoppingBag, ShoppingCart } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -15,10 +15,13 @@ import toast from "react-hot-toast";
 export default function page() {
     const [productDetail, setProductDetail] = useState<ProductDetail>()
     const [recommendations, setRecommendations] = useState<Product[]>([])
+    const [jumlah, setJumlah] = useState<number>(1)
+    const { fetchAndUpdateCartCount, setCheckoutItemsHandler } = useCartContext()
+
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false)
-    const [jumlah, setJumlah] = useState<number>(1)
-    const { fetchAndUpdateCartCount } = useCartContext()
+    const [isBuyingNow, setIsBuyingNow] = useState<boolean>(false)
+
     const params = useParams()
     const { id } = params
     const router = useRouter()
@@ -104,7 +107,30 @@ export default function page() {
         } catch (error) {
             console.error(`[productDetail]: [handleAddToCart] Error: ${error}`);
             toast.error("Gagal menambah produk ke keranjang!")
-        } 
+        }
+    }
+
+    const handleBuyNow = () => {
+        if (!productDetail?.totalStock || productDetail.totalStock < 1) {
+            toast.error("Stok produk telah habis.")
+            return
+        }
+
+        setIsBuyingNow(true)
+
+        const itemForCheckout: ItemForCheckout = {
+            idCart: productDetail.id,
+            idBarang: productDetail.id,
+            namaBarang: productDetail.nama_barang,
+            fotoBarang: productDetail.foto_barang,
+            jumlah: 1,
+            hargaJual: productDetail.harga_jual,
+            sumber: 'MANUAL',
+            totalStock: productDetail.totalStock
+        }
+
+        setCheckoutItemsHandler([itemForCheckout])
+        router.push('/customer/checkout')
     }
 
     return (
@@ -148,7 +174,7 @@ export default function page() {
                                                 <div className="flex items-center border rounded-md overflow-hidden">
                                                     <Button
                                                         variant="ghost"
-                                                        className="px-3 py-1 text-lg bg-gray-100 hover:bg-gray-200 text-black"
+                                                        className="px-3 py-1 text-lg bg-gray-100 hover:bg-gray-200 text-black cursor-pointer"
                                                         onClick={() => setJumlah((prev) => prev - 1)}
                                                         disabled={jumlah < 2}
                                                     >
@@ -157,7 +183,7 @@ export default function page() {
                                                     <span className="px-4">{jumlah}</span>
                                                     <Button
                                                         variant="ghost"
-                                                        className="px-3 py-1 text-lg bg-gray-100 hover:bg-gray-200 text-black"
+                                                        className="px-3 py-1 text-lg bg-gray-100 hover:bg-gray-200 text-black cursor-pointer"
                                                         onClick={() => setJumlah((prev) => prev + 1)}
                                                         disabled={jumlah >= productDetail.totalStock}
                                                     >
@@ -170,9 +196,9 @@ export default function page() {
 
                                     <div className="flex w-full gap-2">
                                         <Button
-                                            className="w-fit bg-white border border-cyan-500 rounded-md hover:bg-cyan-50 text-cyan-600 text-sm py-2"
+                                            className="w-fit bg-white border border-cyan-500 rounded-md hover:bg-cyan-50 text-cyan-600 text-sm py-2 cursor-pointer"
                                             onClick={handleAddToCart}
-                                            disabled={productDetail.totalStock < 1 || isAddingToCart}
+                                            disabled={productDetail.totalStock < 1 || isAddingToCart || isBuyingNow}
                                         >
                                             {isAddingToCart ? (
                                                 <>
@@ -187,11 +213,21 @@ export default function page() {
                                             )}
                                         </Button>
                                         <Button
-                                            className="w-fit bg-cyan-500 text-white text-sm py-2 rounded-md hover:bg-cyan-600"
-                                            onClick={() => { }}
-                                            disabled={productDetail.totalStock < 1}
+                                            className="w-fit bg-cyan-500 text-white text-sm py-2 rounded-md hover:bg-cyan-600 cursor-pointer"
+                                            onClick={handleBuyNow}
+                                            disabled={productDetail.totalStock < 1 || isAddingToCart || isBuyingNow}
                                         >
-                                            Beli Sekarang
+                                            {isBuyingNow ? (
+                                                <>
+                                                    <Loader2 className="animate-spin" size={16} />
+                                                    <span className="animate-pulse">Proses ke laman checkout...</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <ShoppingBag size={16} />
+                                                    Beli Sekarang
+                                                </>
+                                            )}
                                         </Button>
                                     </div>
 

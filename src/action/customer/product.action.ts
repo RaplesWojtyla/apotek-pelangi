@@ -7,19 +7,25 @@ export type ProductDetail = Awaited<ReturnType<typeof getProductDetail>>
 import { revalidatePath } from "next/cache"
 
 
-export const getProducts = async ({ page = 1, matcher = '', take = 16 }) => {
+export const getProducts = async ({ page = 1, matcher = '', take = 16, id_jenis_barang = '' }) => {
 	const skip = (page - 1) * take
 
 	try {
+		const whereClause: any = {
+			nama_barang: {
+				contains: matcher,
+				mode: 'insensitive'
+			}
+		}
+
+		if (id_jenis_barang) {
+			whereClause.id_jenis_barang = id_jenis_barang
+		}
+
 		const products = await prisma.barang.findMany({
 			skip,
 			take,
-			where: {
-				nama_barang: {
-					contains: matcher,
-					mode: 'insensitive'
-				}
-			},
+			where: whereClause,
 			include: {
 				jenis_barang: {
 					include: {
@@ -40,7 +46,7 @@ export const getProducts = async ({ page = 1, matcher = '', take = 16 }) => {
 				totalStock: totalStock
 			}
 		})
-		
+
 		return formattedProducts
 	} catch (error) {
 		console.error("[getProducts] error:", error)
@@ -119,18 +125,24 @@ export const getProductDetail = async (id: string) => {
 	}
 }
 
-export const getCatalogTotalPages = async (matcher: string, take: number) => {
+export const getCatalogTotalPages = async (matcher: string = '', take: number, id_jenis_barang: string = '') => {
 	try {
-		const products = await prisma.barang.findMany({
-			where: {
-				nama_barang: {
-					contains: matcher,
-					mode: 'insensitive'
-				}
+		const whereClause: any = {
+			nama_barang: {
+				contains: matcher,
+				mode: 'insensitive'
 			}
+		}
+
+		if (id_jenis_barang) {
+			whereClause.id_jenis_barang = id_jenis_barang
+		}
+
+		const productsCount = await prisma.barang.count({
+			where: whereClause
 		})
 
-		const totalPages: number = Math.ceil(products.length / take)
+		const totalPages: number = Math.ceil(productsCount / take)
 
 		return totalPages === 0 ? 1 : totalPages
 	} catch (error) {
@@ -139,94 +151,3 @@ export const getCatalogTotalPages = async (matcher: string, take: number) => {
 		throw new Error("Gagal memuat halaman katalog!")
 	}
 }
-
-export const updateProduct = async (
-	id: string,
-	data: {
-		nama_barang?: string;
-		harga_jual?: number;
-		foto_barang?: string;
-		id_jenis_barang?: string;
-	}
-) => {
-	try {
-		const updatedBarang = await prisma.barang.update({
-			where: { id },
-			data,
-		});
-		revalidatePath('/')
-
-		return {
-			success: true,
-			status: 201,
-			message: "Barang berhasil diperbarui",
-			data: updatedBarang,
-		}
-	} catch (error) {
-		console.error("[updateProduct]", error);
-		throw new Error("Gagal memperbarui data barang");
-	}
-};
-
-export const updateDetailProduct = async (
-	id_barang: string,
-	detailData: {
-		deskripsi?: string;
-		indikasi_umum?: string;
-		komposisi?: string;
-		dosis?: string;
-		aturan_pakai?: string;
-		perhatian?: string;
-		kontra_indikasi?: string;
-		efek_samping?: string;
-		golongan?: string;
-		kemasan?: string;
-		manufaktur?: string;
-		no_bpom?: string;
-	}
-) => {
-	try {
-		const updatedDetailProduct = await prisma.detailBarang.update({
-			where: { id_barang },
-			data: detailData,
-		});
-		revalidatePath('/')
-
-		return {
-			success: true,
-			status: 201,
-			message: "Detail Barang berhasil diperbarui",
-			data: updatedDetailProduct,
-		}
-	} catch (error) {
-		console.error("[updateDetailProduct]", error);
-		throw new Error("Gagal memperbarui detail barang");
-	}
-};
-
-export const deleteProduct = async (id: string) => {
-	try {
-		await prisma.detailBarang.delete({
-			where: {
-				id_barang: id
-			}
-		});
-
-		await prisma.barang.delete({
-			where: {
-				id
-			}
-		});
-		revalidatePath('/')
-
-		return {
-			success: true,
-			status: 201,
-			message: "Barang berhasil dihapus",
-		}
-	} catch (error) {
-		console.error("[deleteProduct] error:", error);
-		throw new Error("Gagal menghapus produk");
-	}
-};
-
