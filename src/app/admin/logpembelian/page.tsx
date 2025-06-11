@@ -84,7 +84,7 @@ export default function LogPembelianPage() {
 
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-2 w-full md:w-auto">
-          <Input placeholder="Cari log penmbelian..." className="w-full md:w-64" />
+          <Input placeholder="Cari log pembelian..." className="w-full md:w-64" />
           <Button variant="outline" size="icon">
             <Search className="w-4 h-4" />
           </Button>

@@ -3,7 +3,7 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Card, CardContent } from "@/components/ui/card";
 import SidebarContent from "./SidebarContent";
-import { Category, countAllCategories, getCategories } from "@/action/category.action";
+import { Category, countAllCategories, getCategories } from "@/action/customer/category.action";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useUser } from "@clerk/nextjs";

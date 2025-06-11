@@ -6,6 +6,7 @@ import { SumberCart } from "@prisma/client"
 import { auth, currentUser } from "@clerk/nextjs/server"
 import { updateSellingInvoiceStatus } from "./sellingInvoice.action"
 import { snap } from "@/lib/midtrans"
+import { revalidatePath } from "next/cache"
 
 interface CheckoutItemDetail {
 	id_cart: string
@@ -197,7 +198,7 @@ export const processCheckout = async (payload: CheckoutPayload) => {
 					id_sumber: fakturPenjualan.id,
 					tipe_sumber: 'FAKTUR_PENJUALAN',
 					judul: "Pesanan dibuat.",
-					pesan: `Pesanan Anda #${fakturPenjualan.id} telah berhasil dibuat dan menunggu pembayaran. Total: Rp${total.toLocaleString()}`,
+					pesan: `Pesanan Anda #${fakturPenjualan.id} telah berhasil dibuat dan menunggu pembayaran. Total: Rp${total.toLocaleString('id-ID')}`,
 					sudah_dibaca: false
 				}
 			})
@@ -210,9 +211,12 @@ export const processCheckout = async (payload: CheckoutPayload) => {
 
 			return updatedFakturPenjualan
 		}, {
-			maxWait: 12500,
-			timeout: 12500
+			maxWait: 22500,
+			timeout: 22500
 		})
+
+		revalidatePath('/admin/logpenjualan')
+		revalidatePath('/customer/history')
 
 		return {
 			success: true,
@@ -308,6 +312,20 @@ export const transactionSuccess = async (order_id: string) => {
 			data: null
 		};
 
+		await prisma.notifikasi.create({
+			data: {
+				id_user: res.data?.id_user!,
+				id_sumber: order_id,
+				tipe_sumber: 'FAKTUR_PENJUALAN',
+				judul: "Pembayaran berhasil!",
+				pesan: `Pembayaran untuk pesanan #${order_id} telah berhasil diterima. Pesanan anda akan segera dikemas!`
+			}
+		})
+
+		revalidatePath('/admin/logpenjualan')
+		revalidatePath('/kasir/daftar_transaksi')
+		revalidatePath('/customer/history')
+
 		return {
 			success: true,
 			message: "Transaksi berhasil!",
@@ -374,8 +392,23 @@ export const failedTransaction = async (order_id: string) => {
 
 			await Promise.all(stocksUpdatePromise)
 
+			await tx.notifikasi.create({
+				data: {
+					id_user: updatedFakturPenjualan.id_user,
+					id_sumber: order_id,
+					tipe_sumber: 'FAKTUR_PENJUALAN',
+					judul: "Pembayaran Gagal!",
+					pesan: `Pembayaran untuk pesanan #${order_id} Gagal. Pesanan anda dibatalkan!`
+				}
+			})
+
 			return updatedFakturPenjualan
 		})
+
+		revalidatePath('/admin/logpenjualan')
+		revalidatePath('/kasir/daftar_transaksi')
+		revalidatePath('/kasir/history_transaksi')
+		revalidatePath('/customer/history')
 
 		return {
 			success: true,

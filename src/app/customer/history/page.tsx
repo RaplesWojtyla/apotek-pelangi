@@ -81,49 +81,70 @@ export default function RiwayatTransaksiPage() {
 			</div>
 
 			{/* Kartu transaksi */}
-			<div className="space-y-4">
-				{filtered.map(trx => (
-					<div
-						key={trx.id}
-						className="border rounded-lg p-4 flex flex-col gap-4 shadow-sm bg-white"
-					>
-						<div className="text-sm text-gray-600 font-medium">Kode Invoice : {trx.id}</div>
-						<div className="flex items-start gap-4">
-							<Image
-								src={`/${trx.detail_faktur_penjualan[0].barang.foto_barang}`}
-								alt={trx.detail_faktur_penjualan[0].barang.nama_barang}
-								width={100}
-								height={100}
-								className="object-contain rounded"
-							/>
-							<div className="flex-1">
-								<p className="font-semibold">{trx.detail_faktur_penjualan[0].barang.nama_barang}</p>
-								<p className="text-sm text-gray-600">
-									{trx.detail_faktur_penjualan[0].jumlah} x Rp{trx.detail_faktur_penjualan[0].barang.harga_jual.toLocaleString('id-ID')}
-								</p>
-								<TransaksiDetailDialog transaction={trx} />
-							</div>
-							<div className="text-right">
-								<p className="font-semibold text-lg">Rp{trx.total.toLocaleString()}</p>
-								<span
-									className={`inline-block mt-2 px-3 py-1 text-xs rounded ${clsx({
-										'bg-yellow-500 text-white': trx.status === 'MENUNGGU_PEMBAYARAN',
-										'bg-green-500 text-white': trx.status === 'PEMBAYARAN_BERHASIL',
-										'bg-red-500 text-white': trx.status === 'PEMBAYARAN_GAGAL',
-										'bg-blue-500 text-white': trx.status === 'MENUNGGU_PENGAMBILAN',
-										'bg-green-600 text-white': trx.status === 'SELESAI',
-										'bg-red-700 text-white': trx.status === 'DIBATALKAN',
-									})
-									}`}
-								>
-									{trx.status.replace('_', " ")}
-								</span>
-							</div>
+			{isLoading ? (
+				<SkeletonHistory />
+			) : (
+				<div className="space-y-4">
+					{filtered.length === 0 ? (
+						<div className="w-full min-h-[300px] flex flex-col justify-center items-center text-center py-10">
+							<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-text text-gray-400 mb-4">
+								<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+								<polyline points="14 2 14 8 20 8" />
+								<line x1="16" x2="8" y1="13" y2="13" />
+								<line x1="16" x2="8" y1="17" y2="17" />
+								<line x1="10" x2="8" y1="9" y2="9" />
+							</svg>
+							<p className="text-xl font-semibold text-gray-700">
+								{filter === "Semua" ? "Anda belum memiliki riwayat transaksi" : "Tidak ada transaksi yang sesuai dengan filter ini"}
+							</p>
+							<p className="text-gray-500 mt-1">
+								{filter === "Semua" ? "Silakan lakukan transaksi terlebih dahulu." : "Coba ubah filter atau periksa kembali nanti."}
+							</p>
 						</div>
-					</div>
-				))}
-			</div>
-			<SkeletonHistory />
+					) : (
+						filtered.map(trx => (
+							<div
+								key={trx.id}
+								className="border rounded-lg p-4 flex flex-col gap-4 shadow-sm bg-white"
+							>
+								<div className="text-sm text-gray-600 font-medium">Kode Invoice : {trx.id}</div>
+								<div className="flex items-start gap-4">
+									<Image
+										src={`/${trx.detail_faktur_penjualan[0].barang.foto_barang}`}
+										alt={trx.detail_faktur_penjualan[0].barang.nama_barang}
+										width={100}
+										height={100}
+										className="object-contain rounded"
+									/>
+									<div className="flex-1">
+										<p className="font-semibold">{trx.detail_faktur_penjualan[0].barang.nama_barang}</p>
+										<p className="text-sm text-gray-600">
+											{trx.detail_faktur_penjualan[0].jumlah} x Rp{trx.detail_faktur_penjualan[0].barang.harga_jual.toLocaleString('id-ID')}
+										</p>
+										<TransaksiDetailDialog transaction={trx} />
+									</div>
+									<div className="text-right">
+										<p className="font-semibold text-lg">Rp{trx.total.toLocaleString()}</p>
+										<span
+											className={`inline-block mt-2 px-3 py-1 text-xs rounded ${clsx({
+												'bg-yellow-500 text-white': trx.status === 'MENUNGGU_PEMBAYARAN',
+												'bg-green-500 text-white': trx.status === 'PEMBAYARAN_BERHASIL',
+												'bg-red-500 text-white': trx.status === 'PEMBAYARAN_GAGAL',
+												'bg-blue-500 text-white': trx.status === 'MENUNGGU_PENGAMBILAN',
+												'bg-green-600 text-white': trx.status === 'SELESAI',
+												'bg-red-700 text-white': trx.status === 'DIBATALKAN',
+											})
+												}`}
+										>
+											{trx.status.replace('_', " ")}
+										</span>
+									</div>
+								</div>
+							</div>
+						))
+					)}
+				</div>
+			)}
 		</div>
 	);
 }

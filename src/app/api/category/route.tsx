@@ -1,4 +1,4 @@
-import { Category, countAllCategories, getCategories } from "@/action/category.action"
+import { Category, countAllCategories, getCategories } from "@/action/customer/category.action"
 import { NextResponse } from "next/server"
 
 export async function GET(req: Request) {

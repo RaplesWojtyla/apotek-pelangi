@@ -52,7 +52,7 @@ export default function TransaksiDetailDialog({
         id_sumber: faktur.id,
         tipe_sumber: 'FAKTUR_PENJUALAN',
         judul: 'Pesanan Siap Diambil',
-        pesan: `Pesanan ID ${faktur.id} siap diambil.`,
+        pesan: `Pesanan Anda #${faktur.id} siap diambil.`,
       });
       toast.success('Barang dikemas.');
       setCurrentStatus('MENUNGGU_PENGAMBILAN');

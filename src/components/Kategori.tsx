@@ -1,19 +1,11 @@
-import { Category, getCategories } from "@/action/category.action";
+import { Category, countAllCategories, getCategories } from "@/action/customer/category.action";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
-
-// const categories = [
-// 	{ name: "Alergi", image: "/icons/alergi.png" },
-// 	{ name: "Demam", image: "/icons/demam.png" },
-// 	{ name: "Diabetes", image: "/icons/diabetes.png" },
-// 	{ name: "Mulut & THT", image: "/icons/mulut.png" },
-// 	{ name: "Vitamin & Suplemen", image: "/icons/vitamin.png" },
-// 	{ name: "Hipertensi", image: "/icons/hipertensi.png" },
-// 	{ name: "Kesehatan Ibu/Anak", image: "/icons/ibu-anak.png" },
-// ];
+import { redirect } from "next/navigation";
 
 export const Kategori = async () => {
-	const categories: Category[] = await getCategories(2)
+	const categoriesCount = await countAllCategories()
+	const categories: Category[] = await getCategories(categoriesCount)
 
 	return (
 		<section className="py-8 px-4">
@@ -26,21 +18,22 @@ export const Kategori = async () => {
 				</div>
 				<div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-4">
 					{categories.map(category => (
-						<Card
-							key={category.id}
-							className="h-32 flex flex-col items-center justify-center p-4 cursor-pointer hover:shadow-md transition"
-						>
-							<CardContent className="flex flex-col items-center justify-center gap-2 p-0">
-								<img
-									src={category.foto_kategori}
-									alt={category.nama_kategori}
-									className="w-12 h-12 object-cover rounded-full"
-								/>
-								<span className="text-xs text-gray-700 text-center font-semibold">
-									{category.nama_kategori}
-								</span>
-							</CardContent>
-						</Card>
+						<Link key={category.id} href={'/customer/catalog'}>
+							<Card
+								className="h-32 flex flex-col items-center justify-center p-4 cursor-pointer hover:shadow-md transition"
+							>
+								<CardContent className="flex flex-col items-center justify-center gap-2 p-0">
+									<img
+										src={category.foto_kategori}
+										alt={category.nama_kategori}
+										className="w-12 h-12 object-cover rounded-full"
+									/>
+									<span className="text-xs text-gray-700 text-center font-semibold">
+										{category.nama_kategori}
+									</span>
+								</CardContent>
+							</Card>
+						</Link>
 					))}
 				</div>
 			</div>
