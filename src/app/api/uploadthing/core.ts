@@ -38,6 +38,15 @@ export const ourFileRouter = {
 				uploadedBy: metadata.userId,
 				fileUrl: file.ufsUrl
 			}
+		}),
+
+	resepImgKasirUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 1 }})
+		.middleware(async() => await handleAuth('KASIR'))
+		.onUploadComplete(async ({ metadata, file }) => {
+			return {
+				uploadedBy: metadata.userId,
+				fileUrl: file.ufsUrl 
+			}
 		})
 } satisfies FileRouter
 

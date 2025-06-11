@@ -1,10 +1,7 @@
 'use server'
 
-import fs from 'fs'
-import path from 'path'
 import { prisma } from '@/lib/prisma'
 import { getDbUserId } from '../user.action'
-import { currentUser } from '@clerk/nextjs/server'
 
 interface Item {
 	id: string
@@ -19,7 +16,7 @@ interface TransaksiInput {
 	bayar: number
 	paymentMethod: string
 	resepChecked: Record<string, boolean>
-	resepImage: File | null
+	resepImage: string | null
 }
 
 export async function prosesTransaksi({
@@ -29,16 +26,14 @@ export async function prosesTransaksi({
 	resepChecked,
 	resepImage,
 }: TransaksiInput) {
-	const user = await currentUser()
-	if (!user) throw new Error('Unauthorized')
-
 	const dbUserId = await getDbUserId()
-	if (!dbUserId) throw new Error('User tidak ditemukan di database')
+	if (!dbUserId) throw new Error('Pengguna tidak terautentikasi!')
 
 	const userRecord = await prisma.user.findUnique({
 		where: { id: dbUserId },
 		select: { nama: true },
 	})
+	
 	const namaPenerima = userRecord?.nama?.trim() || '-'
 
 	if (!items || items.length === 0) throw new Error('Item keranjang kosong')
@@ -46,24 +41,7 @@ export async function prosesTransaksi({
 	const total = items.reduce((sum, item) => sum + item.harga_jual * item.quantity, 0)
 	if (bayar < total) throw new Error('Jumlah bayar kurang dari total')
 
-	let resepUrl: string | null = null
 	let pengajuanResepId: string | null = null
-
-	// Simpan gambar resep jika ada
-	if (resepImage && typeof resepImage === 'object') {
-		const buffer = Buffer.from(await resepImage.arrayBuffer())
-		const now = new Date()
-		const pad = (n: number) => n.toString().padStart(2, '0')
-		const timestampFolder = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`
-		const fileName = resepImage.name
-		const dirPath = path.join(process.cwd(), 'public', 'resep', timestampFolder)
-		const fullPath = path.join(dirPath, fileName)
-
-		fs.mkdirSync(dirPath, { recursive: true })
-		fs.writeFileSync(fullPath, buffer)
-
-		resepUrl = `/resep/${timestampFolder}/${fileName}`
-	}
 
 	return await prisma.$transaction(async (tx) => {
 		// 1. Buat Faktur Penjualan
@@ -84,12 +62,12 @@ export async function prosesTransaksi({
 
 		// 2. Buat Pengajuan Resep jika ada resep digunakan
 		const adaResep = items.some((item) => resepChecked[item.id])
-		if (adaResep && resepUrl) {
+		if (adaResep && resepImage) {
 			const pengajuan = await tx.pengajuanResep.create({
 				data: {
 					id_user: dbUserId,
 					status: 'DITERIMA',
-					foto_resep: resepUrl,
+					foto_resep: resepImage,
 					catatan: '',
 				},
 			})
