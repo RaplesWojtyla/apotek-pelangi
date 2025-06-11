@@ -11,12 +11,17 @@ import { getAllJenisBarang, createProduct } from "@/action/admin/product.action"
 import { type JenisBarang } from "@prisma/client"
 import toast from "react-hot-toast"
 import { useRouter } from "next/navigation"
-import { Loader2 } from "lucide-react"
+import { Loader2, Trash2 } from "lucide-react"
+// --- Import Tambahan ---
+import { UploadDropzone } from "@/utils/uploadthing"
+import Image from "next/image"
 
 export default function TambahObatPage() {
 	const [jenisBarangList, setJenisBarangList] = useState<JenisBarang[]>([]);
 	const [isPending, startTransition] = useTransition();
 	const router = useRouter();
+	// --- State baru untuk URL gambar ---
+	const [imageUrl, setImageUrl] = useState<string | null>(null);
 
 	useEffect(() => {
 		const fetchJenisBarang = async () => {
@@ -28,6 +33,11 @@ export default function TambahObatPage() {
 	}, []);
 
 	const handleSubmit = async (formData: FormData) => {
+		// --- Menambahkan URL gambar ke form data sebelum submit ---
+		if (imageUrl) {
+			formData.append('foto_barang', imageUrl);
+		}
+
 		startTransition(async () => {
 			const result = await createProduct(formData);
 			if (result.success && result.data?.id) {
@@ -102,10 +112,48 @@ export default function TambahObatPage() {
 							</SelectContent>
 						</Select>
 					</div>
-					<div className="space-y-2 md:col-span-2">
+					<div className="space-y-2">
 						<Label>Harga Jual (Rp)<span className="text-red-500">*</span></Label>
 						<Input name="harga_jual" type="number" placeholder="Contoh: 5000" required />
 					</div>
+					
+                    {/* --- BAGIAN INPUT FOTO --- */}
+                    <div className="space-y-2">
+                        <Label>Foto Produk</Label>
+                        {imageUrl ? (
+                            <div className="relative w-fit">
+                                <Image 
+                                    src={imageUrl} 
+                                    alt="Preview Foto Produk" 
+                                    width={150} 
+                                    height={150} 
+                                    className="rounded-md object-cover" 
+                                />
+                                <Button 
+                                    type="button" 
+                                    variant="destructive" 
+                                    size="icon" 
+                                    onClick={() => setImageUrl(null)}
+                                    className="absolute top-1 right-1 h-7 w-7"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </Button>
+                            </div>
+                        ) : (
+                            <UploadDropzone
+                                endpoint={'categoryImgUploader'} // Anda bisa buat endpoint baru jika perlu, tapi ini bisa dipakai
+                                onClientUploadComplete={(res) => res && setImageUrl(res[0].url)}
+                                onUploadError={(error: Error) => {
+                                    toast.error(`Gagal upload: ${error.message}`);
+                                }}
+                                config={{ mode: 'auto' }}
+                                className="p-4 ut-label:text-sm ut-allowed-content:hidden"
+                            />
+                        )}
+                        <p className="text-xs text-muted-foreground">
+                            Jika tidak diunggah, gambar default akan digunakan.
+                        </p>
+                    </div>
 				</div>
 			</section>
 

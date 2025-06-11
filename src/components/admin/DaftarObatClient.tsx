@@ -23,6 +23,7 @@ import {
 	Loader2,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image"; // <-- 1. Import komponen Image
 import {
 	DropdownMenu,
 	DropdownMenuTrigger,
@@ -105,7 +106,9 @@ export default function DaftarObatClient({ products, totalPages, totalProducts }
 		});
 	}
 
+    // --- 2. Tambahkan 'foto_barang' ke dalam headers ---
 	const headers = [
+        { key: "foto_barang", label: "Foto"},
 		{ key: "nama_barang", label: "Nama Produk" },
 		{ key: "deskripsi", label: "Deskripsi" },
 		{ key: "golongan", label: "Golongan" },
@@ -162,7 +165,8 @@ export default function DaftarObatClient({ products, totalPages, totalProducts }
 								>
 									<div className="flex items-center gap-1">
 										{header.label}
-										<ChevronsUpDown className="w-4 h-4 text-muted-foreground" />
+                                        {/* Jangan tampilkan ikon sort untuk kolom foto */}
+										{header.key !== 'foto_barang' && <ChevronsUpDown className="w-4 h-4 text-muted-foreground" />}
 									</div>
 								</TableHead>
 							))}
@@ -175,7 +179,20 @@ export default function DaftarObatClient({ products, totalPages, totalProducts }
 								<TableCell>{idx + index + 1}</TableCell>
 								{headers.map(h => (
 									<TableCell key={h.key}>
-										{h.key === 'harga_jual' ? `Rp${obat[h.key].toLocaleString('id-ID')}` : obat[h.key]}
+                                        {/* --- 3. Logika untuk render gambar --- */}
+										{h.key === 'foto_barang' ? (
+											<Image 
+												src={obat.foto_barang.includes("https") ? obat.foto_barang : `/${obat.foto_barang}`} 
+												alt={obat.nama_barang} 
+												width={56} 
+												height={56}
+												className="w-14 h-14 rounded-md object-cover"
+											/>
+										) : h.key === 'harga_jual' ? (
+											`Rp${obat[h.key].toLocaleString('id-ID')}`
+										) : (
+											obat[h.key]
+										)}
 									</TableCell>
 								))}
 								<TableCell>
@@ -186,27 +203,23 @@ export default function DaftarObatClient({ products, totalPages, totalProducts }
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent align="end">
-											<Button
-												variant={'link'}
-												className="flex items-center justify-start gap-2 w-full hover:no-underline hover:text-primary/65 cursor-pointer"
-												onClick={() => push(`/admin/daftarobat/view/${obat.id_barang}`)}
-											>
-												<Eye className="w-4 h-4" /> Lihat
-											</Button>
+											<DropdownMenuItem asChild>
+												<Link href={`/admin/daftarobat/view/${obat.id}`} className="flex items-center gap-2 w-full cursor-pointer">
+													<Eye className="w-4 h-4" /> Lihat
+												</Link>
+											</DropdownMenuItem>
 
-											<Button
-												variant={'link'}
-												className="flex items-center justify-start gap-2 w-full hover:no-underline hover:text-primary/65 cursor-pointer"
-												onClick={() => push(`/admin/daftarobat/edit/${obat.id_barang}`)}
-											>
-												<Pencil className="w-4 h-4" /> Edit
-											</Button>
+											<DropdownMenuItem asChild>
+												<Link href={`/admin/daftarobat/edit/${obat.id}`} className="flex items-center gap-2 w-full cursor-pointer">
+													<Pencil className="w-4 h-4" /> Edit
+												</Link>
+											</DropdownMenuItem>
 
 											<AlertDialog open={isOpen} onOpenChange={setIsOpen}>
 												<AlertDialogTrigger asChild>
-													<Button variant={'link'} className="flex items-center justify-start gap-2 w-full text-red-500 hover:text-red-700 hover:no-underline cursor-pointer">
+													<div className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 text-red-500 hover:bg-red-50 w-full justify-start gap-2">
 														<Trash2 className="w-4 h-4" /> Delete
-													</Button>
+													</div>
 												</AlertDialogTrigger>
 												<AlertDialogContent>
 													<AlertDialogHeader>
@@ -218,16 +231,16 @@ export default function DaftarObatClient({ products, totalPages, totalProducts }
 														<Button
 															variant={'destructive'}
 															className="flex items-center justify-start hover:bg-red-800 transition duration-300 gap-2 cursor-pointer"
-															onClick={() => handleDelete(obat.id_barang)}
+															onClick={() => handleDelete(obat.id)}
 															disabled={isDeleting}
 														>
 															{isDeleting ? (
 																<>
-																	<Loader2 className="size-4 animate-spin" /> <span className="animate-pulse">Deleting...</span>
+																	<Loader2 className="size-4 animate-spin" /> <span className="animate-pulse">Menghapus...</span>
 																</>
 															) : (
 																<>
-																	<Trash2 className="w-4 h-4" /> Delete
+																	<Trash2 className="w-4 h-4" /> Hapus
 																</>
 															)}
 														</Button>
