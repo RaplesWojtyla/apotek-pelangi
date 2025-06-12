@@ -8,11 +8,13 @@ import Link from "next/link";
 import { getProducts, getRecentlyPurchasedProducts } from "@/action/customer/product.action";
 import { getDbUserId } from "@/action/user.action";
 import LatestTransactionProductCards from "@/components/customer/LatestTransactionProductCards";
+
+
 export default async function CustomerPage() {
 
 	const userId = await getDbUserId();
 	let productsToShow;
-	let pageTitle = "Produk Terbaru";
+	let pageTitle = "Produk Tersedia";
 
 	if (userId) {
 		const purchasedProducts = await getRecentlyPurchasedProducts();

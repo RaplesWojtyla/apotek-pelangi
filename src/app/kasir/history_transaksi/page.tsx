@@ -21,6 +21,7 @@ import {
 import {
     getPengajuanResepPaginated,
     getPengajuanResepTotalPages,
+    PengajuanResepItem,
 } from '@/action/kasir/tebusResep.action'; // Import aksi pengajuan resep
 
 // Definisikan tipe untuk data faktur
@@ -43,20 +44,6 @@ interface FakturItem {
         };
     }>;
     barang?: Array<{ nama: string; jumlah: number; harga: number; gambar: string }>;
-}
-
-// Definisikan tipe untuk data pengajuan resep
-interface PengajuanResepItem {
-    id: string;
-    id_user: string;
-    tanggal_pengajuan: Date;
-    status: string;
-    catatan?: string | null;
-    foto_resep: string;
-    createdAt: Date;
-    user?: {
-        nama: string;
-    };
 }
 
 export default function CombinedHistoryPage() {
