@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs"
 import { syncUser } from "@/action/user.action";
 import { currentUser } from "@clerk/nextjs/server";
 import { Toaster } from "react-hot-toast"
+import { idID } from "@clerk/localizations"
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -31,7 +32,7 @@ export default async function RootLayout({
 	if (user) await syncUser()
 
 	return (
-		<ClerkProvider>
+		<ClerkProvider localization={idID}>
 			<html lang="id" suppressHydrationWarning>
 				<body
 					className={`${geistSans.variable} ${geistMono.variable} antialiased`}
