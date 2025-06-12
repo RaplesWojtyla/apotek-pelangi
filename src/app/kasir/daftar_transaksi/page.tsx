@@ -1,54 +1,74 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import toast from 'react-hot-toast';
+import { useEffect, useState, useCallback } from 'react'
+import toast from 'react-hot-toast'
 
-import { Button } from '@/components/ui/button';
-import TabelTebusResep from '@/components/kasir/TabelTebusResep';
-import TabelTransaksiBiasa from '@/components/kasir/TabelTransaksiBiasa';
-import Pagination from '@/components/Pagination';
+import { Button } from '@/components/ui/button'
+import TabelTebusResep from '@/components/kasir/TabelTebusResep'
+import TabelTransaksiBiasa from '@/components/kasir/TabelTransaksiBiasa'
+import Pagination from '@/components/Pagination'
 
-import {
-	getFakturCustomerPaginated,
-	getFakturTotalPages,
-} from '@/action/kasir/faktur.action';
-import SkeletonHistory from '@/components/skeleton/SkeletonHistory';
+import { getFakturCustomerPaginated, getFakturTotalPages } from '@/action/kasir/faktur.action'
+import { getPendingPrescriptions } from '@/action/kasir/tebusResep.action'
+import SkeletonHistory from '@/components/skeleton/SkeletonHistory'
+
+type PengajuanResep = {
+	id: string
+	id_user: string
+	tanggal_pengajuan: Date
+	status: string
+	catatan: string | null
+	foto_resep: string
+	user: { 
+		id: string 
+		nama: string | null 
+	} | null
+}
+
 
 export default function DaftarTransaksiPage() {
-	const router = useRouter();
-	const searchParams = useSearchParams();
+	const [kategori, setKategori] = useState<'resep' | 'biasa'>('resep')
+	const [fakturList, setFakturList] = useState<any[]>([])
+	const [resepList, setResepList] = useState<PengajuanResep[]>([])
+	const [totalPages, setTotalPages] = useState<number>(1)
+	const [totalResepPages, setTotalResepPages] = useState<number>(1)
+	const [isLoading, setIsLoading] = useState<boolean>(true)
 
-	const [kategori, setKategori] = useState<'resep' | 'biasa'>('resep');
-	const [fakturList, setFakturList] = useState<any[]>([]);
-	const [totalPages, setTotalPages] = useState<number>(1);
-	const [isLoading, setIsLoading] = useState<boolean>(true);
-
-	const page = Number(searchParams.get('page') ?? 1);
-	const take = 8;
-
-	const fetchData = async () => {
-		try {
-			setIsLoading(true);
-			const [faktur, total] = await Promise.all([
-				getFakturCustomerPaginated(page, take),
-				getFakturTotalPages(take),
-			]);
-			setFakturList(faktur);
-			setTotalPages(total);
-		} catch (error) {
-			console.error('[FakturPagination] Error:', error);
-			toast.error('Gagal memuat data transaksi');
-		} finally {
-			setIsLoading(false);
+	const fetchResepData = useCallback(async () => {
+		setIsLoading(true)
+		const result = await getPendingPrescriptions()
+		if (result.success) {
+			setResepList(result.data as PengajuanResep[])
+		} else {
+			toast.error(result.message || 'Gagal memuat daftar resep.')
 		}
-	};
+		setIsLoading(false)
+	}, [])
+
+	const fetchFakturData = useCallback(async () => {
+		setIsLoading(true)
+		try {
+			const [faktur, total] = await Promise.all([
+				getFakturCustomerPaginated(1, 10),
+				getFakturTotalPages(10),
+			])
+			setFakturList(faktur)
+			setTotalPages(total)
+		} catch (error) {
+			console.error('[FakturPagination] Error:', error)
+			toast.error('Gagal memuat data transaksi')
+		} finally {
+			setIsLoading(false)
+		}
+	}, [])
 
 	useEffect(() => {
-		if (kategori === 'biasa') {
-			fetchData();
+		if (kategori === 'resep') {
+			fetchResepData()
+		} else {
+			fetchFakturData()
 		}
-	}, [kategori, page]);
+	}, [kategori, fetchResepData, fetchFakturData])
 
 	return (
 		<div className="bg-gray-100 min-h-screen p-6 max-w-5xl mx-auto space-y-8">
@@ -65,26 +85,27 @@ export default function DaftarTransaksiPage() {
 					variant={kategori === 'biasa' ? 'default' : 'outline'}
 					onClick={() => setKategori('biasa')}
 				>
-					Transaksi Biasa
+					Transaksi Online
 				</Button>
 			</div>
 
-			{kategori === 'resep' && <TabelTebusResep />}
-
-			{kategori === 'biasa' && (
+			{isLoading ? (
+				<SkeletonHistory />
+			) : kategori === 'resep' ? (
 				<>
-					{isLoading ? (
-						<SkeletonHistory />
-					) : (
-						<>
-							<TabelTransaksiBiasa fakturList={fakturList} refreshData={fetchData} />
-							<div className="flex justify-center mt-6">
-								<Pagination totalPages={totalPages} />
-							</div>
-						</>
-					)}
+					<TabelTebusResep resepList={resepList} refreshData={fetchResepData} />
+					<div className="flex justify-center mt-6">
+						<Pagination totalPages={totalResepPages} />
+					</div>
+				</>
+			) : (
+				<>
+					<TabelTransaksiBiasa fakturList={fakturList} refreshData={fetchFakturData} />
+					<div className="flex justify-center mt-6">
+						<Pagination totalPages={totalPages} />
+					</div>
 				</>
 			)}
 		</div>
-	);
+	)
 }

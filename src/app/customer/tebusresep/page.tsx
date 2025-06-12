@@ -1,7 +1,6 @@
-'use client'
-
 import UploadResepForm from "@/components/customer/UploadResepForm";
 import TutorTebus from "@/components/TutorTebus";
+import Link from "next/link";
 
 export default function TebusResep() {
 
@@ -20,17 +19,16 @@ export default function TebusResep() {
 			<div className="mb-6 text-center text-sm text-gray-700">
 				<p>
 					Setelah mengupload resep, kamu bisa cek status penebusan di halaman{" "}
-					<a
+					<Link
 						href="/customer/tebusresep/list"
 						className="text-cyan-600 font-semibold underline"
 					>
 						Daftar Penebusan Resep
-					</a>
+					</Link>
 					.
 				</p>
 			</div>
 
-			{/* Accordion Section */}
 			<TutorTebus />
 		</div>
 	);

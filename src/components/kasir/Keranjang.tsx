@@ -220,7 +220,7 @@ export default function Keranjang({
 					<Button
 						type="button"
 						onClick={() => setShowConfirm(true)}
-						disabled={amountPaid < total}
+						disabled={amountPaid < total || isSubmitting}
 						className="w-full bg-cyan-600 hover:bg-cyan-700 text-white"
 					>
 						Simpan Transaksi
