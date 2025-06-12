@@ -9,7 +9,7 @@ import TabelTransaksiBiasa from '@/components/kasir/TabelTransaksiBiasa'
 import Pagination from '@/components/Pagination'
 
 import { getFakturCustomerPaginated, getFakturTotalPages } from '@/action/kasir/faktur.action'
-import { getPendingPrescriptions } from '@/action/kasir/tebusResep.action'
+import { getPendingPrescriptions, getPengajuanResepTotalPages } from '@/action/kasir/tebusResep.action'
 import SkeletonHistory from '@/components/skeleton/SkeletonHistory'
 
 type PengajuanResep = {
@@ -36,11 +36,17 @@ export default function DaftarTransaksiPage() {
 
 	const fetchResepData = useCallback(async () => {
 		setIsLoading(true)
-		const result = await getPendingPrescriptions()
-		if (result.success) {
-			setResepList(result.data as PengajuanResep[])
+
+		const [pendingPrescriptions, totalPages] = await Promise.all([
+			getPendingPrescriptions(),
+			getPengajuanResepTotalPages()
+		])
+
+		if (pendingPrescriptions.success) {
+			setResepList(pendingPrescriptions.data as PengajuanResep[])
+			setTotalResepPages(totalPages)
 		} else {
-			toast.error(result.message || 'Gagal memuat daftar resep.')
+			toast.error(pendingPrescriptions.message || 'Gagal memuat daftar resep.')
 		}
 		setIsLoading(false)
 	}, [])
