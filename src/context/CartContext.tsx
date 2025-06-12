@@ -15,7 +15,7 @@ export interface ItemForCheckout {
 	fotoBarang?: string
 	idResep?: string | null
 	sumber: SumberCart
-	totalStock: number
+	totalStock?: number
 }
 
 interface CartContextType {
