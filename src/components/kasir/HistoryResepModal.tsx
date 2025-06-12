@@ -5,30 +5,8 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, Dialog
 import { Button } from "@/components/ui/button";
 import Image from 'next/image';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { PengajuanResepItem } from '@/action/kasir/tebusResep.action';
 
-// Definisikan tipe untuk item PengajuanResepItem yang diterima sebagai prop
-interface PengajuanResepItem {
-    id: string;
-    id_user: string;
-    tanggal_pengajuan: Date;
-    status: string; // Akan mencerminkan enum StatusResep Anda (MENGAJUKAN, DITERIMA, DITOLAK)
-    catatan?: string | null;
-    foto_resep: string;
-    createdAt: Date;
-    user?: {
-        nama: string;
-    };
-    // Menambahkan detail_faktur_penjualan untuk menampilkan barang yang dikonfirmasi
-    detail_faktur_penjualan?: Array<{
-        id: string;
-        jumlah: number;
-        barang?: {
-            nama_barang: string;
-            harga_jual: number;
-            foto_barang?: string;
-        };
-    }>;
-}
 
 export default function HistoryResepModal({ resep }: { resep: PengajuanResepItem }) {
     const [open, setOpen] = useState(false);
@@ -135,6 +113,7 @@ export default function HistoryResepModal({ resep }: { resep: PengajuanResepItem
                     <p>Tanggal Pengajuan : <span className="font-medium">{new Date(resep.tanggal_pengajuan).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span></p>
                     <p>Status : <span className="font-medium">{getDisplayStatusLabel(resep.status)}</span></p>
                     <p>Catatan : <span className="font-medium">{resep.catatan ?? '-'}</span></p>
+                    <p className='mt-2.5'><strong className='text-primary'>Catatan Toko</strong> : <span className="font-medium">{resep.catatan_toko ?? '-'}</span></p>
                 </div>
 
                 <h4 className="font-semibold mt-4 mb-2 text-gray-800">Status Proses</h4>

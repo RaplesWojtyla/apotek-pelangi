@@ -1,32 +1,25 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import DetailTebusResepDialogCustomer from "@/components/DetailTebusCust";
-import { Badge } from "@/components/ui/badge";
-import { getRescriptionSubmissionList, Rescription } from "@/action/customer/resep.action";
-import toast from "react-hot-toast";
-import { Loader2 } from "lucide-react";
-
-interface Resep {
-    id: number;
-    namaFile: string;
-    tanggalUpload: string;
-    status: "diproses" | "selesai" | "ditolak";
-}
+import { useEffect, useState } from "react"
+import Link from "next/link"
+import DetailTebusResepDialogCustomer from "@/components/DetailTebusCust"
+import { Badge } from "@/components/ui/badge"
+import { getRescriptionSubmissionList, Rescription } from "@/action/customer/resep.action"
+import toast from "react-hot-toast"
+import { Loader2 } from "lucide-react"
 
 const StatusBadge = ({ status }: { status: string }) => {
     switch (status) {
         case 'MENGAJUKAN':
-            return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">Diajukan</Badge>;
+            return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">Diajukan</Badge>
         case 'DITERIMA':
-            return <Badge variant="default" className="bg-green-100 text-green-800">Diterima</Badge>;
+            return <Badge variant="default" className="bg-green-100 text-green-800">Diterima</Badge>
         case 'DITOLAK':
-            return <Badge variant="destructive">Ditolak</Badge>;
+            return <Badge variant="destructive">Ditolak</Badge>
         default:
-            return <Badge>{status}</Badge>;
+            return <Badge>{status}</Badge>
     }
-};
+}
 
 export default function ListTebusResep() {
     const [rescriptionList, setRescriptionList] = useState<Rescription[]>([])
@@ -37,7 +30,7 @@ export default function ListTebusResep() {
             setIsLoading(true)
 
             try {
-                const res = await getRescriptionSubmissionList();
+                const res = await getRescriptionSubmissionList()
 
                 if (res.success) {
                     setRescriptionList(res.data)
@@ -47,7 +40,7 @@ export default function ListTebusResep() {
                 }
             } catch (error) {
                 setRescriptionList([])
-                console.error(`[fetchRescriptionList] Error: ${error}`);
+                console.error(`[fetchRescriptionList] Error: ${error}`)
                 toast.error("Terjadi kesalahan pada server. Harap coba lagi!")
             } finally {
                 setIsLoading(false)
@@ -100,5 +93,5 @@ export default function ListTebusResep() {
                 </ul>
             )}
         </div>
-    );
+    )
 }

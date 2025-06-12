@@ -1,22 +1,9 @@
 'use client';
 
 import clsx from 'clsx';
-import { Badge } from '@/components/ui/badge';
 import HistoryResepModal from './HistoryResepModal';
+import { PengajuanResepItem } from '@/action/kasir/tebusResep.action';
 
-
-interface PengajuanResepItem {
-    id: string;
-    id_user: string;
-    tanggal_pengajuan: Date;
-    status: string;
-    catatan?: string | null;
-    foto_resep: string;
-    createdAt: Date;
-    user?: {
-        nama: string;
-    };
-}
 
 interface HistoryResepProps {
     pengajuanResepList: PengajuanResepItem[];

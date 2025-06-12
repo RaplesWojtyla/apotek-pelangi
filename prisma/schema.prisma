@@ -176,6 +176,7 @@ model PengajuanResep {
     tanggal_pengajuan DateTime    @default(now())
     status            StatusResep @default(MENGAJUKAN)
     catatan           String?
+    catatan_toko      String?
     foto_resep        String
     createdAt         DateTime    @default(now())
 

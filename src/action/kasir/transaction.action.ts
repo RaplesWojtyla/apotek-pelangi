@@ -85,11 +85,11 @@ export async function prosesTransaksi({
 				},
 			})
 
-			// 4. Kurangi stok FIFO dari StokBarang
+			// 4. Kurangi stok dari StokBarang
 			let qtyToDeduct = item.quantity
 			const stokList = await tx.stokBarang.findMany({
 				where: { id_barang: item.id, jumlah: { gt: 0 } },
-				orderBy: { tanggal_masuk: 'asc' },
+				orderBy: { tanggal_kadaluarsa: 'asc' },
 			})
 
 			for (const stok of stokList) {
