@@ -8,8 +8,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { type JenisBarang } from "@prisma/client"
 import { ProductForEdit } from "@/action/admin/product.action"
+import Image from "next/image"
 
 export default function ViewObatClient({ product, jenisBarangList }: { product: ProductForEdit, jenisBarangList: JenisBarang[] }) {
+	const imageUrl = product.foto_barang
+
 	return (
 		<div className="min-h-screen px-4 py-6 md:px-6 lg:px-8 bg-background text-foreground">
 			<div className="mb-6 text-sm text-muted-foreground">
@@ -67,9 +70,49 @@ export default function ViewObatClient({ product, jenisBarangList }: { product: 
 							</SelectContent>
 						</Select>
 					</div>
-					<div className="space-y-2 md:col-span-2">
+					<div className="space-y-2">
 						<Label>Harga Jual (Rp)<span className="text-red-500">*</span></Label>
 						<Input name="harga_jual" type="number" min={1000} step={1000} defaultValue={product.harga_jual} placeholder="Contoh: 5000" required disabled />
+					</div>
+
+					<div className="space-y-2">
+						<Label>Foto Produk</Label>
+						{imageUrl ? (
+							<div className="relative w-fit">
+								<Image
+									src={imageUrl.includes("https") ? imageUrl : `/${imageUrl}`}
+									alt="Preview Foto Produk"
+									width={150}
+									height={150}
+									className="rounded-md object-cover"
+								/>
+							</div>
+						) : (
+							<div className="flex h-[150px] w-[150px] flex-col items-center justify-center rounded-md bg-slate-100 text-slate-500">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="2"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									className="mb-2 h-10 w-10"
+								>
+									<rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+									<circle cx="9" cy="9" r="2"></circle>
+									<path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+								</svg>
+								<p className="text-sm font-medium">
+									Tidak Ada Foto
+								</p>
+							</div>
+						)}
+						<p className="text-xs text-muted-foreground">
+							Jika tidak ada gambar, gambar default akan digunakan.
+						</p>
 					</div>
 				</div>
 			</section>

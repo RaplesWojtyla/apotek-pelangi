@@ -149,6 +149,7 @@ export const updateProduct = async (id: string, formData: FormData) => {
 				nama_barang: formData.get("nama_barang") as string,
 				harga_jual: Number(formData.get("harga_jual") as string),
 				id_jenis_barang: formData.get("id_jenis_barang") as string,
+				foto_barang: formData.get("foto_barang") as string || "Barang.png",
 				detail_barang: {
 					update: {
 						deskripsi: formData.get('deskripsi') as string,
