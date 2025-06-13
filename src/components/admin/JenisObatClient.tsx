@@ -61,7 +61,12 @@ function TambahKategoriDialog() {
 							) : (
 								<UploadDropzone
 									endpoint={'categoryImgUploader'}
-									onClientUploadComplete={(res) => res && setImageUrl(res[0].ufsUrl)}
+									onClientUploadComplete={res => {
+										if (res && res.length > 0) {
+											setImageUrl(res[0].ufsUrl)
+											toast.success("Berhasil mengupload foto kategori!")
+										}
+									}}
 									onUploadError={(error: Error) => {
 										toast.error(`Gagal upload foto kategori: ${error.message}`, { duration: 6500 })
 									}}
