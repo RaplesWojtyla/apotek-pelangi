@@ -204,13 +204,13 @@ export default function DaftarObatClient({ products, totalPages, totalProducts }
 										</DropdownMenuTrigger>
 										<DropdownMenuContent align="end">
 											<DropdownMenuItem asChild>
-												<Link href={`/admin/daftarobat/view/${obat.id}`} className="flex items-center gap-2 w-full cursor-pointer">
+												<Link href={`/admin/daftarobat/view/${obat.id_barang}`} className="flex items-center gap-2 w-full cursor-pointer">
 													<Eye className="w-4 h-4" /> Lihat
 												</Link>
 											</DropdownMenuItem>
 
 											<DropdownMenuItem asChild>
-												<Link href={`/admin/daftarobat/edit/${obat.id}`} className="flex items-center gap-2 w-full cursor-pointer">
+												<Link href={`/admin/daftarobat/edit/${obat.id_barang}`} className="flex items-center gap-2 w-full cursor-pointer">
 													<Pencil className="w-4 h-4" /> Edit
 												</Link>
 											</DropdownMenuItem>
@@ -231,7 +231,7 @@ export default function DaftarObatClient({ products, totalPages, totalProducts }
 														<Button
 															variant={'destructive'}
 															className="flex items-center justify-start hover:bg-red-800 transition duration-300 gap-2 cursor-pointer"
-															onClick={() => handleDelete(obat.id)}
+															onClick={() => handleDelete(obat.id_barang)}
 															disabled={isDeleting}
 														>
 															{isDeleting ? (

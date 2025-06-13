@@ -43,15 +43,15 @@ export default async function RootLayout({
 					<Toaster
 						toastOptions={{
 							success: {
-								duration: 3000, // Durasi 3 detik
+								duration: 3000,
 								iconTheme: {
-									primary: '#10B981', // Warna ikon
-									secondary: '#E2F9F3', // Warna latar belakang ikon
+									primary: '#10B981',
+									secondary: '#E2F9F3',
 								},
 								style: {
-									background: '#E2F9F3', // Latar belakang toast
-									color: '#047857',      // Warna teks
-									border: '1px solid #10B981', // Border
+									background: '#E2F9F3',
+									color: '#047857',     
+									border: '1px solid #10B981',
 									padding: '16px',
 								},
 							},

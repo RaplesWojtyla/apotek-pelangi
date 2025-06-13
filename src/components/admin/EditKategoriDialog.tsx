@@ -23,7 +23,7 @@ export default function EditKategoriDialog({ kategori }: { kategori: { id: strin
 
 		startTransition(async () => {
 			const result = await updateCategory(kategori.id, formData);
-			
+
 			if (result.success) {
 				toast.success(result.message);
 				setOpen(false);
@@ -59,7 +59,12 @@ export default function EditKategoriDialog({ kategori }: { kategori: { id: strin
 							) : (
 								<UploadDropzone
 									endpoint={'categoryImgUploader'}
-									onClientUploadComplete={(res) => res && setImageUrl(res[0].ufsUrl)}
+									onClientUploadComplete={res => {
+										if (res && res.length > 0) {
+											setImageUrl(res[0].ufsUrl)
+											toast.success("Berhasil mengupload foto kategori!")
+										}
+									}}
 									onUploadError={(error: Error) => {
 										toast.error(`Gagal upload foto kategori: ${error.message}`, { duration: 6500 })
 									}}
