@@ -5,13 +5,15 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { useRef, useTransition } from "react"
+import { useRef, useState, useTransition } from "react"
 import { addStockBatch, ProductForEdit, updateProduct } from "@/action/admin/product.action"
 import toast from "react-hot-toast"
-import { Loader2 } from "lucide-react"
+import { Loader2, Trash2 } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { type JenisBarang } from "@prisma/client"
+import { UploadDropzone } from "@/utils/uploadthing"
+import Image from "next/image"
 
 
 function AddBatchForm({ productId }: { productId: string }) {
@@ -54,10 +56,17 @@ function AddBatchForm({ productId }: { productId: string }) {
 }
 
 export default function EditObatClient({ product, jenisBarangList }: { product: ProductForEdit, jenisBarangList: JenisBarang[] }) {
+	const imgUrl = product.foto_barang
+	
 	const [isUpdating, startUpdateTransition] = useTransition();
+	const [imageUrl, setImageUrl] = useState<string | null>(imgUrl.includes("https") ? imgUrl : `/${imgUrl}`)
 
 	const handleUpdate = async (formData: FormData) => {
 		startUpdateTransition(async () => {
+			if (imageUrl) {
+				formData.append("foto_barang", imageUrl)
+			}
+			
 			const result = await updateProduct(product.id, formData);
 			if (result.success) {
 				toast.success(result.message);
@@ -125,9 +134,51 @@ export default function EditObatClient({ product, jenisBarangList }: { product: 
 								</SelectContent>
 							</Select>
 						</div>
-						<div className="space-y-2 md:col-span-2">
+						<div className="space-y-2">
 							<Label>Harga Jual (Rp)<span className="text-red-500">*</span></Label>
 							<Input name="harga_jual" type="number" min={1000} step={1000} defaultValue={product.harga_jual} placeholder="Contoh: 5000" required />
+						</div>
+
+						<div className="space-y-2">
+							<Label>Foto Produk</Label>
+							{imageUrl ? (
+								<div className="relative w-fit">
+									<Image
+										src={imageUrl}
+										alt="Preview Foto Produk"
+										width={150}
+										height={150}
+										className="rounded-md object-cover"
+									/>
+									<Button
+										type="button"
+										variant="destructive"
+										size="icon"
+										onClick={() => setImageUrl(null)}
+										className="absolute top-1 right-1 h-7 w-7"
+									>
+										<Trash2 className="w-4 h-4" />
+									</Button>
+								</div>
+							) : (
+								<UploadDropzone
+									endpoint={'productImgUploader'}
+									onClientUploadComplete={res => {
+										if (res && res.length > 0) {
+											setImageUrl(res[0].ufsUrl)
+											toast.success("Berhasil mengunggah foto produk!")
+										}
+									}}
+									onUploadError={(error: Error) => {
+										toast.error(`Gagal upload: ${error.message}`);
+									}}
+									config={{ mode: 'auto' }}
+									className="p-4 ut-label:text-sm ut-allowed-content:hidden"
+								/>
+							)}
+							<p className="text-xs text-muted-foreground">
+								Jika tidak diunggah, gambar default akan digunakan.
+							</p>
 						</div>
 					</div>
 				</section>

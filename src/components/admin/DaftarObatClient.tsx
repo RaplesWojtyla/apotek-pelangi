@@ -35,7 +35,7 @@ import { useDebouncedCallback } from "use-debounce";
 import Pagination from "../Pagination";
 import { deleteProduct } from "@/action/admin/product.action";
 import toast from "react-hot-toast";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 
 
 export default function DaftarObatClient({ products, totalPages, totalProducts }: { products: any[], totalPages: number, totalProducts: number }) {
