@@ -187,6 +187,19 @@ export const updateProduct = async (id: string, formData: FormData) => {
 
 export const deleteProduct = async (id: string) => {
 	try {
+		const product = await prisma.barang.findUnique({
+			where: {
+				id
+			}
+		})
+
+		if (!product) {
+			return {
+				success: false,
+				message: "Produk tidak ditemukan!"
+			}
+		}
+		
 		await prisma.barang.delete({
 			where: {
 				id

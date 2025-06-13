@@ -40,6 +40,15 @@ export const ourFileRouter = {
 			}
 		}),
 
+	productImgUploader: f({ image: { maxFileSize: "4MB", minFileCount: 1 } })
+		.middleware(async () => handleAuth("ADMIN"))
+		.onUploadComplete(async ({ metadata, file }) => {
+			return {
+				uploadedBy: metadata.userId,
+				fileUrl: file.ufsUrl
+			}
+		}),
+
 	resepImgKasirUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 1 }})
 		.middleware(async() => await handleAuth('KASIR'))
 		.onUploadComplete(async ({ metadata, file }) => {
@@ -47,7 +56,7 @@ export const ourFileRouter = {
 				uploadedBy: metadata.userId,
 				fileUrl: file.ufsUrl 
 			}
-		})
+		}),
 } satisfies FileRouter
 
 export type OurFileRouter = typeof ourFileRouter
