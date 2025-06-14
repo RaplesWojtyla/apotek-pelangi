@@ -11,6 +11,7 @@ import Pagination from '@/components/Pagination'
 import { getFakturCustomerPaginated, getFakturTotalPages } from '@/action/kasir/faktur.action'
 import { getPendingPrescriptions, getPengajuanResepTotalPages } from '@/action/kasir/tebusResep.action'
 import SkeletonHistory from '@/components/skeleton/SkeletonHistory'
+import DaftarTransaksiSkeleton from '@/components/skeleton/SkeletonDaftarTransaksi'
 
 type PengajuanResep = {
 	id: string
@@ -96,7 +97,7 @@ export default function DaftarTransaksiPage() {
 			</div>
 
 			{isLoading ? (
-				<SkeletonHistory />
+				<DaftarTransaksiSkeleton />
 			) : kategori === 'resep' ? (
 				<>
 					<TabelTebusResep resepList={resepList} refreshData={fetchResepData} />

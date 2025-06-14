@@ -8,6 +8,7 @@ import Link from "next/link";
 import { getProducts, getRecentlyPurchasedProducts } from "@/action/customer/product.action";
 import { getDbUserId } from "@/action/user.action";
 import LatestTransactionProductCards from "@/components/customer/LatestTransactionProductCards";
+import CustomerTour from "@/components/customer/CustomerHomepageTour";
 
 
 export default async function CustomerPage() {
@@ -30,6 +31,7 @@ export default async function CustomerPage() {
 
 	return (
 		<div className="flex flex-col">
+			<CustomerTour />
 			<Banner />
 			<Suspense fallback={<SkeletonKategori />}>
 				<Kategori />
@@ -38,7 +40,7 @@ export default async function CustomerPage() {
 				<div className="max-w-6xl mx-auto">
 					<div className="flex justify-between items-center mb-4">
 						<h2 className="text-2xl font-semibold">{pageTitle}</h2>
-						<Link href={'/customer/catalog'} className="text-sm text-cyan-700 hover:underline">
+						<Link id="tour-all-product" href={'/customer/catalog'} className="text-sm text-cyan-700 hover:underline">
 							Lihat Semua
 						</Link>
 					</div>

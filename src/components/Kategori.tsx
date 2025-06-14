@@ -8,11 +8,11 @@ export const Kategori = async () => {
 	const categories: Category[] = await getCategories(categoriesCount)
 
 	return (
-		<section className="py-8 px-4">
+		<section id="tour-kategori" className="py-8 px-4">
 			<div className="max-w-6xl mx-auto">
 				<div className="flex justify-between items-center mb-4">
 					<h2 className="text-2xl font-semibold">Kategori</h2>
-					<Link href={'/customer/catalog'} className="text-sm text-cyan-700 hover:underline">
+					<Link id="tour-all-kategori" href={'/customer/catalog'} className="text-sm text-cyan-700 hover:underline">
 						Lihat Semua
 					</Link>
 				</div>

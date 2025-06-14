@@ -25,7 +25,8 @@ export default function TebusResep() {
 						Tebus Resep Dokter Dengan <br />
 						mudah, cepat, dan Tanpa Antri!
 					</h2>
-					<Button 
+					<Button
+						id="tour-tebus" 
 						className="bg-cyan-500 w-10xl hover:bg-cyan-600 text-white cursor-pointer"
 						onClick={() => router.push('/customer/tebusresep')}
 					>
