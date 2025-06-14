@@ -1,7 +1,6 @@
 import { Category, countAllCategories, getCategories } from "@/action/customer/category.action";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 export const Kategori = async () => {
 	const categoriesCount = await countAllCategories()
