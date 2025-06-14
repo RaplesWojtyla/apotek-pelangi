@@ -6,6 +6,7 @@ import SidebarContent from './SidebarContent'
 import { Category, countAllCategories, getCategories } from '@/action/kasir/category.action'
 import { useUser } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
+import { Menu } from 'lucide-react'
 
 export default function CatalogSidebar() {
   const [categories, setCategories] = useState<Category[]>([])
@@ -30,10 +31,10 @@ export default function CatalogSidebar() {
   return (
     <>
       {/* mobile drawer trigger */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
+      <div className="lg:hidden fixed top-20 -left-7 z-50">
         <Sheet>
           <SheetTrigger className="bg-cyan-600 text-white px-4 py-2 rounded-lg shadow">
-            ☰
+          <Menu size={20} />
           </SheetTrigger>
           <SheetContent side="left" className="p-4 w-64">
             <SheetHeader hidden>
