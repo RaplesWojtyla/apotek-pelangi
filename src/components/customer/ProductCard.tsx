@@ -7,9 +7,11 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { ItemForCheckout, useCartContext } from "@/context/CartContext";
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
 
 export default function ProductCard({ product }: { product: Product }) {
 	const router = useRouter()
+	const { isSignedIn, isLoaded } = useUser()
 	const { fetchAndUpdateCartCount, setCheckoutItemsHandler } = useCartContext()
 
 	const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false)
@@ -20,6 +22,11 @@ export default function ProductCard({ product }: { product: Product }) {
 	}
 
 	const handleAddToCart = async () => {
+		if (!isLoaded || (isLoaded && !isSignedIn)) {
+			toast.error("Harap login terlebih dahulu!")
+			return
+		}
+		
 		setIsAddingToCart(true)
 
 		try {
@@ -66,7 +73,7 @@ export default function ProductCard({ product }: { product: Product }) {
 				}
 			})
 
-		} catch (error) {
+		} catch (error: any) {
 			console.log(`[handleAddToCart] Error: ${error}`);
 		} finally {
 			setIsAddingToCart(false)
@@ -74,6 +81,11 @@ export default function ProductCard({ product }: { product: Product }) {
 	}
 
 	const handleBuyNow = () => {
+		if (!isLoaded || (isLoaded && !isSignedIn)) {
+			toast.error("Harap login terlebih dahulu!")
+			return
+		}
+
 		if (product.totalStock < 1) {
 			toast.error("Stok produk telah habis.")
 			return

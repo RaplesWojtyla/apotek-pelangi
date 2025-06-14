@@ -8,7 +8,7 @@ import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { DbUser, getUserByClerkId } from "@/action/user.action";
 import toast from "react-hot-toast";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, redirect } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import { ClockAlertIcon, Loader2, MoveRight } from "lucide-react";
 import Image from "next/image";
@@ -26,7 +26,7 @@ interface CheckoutFormData {
 
 export default function CheckoutPage() {
 	const { checkoutItems, clearCheckoutItemsHandler, fetchAndUpdateCartCount: updateCartBadge } = useCartContext()
-	const { user: clerkUser, isSignedIn } = useUser()
+	const { user: clerkUser, isSignedIn, isLoaded } = useUser()
 	const router = useRouter()
 	const pathname = usePathname()
 
@@ -43,6 +43,10 @@ export default function CheckoutPage() {
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
 	useEffect(() => {
+		if (isLoaded && !isSignedIn) {
+			redirect('/unauthorized')
+		}
+		
 		const fetchDbUser = async () => {
 			if (isSignedIn && clerkUser) {
 				setIsLoadingUser(true)
@@ -69,7 +73,7 @@ export default function CheckoutPage() {
 		}
 
 		fetchDbUser()
-	}, [isSignedIn, clerkUser])
+	}, [isSignedIn, clerkUser, isLoaded])
 
 	useEffect(() => {
 		if (!isLoadingUser && checkoutItems.length === 0 && !isSubmitting) {
