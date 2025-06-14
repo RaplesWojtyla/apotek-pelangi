@@ -86,10 +86,10 @@ model User {
 
 model Vendor {
     id          String   @id @default(cuid())
-    kode_vendor String   @unique
     nama_vendor String
     alamat      String?
     no_hp       String?
+    email       String?  @unique
     createdAt   DateTime @default(now())
 
     faktur_pembelian FakturPembelian[]
@@ -239,10 +239,11 @@ model DetailFakturPenjualan {
 
 model FakturPembelian {
     id             String   @id @default(cuid())
+    nomor_faktur   String
     id_user        String
     id_vendor      String
     tanggal_faktur DateTime @default(now())
-    pajak          Int?
+    pajak          Int      @default(0)
     total          Int
     keterangan     String?
     createdAt      DateTime @default(now())
@@ -259,6 +260,9 @@ model DetailFakturPembelian {
     id_barang           String
     jumlah              Int
     harga_beli          Int
+
+    kode_batch         String
+    tanggal_kadaluarsa DateTime
 
     faktur_pembelian FakturPembelian @relation(fields: [id_faktur_pembelian], references: [id], onDelete: Cascade, onUpdate: Cascade)
     barang           Barang          @relation(fields: [id_barang], references: [id], onDelete: Restrict, onUpdate: Cascade)
