@@ -140,3 +140,19 @@
     --chart-5: 340 75% 55%;
   }
 }
+@layer components {
+  /* Container utama dari tooltip, menggunakan kelas dari komponen kustom */
+  .react-joyride__tooltip {
+    @apply w-full max-w-sm rounded-lg bg-white p-4 shadow-lg text-slate-700;
+  }
+  
+  /* Area yang di-highlight */
+  .react-joyride__spotlight {
+    @apply rounded-lg;
+  }
+  
+  /* Overlay gelap di latar belakang */
+  .__floater__overlay {
+    @apply bg-black/60;
+  }
+}
