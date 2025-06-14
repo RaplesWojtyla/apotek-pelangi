@@ -1,6 +1,6 @@
 'use client'
 
-import { Category } from "@/action/customer/category.action";
+import { Category } from "@/action/kasir/category.action"; // Pastikan path ini benar
 import {
 	Accordion,
 	AccordionContent,
@@ -41,6 +41,7 @@ const SidebarContent = ({
 			{/* Scrollable Nav */}
 			<div className="flex-1 overflow-y-auto max-h-screen pr-1">
 				<p className="text-xs uppercase text-gray-400 mb-2">Kategori</p>
+				{/* Link untuk kembali menampilkan semua produk */}
 				<Link
 					href="/kasir"
 					className="flex items-center space-x-2 text-gray-800 font-semibold mb-1 hover:text-cyan-600 text-sm"
@@ -63,9 +64,13 @@ const SidebarContent = ({
 							<AccordionContent className="ml-6 space-y-1 text-sm">
 								{category.jenis_barang.map((jB) => (
 									<div key={jB.id}>
-										<p className="block text-gray-700 hover:text-cyan-600 transition cursor-pointer mb-1">
+										{/* DIUBAH: Dari <p> menjadi <Link> agar bisa diklik dan memfilter */}
+										<Link
+											href={`/kasir?jenisId=${jB.id}&kategoriNama=${encodeURIComponent(category.nama_kategori)}&jenisNama=${encodeURIComponent(jB.nama_jenis)}`}
+											className="block text-gray-700 hover:text-cyan-600 transition cursor-pointer mb-1"
+										>
 											{jB.nama_jenis}
-										</p>
+										</Link>
 										<Separator />
 									</div>
 								))}
