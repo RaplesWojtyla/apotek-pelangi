@@ -1,5 +1,7 @@
 import { Roles } from "@/types/globals"
-import { currentUser } from "@clerk/nextjs/server"
+import { createClerkClient, currentUser } from "@clerk/nextjs/server"
+
+export const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY })
 
 export const checkRole = async (role: Roles) => {
 	const user  = await currentUser()
