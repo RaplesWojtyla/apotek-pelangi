@@ -1,4 +1,3 @@
-
 'use server'
 
 import { prisma } from "@/lib/prisma"
@@ -19,7 +18,7 @@ export async function createVendor(formData: FormData) {
         
         const existingVendor = await prisma.vendor.findFirst({
             where: { nama_vendor: { equals: nama_vendor, mode: 'insensitive' } }
-        });
+        })
 
         if (existingVendor) {
             return { success: false, message: `Vendor dengan nama '${nama_vendor}' sudah ada.` }
@@ -32,19 +31,18 @@ export async function createVendor(formData: FormData) {
                 no_hp,
                 email,
             }
-        });
+        })
 
-        revalidatePath('/admin/vendor');
-        return { success: true, message: 'Vendor berhasil ditambahkan.' };
+        revalidatePath('/admin/vendor')
+        return { success: true, message: 'Vendor berhasil ditambahkan.' }
     } catch (error) {
-        console.error('[CREATE_VENDOR_ERROR]', error);
+        console.error('[CREATE_VENDOR_ERROR]', error)
         return { success: false, message: 'Terjadi kesalahan saat menambahkan vendor.' }
     }
 }
 
-
 export async function getVendors({ page = 1, take = 10, query = "" }) {
-    const skip = (page - 1) * take;
+    const skip = (page - 1) * take
     try {
         const vendors = await prisma.vendor.findMany({
             skip,
@@ -58,10 +56,10 @@ export async function getVendors({ page = 1, take = 10, query = "" }) {
             orderBy: {
                 createdAt: 'desc'
             }
-        });
-        return { success: true, data: vendors };
+        })
+        return { success: true, data: vendors }
     } catch (error) {
-        console.error('[GET_VENDORS_ERROR]', error);
+        console.error('[GET_VENDORS_ERROR]', error)
         return { success: false, data: [], message: 'Gagal mengambil data vendor.' }
     }
 }
@@ -76,15 +74,13 @@ export async function getVendorStats(query = "") {
                     mode: 'insensitive'
                 }
             },
-        });
-        return { success: true, total: totalVendors };
+        })
+        return { success: true, total: totalVendors }
     } catch (error) {
-        console.error('[GET_VENDOR_STATS_ERROR]', error);
+        console.error('[GET_VENDOR_STATS_ERROR]', error)
         return { success: false, total: 0, message: 'Gagal menghitung statistik vendor.' }
     }
 }
-
-
 
 export async function updateVendor(id: string, formData: FormData) {
     const nama_vendor = formData.get('nama_vendor') as string
@@ -105,22 +101,21 @@ export async function updateVendor(id: string, formData: FormData) {
                 no_hp,
                 email,
             }
-        });
+        })
 
-        revalidatePath('/admin/vendor');
-        return { success: true, message: 'Vendor berhasil diperbarui.' };
+        revalidatePath('/admin/vendor')
+        return { success: true, message: 'Vendor berhasil diperbarui.' }
     } catch (error) {
-        console.error('[UPDATE_VENDOR_ERROR]', error);
+        console.error('[UPDATE_VENDOR_ERROR]', error)
         return { success: false, message: 'Terjadi kesalahan saat memperbarui vendor.' }
     }
 }
-
 
 export async function deleteVendor(id: string) {
     try {
         const existingFaktur = await prisma.fakturPembelian.findFirst({
             where: { id_vendor: id }
-        });
+        })
 
         if (existingFaktur) {
             return { success: false, message: 'Gagal menghapus. Vendor ini sudah memiliki riwayat transaksi pembelian.' }
@@ -128,12 +123,13 @@ export async function deleteVendor(id: string) {
 
         await prisma.vendor.delete({
             where: { id }
-        });
+        })
 
-        revalidatePath('/admin/vendor');
-        return { success: true, message: 'Vendor berhasil dihapus.' };
+        revalidatePath('/admin/vendor')
+
+        return { success: true, message: 'Vendor berhasil dihapus.' }
     } catch (error) {
-        console.error('[DELETE_VENDOR_ERROR]', error);
+        console.error('[DELETE_VENDOR_ERROR]', error)
         return { success: false, message: 'Terjadi kesalahan saat menghapus vendor.' }
     }
 }

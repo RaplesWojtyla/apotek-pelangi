@@ -163,7 +163,7 @@ export default function CheckoutPage() {
 				clearCheckoutItemsHandler()
 				await updateCartBadge()
 				router.push(`/customer/invoice/${res.fakturId}`)
-			} else if (res.message === 'Server Timeout') {
+			} else if (res.message.includes('Waktu pemrosesan')) {
 				toast.error(res.message, {
 					duration: 6000,
 					style: {

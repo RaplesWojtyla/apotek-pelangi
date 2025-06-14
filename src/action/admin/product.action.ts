@@ -236,7 +236,7 @@ export const addStockBatch = async (formData: FormData) => {
 			data: {
 				id_barang: id_barang,
 				jumlah: Number(formData.get('jumlah')),
-				kode_batch: formData.get('kode_batch') as string | undefined,
+				kode_batch: formData.get('kode_batch') as string || undefined,
 				tanggal_kadaluarsa: new Date(formData.get('tanggal_kadaluarsa') as string),
 			}
 		});

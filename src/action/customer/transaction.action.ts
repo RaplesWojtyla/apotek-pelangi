@@ -234,7 +234,7 @@ export const processCheckout = async (payload: CheckoutPayload) => {
 			} else if (error.message === "Gagal membuat token pembayaran.") {
 				userFriendlyMessage = "Gagal memproses pembayaran. Silakan coba lagi.";
 			} else if (error.message.toLowerCase().includes("timeout") || error.message.toLowerCase().includes("timed out")) {
-				userFriendlyMessage = "Waktu pemrosesan pesanan habis. Silakan coba lagi.";
+				userFriendlyMessage = "Waktu pemrosesan pesanan habis. Silakan periksa jaringan anda lalu coba lagi.";
 			}
 		}
 
