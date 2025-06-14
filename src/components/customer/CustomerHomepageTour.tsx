@@ -1,13 +1,15 @@
+
 'use client'
 
 import { useState, useEffect } from 'react';
-import Joyride, { Step, CallBackProps } from 'react-joyride';
+import Joyride, { Step, CallBackProps, TooltipRenderProps } from 'react-joyride';
+import { Button } from '@/components/ui/button'; // Menggunakan komponen Button Anda
 
+// Definisikan 'steps' DI LUAR KOMPONEN untuk mencegah bug.
 const tourSteps: Step[] = [
     {
         title: 'Selamat Datang di Apotek Pelangi!',
         content: 'Kami akan memandu Anda melihat fitur-fitur utama di halaman ini.',
-        locale: { skip: 'LEWATI' },
         placement: 'center',
         target: 'body',
     },
@@ -25,17 +27,42 @@ const tourSteps: Step[] = [
         content: 'Ini adalah daftar produk kami. Jika Anda pernah berbelanja, kami akan menampilkan produk yang terakhir Anda beli.',
     },
     {
-        target: '.tour-all-latest',
-        content: 'Ini adalah duplikat dari target sebelumnya, Anda bisa menghapus langkah ini jika tidak perlu.',
-    },
-    {
         target: '#tour-tebus',
         content: 'Punya resep dari dokter? Unggah resep Anda di sini dan biarkan kami yang siapkan obatnya.',
     }
 ];
 
+// --- PERBAIKAN: Komponen tooltip sekarang lebih pintar ---
+// Komponen kustom untuk Tooltip agar bisa menggunakan komponen Button dari ShadCN
+const CustomTooltip = ({
+  index,
+  isLastStep, // Kita akan menggunakan prop 'isLastStep' yang disediakan Joyride
+  step,
+  backProps,
+  primaryProps,
+  tooltipProps,
+}: TooltipRenderProps) => (
+  <div {...tooltipProps} className="w-full max-w-sm rounded-lg bg-white p-4 shadow-lg">
+    {step.title && <h2 className="text-lg font-bold text-slate-800 mb-2">{step.title}</h2>}
+    <div className="text-sm text-slate-600">{step.content}</div>
+    <div className="flex justify-between items-center mt-4">
+      {/* Tampilkan tombol "Kembali" hanya jika bukan langkah pertama */}
+      {index > 0 && (
+        <Button variant="ghost" {...backProps}>
+          Kembali
+        </Button>
+      )}
+      {/* Spacer agar tombol utama ke kanan */}
+      <div className='flex-grow' /> 
+      {/* Tombol utama yang teksnya berubah secara dinamis */}
+      <Button {...primaryProps}>
+        {isLastStep ? "Selesai" : "Lanjut"}
+      </Button>
+    </div>
+  </div>
+);
 
-// Komponen ini HANYA bertanggung jawab untuk menampilkan tur.
+
 export default function CustomerTour() {
     const [run, setRun] = useState(false);
     const [isClient, setIsClient] = useState(false);
@@ -56,7 +83,6 @@ export default function CustomerTour() {
         }
     }, [isClient]);
 
-
     const handleJoyrideCallback = (data: CallBackProps) => {
         const { status } = data;
         const finishedStatuses: string[] = ['finished', 'skipped'];
@@ -74,51 +100,17 @@ export default function CustomerTour() {
     return (
         <Joyride
             run={run}
-            steps={tourSteps} 
+            steps={tourSteps}
             continuous
-            showProgress
-            showSkipButton
             callback={handleJoyrideCallback}
-            scrollOffset={150}      
-            spotlightPadding={10} 
+            scrollOffset={150}
+            spotlightPadding={10}
+            tooltipComponent={CustomTooltip}
             styles={{
-                options: {
-                    arrowColor: '#ffffff',
-                    backgroundColor: '#ffffff',
-                    primaryColor: '#0891b2',
-                    textColor: '#334155',
-                    zIndex: 9999,
-                },
-                tooltip: {
-                    borderRadius: '8px',
-                    padding: '16px',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                    fontFamily: 'inherit',
-                },
-                tooltipTitle: {
-                    fontSize: '18px',
-                    fontWeight: 'bold',
-                    margin: '0 0 8px',
-                },
-                buttonNext: {
-                    backgroundColor: '#0891b2',
-                    borderRadius: '6px',
-                    padding: '8px 16px',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                },
-                buttonSkip: {
-                    color: '#64748b',
-                    fontSize: '14px',
-                },
-                overlay: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                },
-                spotlight: {
-                    borderRadius: '8px',
-                },
+              options: {
+                zIndex: 9999
+              }
             }}
         />
     );
 }
-
