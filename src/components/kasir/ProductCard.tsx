@@ -38,8 +38,10 @@ export default function ProductCard({ product, onAddToCart, cartQty = 0 }: Produ
           className="max-h-full object-contain"
         />
         {isOutOfStock && (
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <span className="text-white font-bold">STOK HABIS</span>
+          <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-10">
+            <span className="text-white font-bold text-sm uppercase tracking-wide">
+              Stok Habis
+            </span>
           </div>
         )}
       </div>

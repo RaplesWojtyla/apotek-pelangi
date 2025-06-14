@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import toast, { Toaster } from 'react-hot-toast'
+import Link from 'next/link' // DITAMBAH
 
 import SearchBar from '@/components/SearchBar'
 import CatalogSidebar from '@/components/kasir/CatalogSidebar'
@@ -26,6 +27,10 @@ export default function DashboardKasirPage() {
 	const params = useSearchParams()
 	const search = String(params.get('matcher') ?? '')
 	const page = Number(params.get('page') ?? 1)
+	// DITAMBAH: Baca parameter filter dari URL
+	const jenisId = params.get("jenisId") ?? ""
+	const jenisNama = params.get("jenisNama") ?? ""
+	const kategoriNama = params.get("kategoriNama") ?? ""
 	const take = 8
 
 	const [cartItems, setCartItems] = useState<CartItem[]>([])
@@ -77,14 +82,16 @@ export default function DashboardKasirPage() {
 	useEffect(() => {
 		const fetchTotal = async () => {
 			try {
-				const t = await getCatalogTotalPages(search, take)
+				// DIUBAH: Kirim jenisId ke action untuk perhitungan halaman
+				const t = await getCatalogTotalPages(search, take, jenisId)
 				setTotalPages(t)
 			} catch {
 				toast.error('Gagal menghitung total halaman')
 			}
 		}
 		fetchTotal()
-	}, [search, page])
+		// DIUBAH: Tambahkan jenisId sebagai dependency agar halaman di-update saat filter berubah
+	}, [search, page, jenisId])
 
 	return (
 		<>
@@ -94,13 +101,30 @@ export default function DashboardKasirPage() {
 
 				<div className="flex-1 lg:pl-64 p-4">
 					<SearchBar />
-					<h1 className="text-2xl font-bold mb-6">Semua Produk</h1>
+					{/* DIUBAH: Judul dinamis berdasarkan filter yang aktif */}
+					{jenisId && jenisNama ? (
+						<h1 className="text-xl md:text-2xl font-bold mb-6 text-gray-800">
+							<Link
+								href={'/kasir'}
+								className="text-gray-500 hover:underline"
+							>
+								Semua Produk
+							</Link>
+							<span className="mx-2 text-gray-400">&gt;</span>
+							<span className="text-gray-500">{kategoriNama}</span>
+							<span className="mx-2 text-gray-400">&gt;</span>
+							<span className="text-cyan-600">{jenisNama}</span>
+						</h1>
+					) : (
+						<h1 className="text-2xl font-bold mb-6">Semua Produk</h1>
+					)}
 					<CatalogProducts
 						search={search}
 						currPage={page}
 						take={take}
 						onAddToCart={handleAddToCart}
 						cartItems={cartItems}
+						jenisId={jenisId} // DIUBAH: Kirim jenisId ke komponen produk
 					/>
 					<div className="mt-6 flex justify-center">
 						<ProductPagination totalPages={totalPages} />

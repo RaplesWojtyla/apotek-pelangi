@@ -12,8 +12,8 @@ export type Product = {
   harga_jual: number
   foto_barang: string
   jenis_barang: {
-    id: string
-    nama_jenis: string
+    id:string
+    nama_jenis:string
     kategori_barang: any
   }
   stok_barang: number
@@ -72,28 +72,38 @@ export const createProduct = async (
   }
 }
 
+// DIUBAH: Menambahkan parameter id_jenis_barang dan logika filter dinamis
 export const getProducts = async ({
   page = 1,
   matcher = "",
   take = 16,
+  id_jenis_barang = "", // Parameter baru
 }: {
   page?: number
   matcher?: string
   take?: number
+  id_jenis_barang?: string // Parameter baru
 }): Promise<Product[]> => {
   const skip = (page - 1) * take
 
   try {
+    // Klausa `where` dinamis untuk filter
+    const whereClause: any = {
+      nama_barang: {
+        contains: matcher,
+        mode: "insensitive",
+      },
+    }
+
+    if (id_jenis_barang) {
+      whereClause.id_jenis_barang = id_jenis_barang
+    }
+
     // ambil raw data termasuk relasi jenis_barang dan stok_barang
     const raw = await prisma.barang.findMany({
       skip,
       take,
-      where: {
-        nama_barang: {
-          contains: matcher,
-          mode: "insensitive",
-        },
-      },
+      where: whereClause, // Menggunakan klausa where yang dinamis
       include: {
         jenis_barang: {
           include: {
@@ -167,21 +177,31 @@ export const getProductDetail = async (id: string) => {
   }
 }
 
+// DIUBAH: Menambahkan parameter id_jenis_barang dan menggunakan `count` untuk efisiensi
 export const getCatalogTotalPages = async (
   matcher: string,
-  take: number
+  take: number,
+  id_jenis_barang: string = "" // Parameter baru
 ) => {
   try {
-    const products = await prisma.barang.findMany({
-      where: {
-        nama_barang: {
-          contains: matcher,
-          mode: "insensitive",
-        },
+    // Klausa `where` dinamis untuk filter
+    const whereClause: any = {
+      nama_barang: {
+        contains: matcher,
+        mode: "insensitive",
       },
+    }
+
+    if (id_jenis_barang) {
+      whereClause.id_jenis_barang = id_jenis_barang
+    }
+
+    // Menggunakan `count` agar lebih efisien daripada mengambil semua data
+    const productsCount = await prisma.barang.count({
+      where: whereClause,
     })
 
-    const totalPages: number = Math.ceil(products.length / take)
+    const totalPages: number = Math.ceil(productsCount / take)
     return totalPages === 0 ? 1 : totalPages
   } catch (error) {
     console.error(`[getCatalogTotalPages] ERROR: ${error}`)
