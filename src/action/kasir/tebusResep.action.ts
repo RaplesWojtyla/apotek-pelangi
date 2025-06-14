@@ -43,7 +43,7 @@ export async function getPengajuanResepPaginated(page: number, take: number = 8)
 }
 
 // Fungsi untuk mendapatkan total halaman pengajuan resep
-export async function getPengajuanResepTotalPages(take: number = 8) {
+export async function getPengajuanResepTotalPages(take: number = 10) {
     const total = await prisma.pengajuanResep.count({
         where: {
             // Filter status hanya DITERIMA atau DITOLAK
@@ -69,9 +69,12 @@ export async function updatePengajuanResepStatus(
     return result
 }
 
-export async function getPendingPrescriptions() {
+export async function getPendingPrescriptions(page: number = 1, take: number = 8) {
+    const skip = (page - 1) * take
+    
     try {
         const pendingRescriptions = await prisma.pengajuanResep.findMany({
+            take,
             where: {
                 status: 'MENGAJUKAN',
             },

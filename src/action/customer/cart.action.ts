@@ -4,9 +4,10 @@ import { prisma } from "@/lib/prisma"
 import { getDbUserId } from "../user.action"
 import { SumberCart } from "@prisma/client"
 import { revalidatePath } from "next/cache"
+import { auth } from "@clerk/nextjs/server"
 
 export type CartItem = Awaited<ReturnType<typeof getCart>>[number]
-export type SimpleCartItem = Awaited<ReturnType<typeof getCartBySource>>['data'][number]
+export type RescriptionCartItem = Awaited<ReturnType<typeof getCartBySource>>['data'][number]
 
 export const getCart = async () => {
 	const dbUserId = await getDbUserId()
@@ -52,25 +53,40 @@ export const getCart = async () => {
 	}
 }
 
-export const getCartBySource = async ( source: SumberCart ) => {
-	const dbUserId = await getDbUserId()
+export const getCartBySource = async (id_resep: string, source: SumberCart ) => {
+	const { userId } = await auth()
 
-	if (!dbUserId) return {
+	if (!userId) return {
 		success: false,
 		message: "Pengguna tidak terauntentikasi!",
 		data: []
 	}
 
 	try {
+		const resep = await prisma.pengajuanResep.findUnique({
+			where: {
+				id: id_resep
+			}
+		})
+
+		if (!resep) return {
+			success: false,
+			message: "Pengajuan resep tidak ditemukan!",
+			data: []
+		}
+
 		const cartItems = await prisma.cart.findMany({
 			where: {
-				id_user: dbUserId,
+				id_user: resep.id_user,
+				id_resep: resep.id,
 				sumber: source
 			},
 			include: {
 				barang: {
 					select: {
-						nama_barang: true
+						nama_barang: true,
+						harga_jual: true,
+						foto_barang: true
 					}
 				}
 			}

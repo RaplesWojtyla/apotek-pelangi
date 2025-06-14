@@ -1,13 +1,63 @@
+// app/page.tsx
 'use client'
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { getDashboardData, DashboardData, getLimitedJenisBarangWithCategories, JenisBarangWithCategory } from '@/action/dashboard.action';
+import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
 
 export default function Home() {
+    const [dashboardData, setDashboardData] = useState<DashboardData>({
+        userCount: 0,
+        barangCount: 0,
+        jenisBarangCount: 0,
+        kategoriBarangNames: [],
+        jenisBarangNames: [],
+    });
+
+    const [displayJenisBarang, setDisplayJenisBarang] = useState<JenisBarangWithCategory[]>([]);
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const dashboardResult = await getDashboardData();
+                if (dashboardResult.success && dashboardResult.data) {
+                    setDashboardData(dashboardResult.data);
+                } else {
+                    setError(dashboardResult.error || "Gagal memuat data dashboard.");
+                }
+
+                const limitedJenisResult = await getLimitedJenisBarangWithCategories();
+                if (limitedJenisResult.success && limitedJenisResult.data) {
+                    setDisplayJenisBarang(limitedJenisResult.data);
+                } else {
+                    setError(limitedJenisResult.error || "Gagal memuat daftar jenis barang.");
+                }
+
+            } catch (err) {
+                console.error("Error fetching data:", err);
+                setError(`Terjadi kesalahan: ${err instanceof Error ? err.message : String(err)}`);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    // Menggunakan useUser dari Clerk untuk kondisional rendering SignIn/UserButton
+    const { isSignedIn } = useUser(); // Hook useUser dari Clerk
+
     return (
-        // Wrapper utama diubah agar section bisa saling menumpuk dengan benar
         <div className="bg-white">
             <Navbar />
 
@@ -27,7 +77,7 @@ export default function Home() {
                                 Apotek Pelangi adalah solusi terlengkap untuk kebutuhan Kesehatan harian Anda
                             </p>
                             <p className="max-w-2xl text-base md:text-lg leading-relaxed text-white/80">
-                                Dapatkan semua kebutuhan Kesehatan Anda dengan mudah melalui ekosistem kami. Kami bermitra dengan 7.000+ Member Apotek Pelangi yang menyediakan 50.000+ produk dan menjangkau 480+ jenis produk.
+                                Dapatkan semua kebutuhan Kesehatan Anda dengan mudah melalui ekosistem kami. Kami bermitra dengan <strong className="text-yellow-300">{loading ? '...' : dashboardData.userCount}</strong> Member Apotek Pelangi yang menyediakan <strong className="text-yellow-300">{loading ? '...' : dashboardData.barangCount}</strong> produk dan menjangkau <strong className="text-yellow-300">{loading ? '...' : dashboardData.jenisBarangCount}</strong> jenis produk.
                             </p>
                             <div className="mt-8 flex flex-col sm:flex-row gap-4 w-full justify-center lg:justify-start">
                                 <Link href="/customer/catalog">
@@ -51,36 +101,56 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Statistik Box Section (Dipisahkan dan diberi margin negatif) */}
+            {/* Statistik Box Section (Data Dinamis) */}
             <section className="relative z-10 -mt-20">
                 <div className="max-w-5xl mx-auto px-4">
-                    <div className="flex flex-col md:flex-row flex-wrap justify-center items-center gap-6">
-                        <div className="bg-white border border-gray-200 p-6 shadow-lg rounded-lg text-center w-full sm:w-72">
-                            <p className="text-4xl text-cyan-800 font-extrabold mb-2">480</p>
-                            <p className="text-lg font-semibold text-cyan-800 mb-4">Jenis Produk</p>
-                            <button className="w-full text-yellow-500 font-bold border border-yellow-500 rounded-full px-6 py-3 hover:bg-yellow-500 hover:text-cyan-800 transition-colors duration-300">
-                                Jelajahi
-                            </button>
+                    {loading ? (
+                        <p className="text-center text-gray-700 text-lg py-10">Memuat data statistik...</p>
+                    ) : error ? (
+                        <p className="text-center text-red-500 text-lg py-10">Error: {error}</p>
+                    ) : (
+                        <div className="flex flex-col md:flex-row flex-wrap justify-center items-center gap-6">
+                            <div className="bg-white border border-gray-200 p-6 shadow-lg rounded-lg text-center w-full sm:w-72">
+                                <p className="text-4xl text-cyan-800 font-extrabold mb-2">{dashboardData.jenisBarangCount}</p>
+                                <p className="text-lg font-semibold text-cyan-800 mb-4">Jenis Produk</p>
+                                <Link href="/customer/catalog">
+                                    <button className="w-full text-yellow-500 font-bold border border-yellow-500 rounded-full px-6 py-3 hover:bg-yellow-500 hover:text-cyan-800 transition-colors duration-300">
+                                        Jelajahi
+                                    </button>
+                                </Link>
+                            </div>
+                            <div className="bg-white border border-gray-200 p-6 shadow-lg rounded-lg text-center w-full sm:w-72">
+                                <p className="text-4xl text-cyan-800 font-extrabold mb-2">{dashboardData.userCount}</p>
+                                <p className="text-lg font-semibold text-cyan-800 mb-4">Member Apotek Pelangi</p>
+                                {/* Tombol "Jadi Member Kami" - Disabled jika isSignedIn true */}
+                                <SignUpButton mode="modal" fallbackRedirectUrl="/sign-in/callback">
+                                    <button
+                                        className={`w-full font-bold border rounded-full px-6 py-3 transition-colors duration-300 ${
+                                            isSignedIn
+                                                ? 'text-yellow-500 border-yellow-500 hover:bg-yellow-500 hover:text-cyan-800'
+                                                : 'text-yellow-500 border-yellow-500 hover:bg-yellow-500 hover:text-cyan-800'
+                                        }`}
+                                        disabled={isSignedIn} // Properti disabled berdasarkan isSignedIn
+                                    >
+                                        {isSignedIn ? 'Jadi Member Kami' : 'Jadi Member Kami'}
+                                    </button>
+                                </SignUpButton>
+                            </div>
+                            <div className="bg-white border border-gray-200 p-6 shadow-lg rounded-lg text-center w-full sm:w-72">
+                                <p className="text-4xl text-cyan-800 font-extrabold mb-2">{dashboardData.barangCount}</p>
+                                <p className="text-lg font-semibold text-cyan-800 mb-4">Produk Tersedia</p>
+                                <Link href="/customer/catalog">
+                                    <button className="w-full text-yellow-500 font-bold border border-yellow-500 rounded-full px-6 py-3 hover:bg-yellow-500 hover:text-cyan-800 transition-colors duration-300">
+                                        Lihat Produk
+                                    </button>
+                                </Link>
+                            </div>
                         </div>
-                        <div className="bg-white border border-gray-200 p-6 shadow-lg rounded-lg text-center w-full sm:w-72">
-                            <p className="text-4xl text-cyan-800 font-extrabold mb-2">7.000</p>
-                            <p className="text-lg font-semibold text-cyan-800 mb-4">Member Apotek Pelangi</p>
-                            <button className="w-full text-yellow-500 font-bold border border-yellow-500 rounded-full px-6 py-3 hover:bg-yellow-500 hover:text-cyan-800 transition-colors duration-300">
-                                Jadi Member Kami
-                            </button>
-                        </div>
-                        <div className="bg-white border border-gray-200 p-6 shadow-lg rounded-lg text-center w-full sm:w-72">
-                            <p className="text-4xl text-cyan-800 font-extrabold mb-2">50.000</p>
-                            <p className="text-lg font-semibold text-cyan-800 mb-4">Produk Tersedia</p>
-                            <button className="w-full text-yellow-500 font-bold border border-yellow-500 rounded-full px-6 py-3 hover:bg-yellow-500 hover:text-cyan-800 transition-colors duration-300">
-                                Lihat Produk
-                            </button>
-                        </div>
-                    </div>
+                    )}
                 </div>
             </section>
 
-            {/* Section "Belanja Aneka Produk Kesehatan" */}
+            {/* Section "Belanja Aneka Produk Kesehatan" (Daftar Jenis Barang Dinamis dengan Link) */}
             <section className="bg-white px-6 md:px-12 py-16">
                 <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-10 items-center">
                     <div className="lg:w-1/3 flex justify-center">
@@ -97,21 +167,33 @@ export default function Home() {
                             Belanja Aneka Produk Kesehatan Mulai <br className="hidden md:block" />
                             Dari Obat sampai dengan Produk <span className="bg-yellow-400 px-2 rounded">Kecantikan</span>
                         </h2>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                            {[
-                                "Obat", "Suplemen", "Nutrisi", "Herbal",
-                                "Alat Kesehatan", "Produk Bayi", "Mata", "Kecantikan"
-                            ].map((item, index) => (
-                                <div key={index} className="p-4 border border-yellow-400 rounded-lg text-center font-medium text-gray-700 shadow-sm hover:shadow-md transition-shadow">
-                                    {item}
-                                </div>
-                            ))}
-                        </div>
+                        {loading ? (
+                            <p className="text-center text-gray-700 text-lg">Memuat jenis produk...</p>
+                        ) : error ? (
+                            <p className="text-center text-red-500 text-lg">Error memuat jenis produk: {error}</p>
+                        ) : (
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                {displayJenisBarang.length > 0 ? (
+                                    displayJenisBarang.map((jB) => (
+                                        <div key={jB.id} className="p-4 border border-yellow-400 rounded-lg text-center font-medium text-gray-700 shadow-sm hover:shadow-md transition-shadow">
+                                            <Link
+                                                href={`/customer/catalog?jenisId=${jB.id}&kategoriNama=${encodeURIComponent(jB.kategori_barang.nama_kategori)}&jenisNama=${encodeURIComponent(jB.nama_jenis)}`}
+                                                className="block text-gray-700 hover:text-cyan-600 transition cursor-pointer"
+                                            >
+                                                {jB.nama_jenis}
+                                            </Link>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="col-span-full text-gray-600">Tidak ada jenis barang ditemukan.</p>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             </section>
 
-            {/* Section "Tersedia produk berdasarkan kondisi Kesehatan" */}
+            {/* Section "Tersedia produk berdasarkan kondisi Kesehatan" (Tidak Diubah) */}
             <section className="bg-white py-16 px-6 md:px-12">
                 <div className="max-w-7xl mx-auto text-center">
                     <h2 className="text-3xl md:text-4xl font-bold mb-10 text-gray-800">
@@ -155,14 +237,14 @@ export default function Home() {
                             <p className="text-gray-600 text-sm leading-relaxed">Agar Anda tenang dan aman, hanya obat terjamin asli dari distributor resmi dan sudah lulus BPOM.</p>
                         </div>
 
-                        {/* INI BAGIAN YANG DIGANTI (menggunakan Opsi 1) */}
+                        {/* Kartu 2: Proses Cepat & Mudah */}
                         <div className="flex flex-col items-center p-8 bg-orange-50 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-2">
                             <svg className="w-16 h-16 text-orange-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <h3 className="text-xl font-semibold text-gray-800 mb-2">Proses Cepat & Mudah</h3>
                             <p className="text-gray-600 text-sm leading-relaxed">Pesan obat secara online dan ambil langsung di apotek tanpa perlu antre. Cepat, mudah, dan hemat waktu.</p>
                         </div>
 
-                        {/* Kartu 3: Pembayaran Lengkap */}
+                        {/* Kartu 3: Pilihan Pembayaran Lengkap */}
                         <div className="flex flex-col items-center p-8 bg-blue-50 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-2">
                             <svg className="w-16 h-16 text-blue-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                             <h3 className="text-xl font-semibold text-gray-800 mb-2">Pilihan Pembayaran Lengkap</h3>

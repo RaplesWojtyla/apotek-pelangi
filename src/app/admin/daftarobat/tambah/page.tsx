@@ -33,7 +33,6 @@ export default function TambahObatPage() {
 	}, []);
 
 	const handleSubmit = async (formData: FormData) => {
-		// --- Menambahkan URL gambar ke form data sebelum submit ---
 		if (imageUrl) {
 			formData.append('foto_barang', imageUrl);
 		}
@@ -90,9 +89,9 @@ export default function TambahObatPage() {
 								<SelectValue placeholder="Pilih golongan" />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value="Obat Bebas">Obat Bebas</SelectItem>
-								<SelectItem value="Obat Bebas Terbatas">Obat Bebas Terbatas</SelectItem>
-								<SelectItem value="Obat Keras">Obat Keras</SelectItem>
+								<SelectItem value="Obat bebas">Obat Bebas</SelectItem>
+								<SelectItem value="Obat bebas terbatas">Obat Bebas Terbatas</SelectItem>
+								<SelectItem value="Obat keras">Obat Keras</SelectItem>
 							</SelectContent>
 						</Select>
 					</div>
@@ -103,12 +102,12 @@ export default function TambahObatPage() {
 								<SelectValue placeholder="Pilih jenis kemasan" />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value="Strip 10 tablet">Strip</SelectItem>
-								<SelectItem value="Box isi 10 strip">Box</SelectItem>
-								<SelectItem value="Botol 60 ml">Botol</SelectItem>
-								<SelectItem value="Tube 5 gram">Tube</SelectItem>
-								<SelectItem value="Sachet 5 gram">Sachet</SelectItem>
-								<SelectItem value="Kaplet dalam blister">Blister</SelectItem>
+								<SelectItem value="Strip">Strip</SelectItem>
+								<SelectItem value="Box">Box</SelectItem>
+								<SelectItem value="Botol">Botol</SelectItem>
+								<SelectItem value="Tube">Tube</SelectItem>
+								<SelectItem value="Sachet">Sachet</SelectItem>
+								<SelectItem value="Blister">Blister</SelectItem>
 							</SelectContent>
 						</Select>
 					</div>
@@ -116,44 +115,49 @@ export default function TambahObatPage() {
 						<Label>Harga Jual (Rp)<span className="text-red-500">*</span></Label>
 						<Input name="harga_jual" type="number" placeholder="Contoh: 5000" required />
 					</div>
-					
-                    {/* --- BAGIAN INPUT FOTO --- */}
-                    <div className="space-y-2">
-                        <Label>Foto Produk</Label>
-                        {imageUrl ? (
-                            <div className="relative w-fit">
-                                <Image 
-                                    src={imageUrl} 
-                                    alt="Preview Foto Produk" 
-                                    width={150} 
-                                    height={150} 
-                                    className="rounded-md object-cover" 
-                                />
-                                <Button 
-                                    type="button" 
-                                    variant="destructive" 
-                                    size="icon" 
-                                    onClick={() => setImageUrl(null)}
-                                    className="absolute top-1 right-1 h-7 w-7"
-                                >
-                                    <Trash2 className="w-4 h-4" />
-                                </Button>
-                            </div>
-                        ) : (
-                            <UploadDropzone
-                                endpoint={'categoryImgUploader'} // Anda bisa buat endpoint baru jika perlu, tapi ini bisa dipakai
-                                onClientUploadComplete={(res) => res && setImageUrl(res[0].url)}
-                                onUploadError={(error: Error) => {
-                                    toast.error(`Gagal upload: ${error.message}`);
-                                }}
-                                config={{ mode: 'auto' }}
-                                className="p-4 ut-label:text-sm ut-allowed-content:hidden"
-                            />
-                        )}
-                        <p className="text-xs text-muted-foreground">
-                            Jika tidak diunggah, gambar default akan digunakan.
-                        </p>
-                    </div>
+
+					{/* --- BAGIAN INPUT FOTO --- */}
+					<div className="space-y-2">
+						<Label>Foto Produk</Label>
+						{imageUrl ? (
+							<div className="relative w-fit">
+								<Image
+									src={imageUrl}
+									alt="Preview Foto Produk"
+									width={150}
+									height={150}
+									className="rounded-md object-cover"
+								/>
+								<Button
+									type="button"
+									variant="destructive"
+									size="icon"
+									onClick={() => setImageUrl(null)}
+									className="absolute top-1 right-1 h-7 w-7"
+								>
+									<Trash2 className="w-4 h-4" />
+								</Button>
+							</div>
+						) : (
+							<UploadDropzone
+								endpoint={'productImgUploader'}
+								onClientUploadComplete={res => {
+									if (res && res.length > 0) {
+										setImageUrl(res[0].ufsUrl)
+										toast.success("Berhasil mengunggah foto produk!")
+									}
+								}}
+								onUploadError={(error: Error) => {
+									toast.error(`Gagal upload: ${error.message}`);
+								}}
+								config={{ mode: 'auto' }}
+								className="p-4 ut-label:text-sm ut-allowed-content:hidden"
+							/>
+						)}
+						<p className="text-xs text-muted-foreground">
+							Jika tidak diunggah, gambar default akan digunakan.
+						</p>
+					</div>
 				</div>
 			</section>
 
