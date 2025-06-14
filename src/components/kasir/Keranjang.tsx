@@ -10,6 +10,7 @@ import { prosesTransaksi } from '@/action/kasir/transaction.action'
 import { UploadDropzone } from '@/utils/uploadthing'
 import Image from 'next/image'
 import { CartItem } from '@/app/kasir/page'
+import MemberVerification from './MemberVerification'
 
 interface Props {
 	items: CartItem[]
@@ -189,6 +190,7 @@ export default function Keranjang({
 
 			{items.length > 0 && (
 				<>
+					<MemberVerification />
 					<div>
 						<Label htmlFor="amountPaid" className="text-sm">Jumlah Bayar</Label>
 						<Input
