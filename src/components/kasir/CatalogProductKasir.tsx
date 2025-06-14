@@ -6,18 +6,21 @@ import ProductCard from './ProductCard'
 import toast from 'react-hot-toast'
 import SkeletonCard from '@/components/skeleton/SkeletonCard'
 
+// DITAMBAH: jenisId pada interface Props
 interface Props {
   search: string
   currPage: number
   take: number
+  jenisId: string 
   onAddToCart: (product: Product) => void
-  cartItems: { id: string; quantity: number }[] // ✅ diterima dari parent
+  cartItems: { id: string; quantity: number }[]
 }
 
 export default function CatalogProductKasir({
   search,
   currPage,
   take,
+  jenisId, // DITAMBAH: Terima prop jenisId
   onAddToCart,
   cartItems = [],
 }: Props) {
@@ -28,7 +31,13 @@ export default function CatalogProductKasir({
     const fetchProducts = async () => {
       setIsFetchingProducts(true)
       try {
-        const data = await getProducts({ matcher: search, page: currPage, take })
+        // DIUBAH: Kirim id_jenis_barang ke action getProducts
+        const data = await getProducts({ 
+          matcher: search, 
+          page: currPage, 
+          take, 
+          id_jenis_barang: jenisId 
+        })
         setProducts(data)
       } catch (error) {
         console.error('[CatalogProductKasir] Error fetching products:', error)
@@ -39,7 +48,8 @@ export default function CatalogProductKasir({
     }
 
     fetchProducts()
-  }, [search, currPage, take])
+    // DIUBAH: Tambahkan jenisId ke dependency array agar komponen di-refresh saat filter berubah
+  }, [search, currPage, take, jenisId])
 
   const getCartQty = (productId: string) => {
     const item = cartItems.find(item => item.id === productId)
@@ -62,9 +72,29 @@ export default function CatalogProductKasir({
           />
         ))
       ) : (
-        <div className="col-span-full text-center text-gray-500 py-12">
-          <p>Oops! Produk tidak ditemukan</p>
-        </div>
+        <div className="col-span-full flex flex-col items-center justify-center py-12 px-4 text-center">
+						<svg
+							className="w-16 h-16 text-gray-400 mb-4"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth="2"
+								d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+							></path>
+						</svg>
+
+						<h3 className="text-lg font-semibold text-gray-700 mb-1">
+							Oops! Produk Tidak Ditemukan!
+						</h3>
+						<p className="text-sm text-gray-500">
+							Sepertinya tidak ada produk yang cocok dengan filter atau pencarian Anda.
+						</p>
+					</div>
       )}
     </div>
   )
