@@ -1,32 +1,53 @@
 'use client'
 
-import { useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Loader2, CheckCircle2, XCircle, Check } from "lucide-react";
+import { useState } from "react"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import { Loader2, CheckCircle2, XCircle, Check } from "lucide-react"
+import { findUserByEmail, VerifiedMember } from "@/action/kasir/user.action"
+import toast from "react-hot-toast"
 
-export default function MemberVerification() {
-    const [isMember, setIsMember] = useState(false);
-    const [email, setEmail] = useState("");
-    const [verificationStatus, setVerificationStatus] = useState('idle');
+interface MemberVerificationProps {
+    onVerify: (member: VerifiedMember | null) => void
+}
+
+
+export default function MemberVerification({ onVerify }: MemberVerificationProps) {
+    const [isMember, setIsMember] = useState(false)
+    const [email, setEmail] = useState("")
+    const [verificationStatus, setVerificationStatus] = useState<'idle' | 'loading' | 'not_found' | 'verified'>('idle')
 
     const handleVerifyEmail = async () => {
         if (!email) {
-            alert("Email tidak boleh kosong.");
-            return;
+            toast.error("Email tidak boleh kosong!")
+            return
         }
 
-        setVerificationStatus('loading');
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        setVerificationStatus('loading')
+        const res = await findUserByEmail(email)
 
-        if (email.toLowerCase() === "member@a.com") {
-            setVerificationStatus('verified');
+        if (res.success && res.data) {
+            setVerificationStatus('verified')
+            toast.success(`Member ditemukan: ${res.data.nama}`)
+            onVerify(res.data)
         } else {
-            setVerificationStatus('not_found');
+            setVerificationStatus('not_found')
+            toast.error(res.message || "Member tidak ditemukan!")
+            onVerify(null)
         }
-    };
+    }
+
+    const handleCheckboxChange = (checked: boolean) => {
+        setIsMember(checked)
+
+        if (!checked) {
+            setEmail("")
+            setVerificationStatus('idle')
+            onVerify(null)
+        }
+    }
 
     return (
         <div className="space-y-4 rounded-lg border bg-white p-4">
@@ -34,13 +55,7 @@ export default function MemberVerification() {
                 <Checkbox
                     id="isMemberCheckbox"
                     checked={isMember}
-                    onCheckedChange={(checked) => {
-                        setIsMember(Boolean(checked));
-                        if (!checked) {
-                            setEmail("");
-                            setVerificationStatus('idle');
-                        }
-                    }}
+                    onCheckedChange={(c) => handleCheckboxChange(Boolean(c))}
                 />
                 <Label
                     htmlFor="isMemberCheckbox"
@@ -60,9 +75,11 @@ export default function MemberVerification() {
                             placeholder="contoh@email.com"
                             value={email}
                             onChange={(e) => {
-                                setEmail(e.target.value);
+                                setEmail(e.target.value)
+
                                 if (verificationStatus !== 'idle') {
-                                    setVerificationStatus('idle');
+                                    setVerificationStatus('idle')
+                                    onVerify(null)
                                 }
                             }}
                             disabled={verificationStatus === 'loading' || verificationStatus === 'verified'}
@@ -71,16 +88,15 @@ export default function MemberVerification() {
                             type="button"
                             onClick={handleVerifyEmail}
                             disabled={!email || verificationStatus === 'loading' || verificationStatus === 'verified'}
-                            className={`transition-all duration-300 ${verificationStatus === 'idle' || verificationStatus === 'not_found'
-                                    ? "w-10"
-                                    : "w-10"
-                                }`}
-                            size={verificationStatus === 'idle' || verificationStatus === 'not_found' ? 'default' : 'icon'}
+                            className={`transition-all duration-300 w-24`}
+                            size={'default'}
                         >
                             {verificationStatus === 'loading' ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : verificationStatus === 'verified' ? (
+                                <CheckCircle2 className="h-5 w-5" />
                             ) : (
-                                <Check className="h-5 w-5 text-white" />
+                                "Verifikasi"
                             )}
                         </Button>
                     </div>
@@ -88,17 +104,18 @@ export default function MemberVerification() {
                     {verificationStatus === 'verified' && (
                         <p className="flex items-center gap-1 text-sm text-green-600">
                             <CheckCircle2 size={16} />
-                            Email ditemukan.
+                            Member terverifikasi.
                         </p>
                     )}
+
                     {verificationStatus === 'not_found' && (
                         <p className="flex items-center gap-1 text-sm text-red-600">
                             <XCircle size={16} />
-                            Email tidak ditemukan.
+                            Member tidak ditemukan.
                         </p>
                     )}
                 </div>
             )}
         </div>
-    );
+    )
 }
