@@ -6,6 +6,7 @@ import {
   FileText,
   LogOut,
   Store,
+  Landmark,
 } from "lucide-react";
 import Link from "next/link";
 import SidebarLink from "../SidebarLink";
@@ -39,6 +40,7 @@ export default function SidebarContent() {
           <SidebarLink href="/admin/vendor" icon={<Store size={16} />} label="Vendor" />
           <SidebarLink href="/admin/logpembelian" icon={<FileText size={16} />} label="Log Pembelian" />
           <SidebarLink href="/admin/logpenjualan" icon={<FileText size={16} />} label="Log Penjualan" />
+          <SidebarLink href="/admin/laporankeuangan" icon={<Landmark size={16} />} label="Laporan Keuangan" />
         </div>
 
         <hr className="my-5 border-gray-200" />

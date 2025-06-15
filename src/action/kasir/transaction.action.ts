@@ -47,7 +47,7 @@ export async function prosesTransaksi({
 		// 1. Buat Faktur Penjualan
 		const faktur = await tx.fakturPenjualan.create({
 			data: {
-				id_user: dbUserId,
+				id_user: null,
 				id_kasir: dbUserId,
 				metode_pembayaran: paymentMethod,
 				total: total,

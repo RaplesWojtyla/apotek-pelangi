@@ -164,7 +164,7 @@ export async function updateFakturStatus(
         },
     });
 
-    if (status === 'SELESAI') {
+    if (faktur.id_user && status === 'SELESAI') {
         await buatNotifikasi({
             id_user: faktur.id_user,
             id_sumber: id,
@@ -172,7 +172,7 @@ export async function updateFakturStatus(
             judul: 'Pesanan Selesai',
             pesan: `Pesanan Anda #${id} telah selesai. Terima kasih telah berbelanja!`,
         });
-    } else if (status === 'MENUNGGU_PENGAMBILAN') {
+    } else if (faktur.id_user && status === 'MENUNGGU_PENGAMBILAN') {
         await buatNotifikasi({
             id_user: faktur.id_user,
             id_sumber: id,
@@ -180,7 +180,7 @@ export async function updateFakturStatus(
             judul: 'Pesanan Dikemas!',
             pesan: `Pesanan Anda #${id} telah selesai dikemas. Silahkan lakukan pengambilan!`,
         });
-    } else if (status === 'DIBATALKAN') {
+    } else if (faktur.id_user && status === 'DIBATALKAN') {
         await buatNotifikasi({
             id_user: faktur.id_user,
             id_sumber: id,

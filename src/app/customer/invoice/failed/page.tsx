@@ -19,7 +19,7 @@ export default function page() {
 	const order_id = searchParams.get("order_id") || ""
 
 	const [isLoading, setIsLoading] = useState<boolean>(true)
-	const [failedInvoice, setFailedInvoice] = useState<SellingInvoice>()
+	const [failedInvoice, setFailedInvoice] = useState<SellingInvoice>(null)
 	const { isSignedIn, user, isLoaded } = useUser()
 
 	if (isLoaded && !isSignedIn) {
@@ -42,6 +42,7 @@ export default function page() {
 				const data = await failedTransaction(order_id)
 
 				if (!data.success) {
+					setFailedInvoice(null)
 					toast.error(data.message || "Invoice tidak ditemukan atau Anda tidak memiliki akses.")
 					router.push('/customer/cart')
 					return
@@ -50,11 +51,13 @@ export default function page() {
 				if (data.data) {
 					setFailedInvoice(data.data)
 				} else {
+					setFailedInvoice(null)
 					toast.error("Data invoice tidak ditemukan.")
 					router.push('/customer/cart')
 					return
 				}
 			} catch (error: any) {
+				setFailedInvoice(null)
 				console.error(`[fetchFailedInvoiceData] Error: ${error.message || error}`);
 				toast.error("Terjadi kesalahan saat mengambil data invoice.")
 				router.push('/customer')

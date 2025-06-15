@@ -206,7 +206,7 @@ model Cart {
 
 model FakturPenjualan {
     id                String       @id @default(cuid())
-    id_user           String
+    id_user           String?
     id_kasir          String?
     tanggal_faktur    DateTime     @default(now())
     nama_penerima     String
@@ -221,7 +221,7 @@ model FakturPenjualan {
 
     detail_faktur_penjualan DetailFakturPenjualan[]
 
-    user  User  @relation("FakturPenjualanCustomer", fields: [id_user], references: [id], onDelete: Restrict, onUpdate: Cascade)
+    user  User?  @relation("FakturPenjualanCustomer", fields: [id_user], references: [id], onDelete: Restrict, onUpdate: Cascade)
     kasir User? @relation("FakturPenjualanKasir", fields: [id_kasir], references: [id], onDelete: Restrict, onUpdate: Cascade)
 }
 
