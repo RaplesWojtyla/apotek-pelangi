@@ -74,6 +74,7 @@ export const getLogPembelian = async ({ page = 1, take = 10, query = "" }) => {
 		return {
 			success: true,
 			data: logs,
+			total: total,
 			totalPages: Math.ceil(total / take)
 		}
 	} catch (error) {
@@ -82,6 +83,7 @@ export const getLogPembelian = async ({ page = 1, take = 10, query = "" }) => {
 		return { 
 			success: false, 
 			data: [], 
+			total: 0,
 			totalPages: 1, 
 			message: 'Gagal mengambil data log pembelian.' 
 		}

@@ -16,76 +16,79 @@ import EditJenisDialog from "./EditJenisDialog";
 
 
 function TambahKategoriDialog() {
-	const [isPending, startTransition] = useTransition();
-	const [imageUrl, setImageUrl] = useState<string | null>(null);
-	const formRef = useRef<HTMLFormElement>(null);
+    const [open, setOpen] = useState(false);
+    const [isPending, startTransition] = useTransition();
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const formRef = useRef<HTMLFormElement>(null);
 
-	const handleSubmit = async (formData: FormData) => {
-		if (imageUrl) {
-			formData.append('foto_kategori', imageUrl);
-		}
-		
-		startTransition(async () => {
-			const result = await createCategory(formData);
-			if (result.success) {
-				toast.success(result.message);
-				formRef.current?.reset();
-				setImageUrl(null);
-			} else {
-				toast.error(result.message);
-			}
-		});
-	};
+    const handleSubmit = async (formData: FormData) => {
+        if (imageUrl) {
+            formData.append('foto_kategori', imageUrl);
+        }
 
-	return (
-		<Dialog>
-			<DialogTrigger asChild>
-				<div className="flex-shrink-0 w-24 h-24 bg-blue-50 border-2 border-dashed border-blue-200 rounded-full flex items-center justify-center shadow-sm cursor-pointer text-4xl font-bold text-blue-600 select-none hover:bg-blue-100 transition">
-					+
-				</div>
-			</DialogTrigger>
-			<DialogContent className="sm:max-w-[425px]">
-				<form action={handleSubmit} ref={formRef}>
-					<DialogHeader>
-						<DialogTitle>Tambah Kategori Baru</DialogTitle>
-					</DialogHeader>
-					<div className="grid gap-4 py-4">
-						<div className="space-y-1">
-							<Label htmlFor="nama_kategori">Nama Kategori</Label>
-							<Input id="nama_kategori" name="nama_kategori" required />
-						</div>
-						<div className="space-y-1">
-							<Label>Ikon Kategori</Label>
-							{imageUrl ? (
-								<div className="text-center"><Image src={imageUrl} alt="preview" width={80} height={80} className="rounded-full mx-auto" /></div>
-							) : (
-								<UploadDropzone
-									endpoint={'categoryImgUploader'}
-									onClientUploadComplete={res => {
-										if (res && res.length > 0) {
-											setImageUrl(res[0].ufsUrl)
-											toast.success("Berhasil mengupload foto kategori!")
-										}
-									}}
-									onUploadError={(error: Error) => {
-										toast.error(`Gagal upload foto kategori: ${error.message}`, { duration: 6500 })
-									}}
-									config={{
-										mode: 'auto'
-									}}
-								/>
-							)}
-						</div>
-					</div>
-					<DialogFooter>
-						<Button type="submit" disabled={isPending} className="gap-2">
-							{isPending && <Loader2 size={16} className="animate-spin" />} Simpan
-						</Button>
-					</DialogFooter>
-				</form>
-			</DialogContent>
-		</Dialog>
-	);
+        startTransition(async () => {
+            const result = await createCategory(formData);
+            if (result.success) {
+                toast.success(result.message);
+                formRef.current?.reset();
+                setImageUrl(null);
+                setOpen(false);
+            } else {
+                toast.error(result.message);
+            }
+        });
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <div className="flex flex-col items-center flex-shrink-0 w-28 space-y-2 cursor-pointer group">
+                    <div className="w-24 h-24 bg-blue-50 border-2 border-dashed border-blue-200 rounded-full flex items-center justify-center shadow-sm cursor-pointer hover:bg-blue-100 transition">
+                        <Plus className="w-8 h-8 text-blue-600" />
+                    </div>
+                    <span className="text-sm text-center font-medium text-gray-700">Tambah</span>
+                </div>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+                <form action={handleSubmit} ref={formRef}>
+                    <DialogHeader>
+                        <DialogTitle>Tambah Kategori Baru</DialogTitle>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="space-y-1">
+                            <Label htmlFor="nama_kategori">Nama Kategori</Label>
+                            <Input id="nama_kategori" name="nama_kategori" required />
+                        </div>
+                        <div className="space-y-1">
+                            <Label>Ikon Kategori</Label>
+                            {imageUrl ? (
+                                <div className="text-center"><Image src={imageUrl} alt="preview" width={80} height={80} className="rounded-full mx-auto" /></div>
+                            ) : (
+                                <UploadDropzone
+                                    endpoint={'categoryImgUploader'}
+                                    onClientUploadComplete={res => {
+                                        if (res && res.length > 0) {
+                                            setImageUrl(res[0].ufsUrl)
+                                            toast.success("Berhasil mengupload foto kategori!")
+                                        }
+                                    }}
+                                    onUploadError={(error: Error) => {
+                                        toast.error(`Gagal upload foto kategori: ${error.message}`, { duration: 6500 })
+                                    }}
+                                    config={{ mode: 'auto' }}
+                                />
+                            )}
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button type="submit" disabled={isPending} className="gap-2">
+                            {isPending && <Loader2 size={16} className="animate-spin" />} Simpan
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
 }
 
 

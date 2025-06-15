@@ -11,6 +11,7 @@ import { UploadDropzone } from '@/utils/uploadthing'
 import Image from 'next/image'
 import { CartItem } from '@/app/kasir/page'
 import MemberVerification from './MemberVerification'
+import { createPortal } from 'react-dom'
 import { VerifiedMember } from '@/action/kasir/user.action'
 import Portal from "../Portal"
 

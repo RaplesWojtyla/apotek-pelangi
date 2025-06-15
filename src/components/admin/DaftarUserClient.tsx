@@ -12,14 +12,14 @@ import { deleteUser, updateUserRoleAndStatus } from "@/action/admin/user.action"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Pagination from "@/components/Pagination"
 
-import { Pencil, Trash2, Plus, Search, User as UserIcon, MoreVertical, Eye, Loader2 } from "lucide-react"
+import { Pencil, Trash2, Plus, Search, User as UserIcon, MoreVertical, Loader2 } from "lucide-react"
 
 interface DaftarUserClientProps {
 	users: UserData[]
@@ -46,7 +46,6 @@ export default function DaftarUserClient({ users, totalUsers, totalPages }: Daft
 
 	const [isPending, startTransition] = useTransition()
 	const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
-	const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false)
 	const [selectedUser, setSelectedUser] = useState<UserData | null>(null)
 	const [editedData, setEditedData] = useState<{
 		role: LevelUser
@@ -70,7 +69,8 @@ export default function DaftarUserClient({ users, totalUsers, totalPages }: Daft
 		setOpenEditDialog(true)
 	}
 
-	const handleEditSubmit = () => {
+	const handleEditSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
 		if (!selectedUser || !editedData) return
 		startTransition(async () => {
 			const result = await updateUserRoleAndStatus(selectedUser.clerkId, editedData.role, editedData.status)
@@ -108,7 +108,7 @@ export default function DaftarUserClient({ users, totalUsers, totalPages }: Daft
 						defaultValue={searchParams.get('query')?.toString()}
 						onChange={(e) => handleSearch(e.target.value)}
 					/>
-					<Button variant="outline" size="icon"><Search className="w-4 h-4" /></Button>
+					<Button variant="outline" size="icon" aria-label="Cari"><Search className="w-4 h-4" /></Button>
 				</div>
 				<Link href="/admin/daftaruser/tambah">
 					<Button className="flex items-center gap-2 bg-cyan-500 text-white hover:bg-cyan-600">
@@ -148,13 +148,15 @@ export default function DaftarUserClient({ users, totalUsers, totalPages }: Daft
 												</Button>
 											</DropdownMenuTrigger>
 											<DropdownMenuContent align="end">
-												<DropdownMenuItem onClick={() => handleEditClick(user)} className="cursor-pointer gap-2"><Pencil size={14} />Edit</DropdownMenuItem>
-												<AlertDialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
-													<AlertDialogTrigger asChild>
+												<DropdownMenuItem onClick={() => handleEditClick(user)} className="cursor-pointer gap-2">
+													<Pencil size={14} />Edit
+												</DropdownMenuItem>
+												<AlertDialog>
+													<AlertDialogTitle asChild>
 														<div className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors text-red-500 hover:bg-red-50 w-full justify-start gap-2">
 															<Trash2 size={14} />Hapus
 														</div>
-													</AlertDialogTrigger>
+													</AlertDialogTitle>
 													<AlertDialogContent>
 														<AlertDialogHeader><AlertDialogTitle>Anda Yakin?</AlertDialogTitle><AlertDialogDescription>Aksi ini akan menghapus pengguna '{user.nama}' secara permanen. Data yang terhapus tidak dapat dikembalikan.</AlertDialogDescription></AlertDialogHeader>
 														<AlertDialogFooter>
@@ -179,37 +181,69 @@ export default function DaftarUserClient({ users, totalUsers, totalPages }: Daft
 				<Pagination totalPages={totalPages} />
 			</div>
 
+            {/* ==========================================================
+              MODAL EDIT PENGGUNA YANG SUDAH DIPERBAIKI
+              ==========================================================
+            */}
 			<Dialog open={openEditDialog} onOpenChange={setOpenEditDialog}>
-				<DialogContent>
-					<DialogHeader><DialogTitle>Edit Pengguna: {selectedUser?.nama}</DialogTitle></DialogHeader>
-					<div className="space-y-4 mt-2">
-						<div>
-							<Label htmlFor="editUserRole">Role</Label>
-							<Select value={editedData?.role} onValueChange={(value) => setEditedData(prev => ({ ...prev!, role: value as LevelUser }))}>
-								<SelectTrigger><SelectValue /></SelectTrigger>
-								<SelectContent>
-									<SelectItem value="ADMIN">Admin</SelectItem>
-									<SelectItem value="KASIR">Kasir</SelectItem>
-									<SelectItem value="CUSTOMER">Customer</SelectItem>
-								</SelectContent>
-							</Select>
-						</div>
-						<div>
-							<Label htmlFor="editUserStatus">Status</Label>
-							<Select value={editedData?.status} onValueChange={(value) => setEditedData(prev => ({ ...prev!, status: value as StatusUser }))}>
-								<SelectTrigger><SelectValue /></SelectTrigger>
-								<SelectContent>
-									<SelectItem value="AKTIF">Aktif</SelectItem>
-									<SelectItem value="NONAKTIF">Nonaktif</SelectItem>
-									<SelectItem value="BANNED">Banned</SelectItem>
-								</SelectContent>
-							</Select>
-						</div>
-						<div className="flex justify-end gap-2 pt-2">
-							<Button variant="outline" onClick={() => setOpenEditDialog(false)}>Batal</Button>
-							<Button onClick={handleEditSubmit} disabled={isPending}>{isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Simpan'}</Button>
-						</div>
-					</div>
+				<DialogContent className="sm:max-w-md">
+                    <DialogHeader className="text-left">
+                        <DialogTitle className="text-xl">Edit Pengguna</DialogTitle>
+                        <DialogDescription>
+                            Ubah role dan status untuk pengguna <span className="font-semibold">{selectedUser?.nama}</span>.
+                            Perubahan akan langsung diterapkan setelah disimpan.
+                        </DialogDescription>
+                    </DialogHeader>
+                    
+                    <form onSubmit={handleEditSubmit} className="grid gap-6 py-2">
+                        {/* Input untuk Role */}
+                        <div className="grid gap-3">
+                            <Label htmlFor="editUserRole" className="text-sm font-semibold">
+                                Role Pengguna
+                            </Label>
+                            <Select 
+                                value={editedData?.role} 
+                                onValueChange={(value) => setEditedData(prev => ({ ...prev!, role: value as LevelUser }))}
+                            >
+                                <SelectTrigger id="editUserRole" className="w-full">
+                                    <SelectValue placeholder="Pilih role..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="ADMIN">Admin</SelectItem>
+                                    <SelectItem value="KASIR">Kasir</SelectItem>
+                                    <SelectItem value="CUSTOMER">Customer</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        
+                        {/* Input untuk Status */}
+                        <div className="grid gap-3">
+                            <Label htmlFor="editUserStatus" className="text-sm font-semibold">
+                                Status Akun
+                            </Label>
+                            <Select 
+                                value={editedData?.status} 
+                                onValueChange={(value) => setEditedData(prev => ({ ...prev!, status: value as StatusUser }))}
+                            >
+                                <SelectTrigger id="editUserStatus" className="w-full">
+                                    <SelectValue placeholder="Pilih status..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="AKTIF">Aktif</SelectItem>
+                                    <SelectItem value="NONAKTIF">Nonaktif</SelectItem>
+                                    <SelectItem value="BANNED">Banned</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <DialogFooter className="mt-4">
+                            <Button type="button" variant="outline" onClick={() => setOpenEditDialog(false)}>Batal</Button>
+                            <Button type="submit" disabled={isPending}>
+                                {isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                                {isPending ? 'Menyimpan...' : 'Simpan Perubahan'}
+                            </Button>
+                        </DialogFooter>
+                    </form>
 				</DialogContent>
 			</Dialog>
 		</>
