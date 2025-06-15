@@ -12,6 +12,7 @@ interface Item {
 }
 
 interface TransaksiInput {
+	id_customer: string | null
 	items: Item[]
 	bayar: number
 	paymentMethod: string
@@ -20,6 +21,7 @@ interface TransaksiInput {
 }
 
 export async function prosesTransaksi({
+	id_customer,
 	items,
 	bayar,
 	paymentMethod,
@@ -29,12 +31,25 @@ export async function prosesTransaksi({
 	const dbUserId = await getDbUserId()
 	if (!dbUserId) throw new Error('Pengguna tidak terautentikasi!')
 
-	const userRecord = await prisma.user.findUnique({
-		where: { id: dbUserId },
-		select: { nama: true },
-	})
-	
-	const namaPenerima = userRecord?.nama?.trim() || '-'
+	let nama_penerima = '-'
+
+	if (id_customer) {
+		const customer = await prisma.user.findUnique({
+			where: { id: id_customer, role: 'CUSTOMER' },
+			select: { nama: true }
+		})
+
+		if (customer) {
+			nama_penerima = customer.nama || '-'
+		}
+	} else {
+		const kasir = await prisma.user.findUnique({
+			where: { id: dbUserId, role: 'KASIR' },
+			select: { nama: true }
+		})
+
+		nama_penerima = kasir?.nama || 'Pelanggan'
+	}
 
 	if (!items || items.length === 0) throw new Error('Item keranjang kosong')
 
@@ -43,16 +58,15 @@ export async function prosesTransaksi({
 
 	let pengajuanResepId: string | null = null
 
-	return await prisma.$transaction(async (tx) => {
-		// 1. Buat Faktur Penjualan
+	return await prisma.$transaction(async (tx) => {	
 		const faktur = await tx.fakturPenjualan.create({
 			data: {
-				id_user: null,
+				id_user: id_customer,
 				id_kasir: dbUserId,
 				metode_pembayaran: paymentMethod,
 				total: total,
 				status: 'SELESAI',
-				nama_penerima: namaPenerima,
+				nama_penerima: nama_penerima,
 				nomor_telepon: '-',
 				alamat: '-',
 				snap_token: '-',
@@ -60,7 +74,7 @@ export async function prosesTransaksi({
 			},
 		})
 
-		// 2. Buat Pengajuan Resep jika ada resep digunakan
+		
 		const adaResep = items.some((item) => resepChecked[item.id])
 		if (adaResep && resepImage) {
 			const pengajuan = await tx.pengajuanResep.create({
@@ -74,7 +88,7 @@ export async function prosesTransaksi({
 			pengajuanResepId = pengajuan.id
 		}
 
-		// 3. Insert tiap DetailFakturPenjualan
+		
 		for (const item of items) {
 			await tx.detailFakturPenjualan.create({
 				data: {
@@ -85,7 +99,7 @@ export async function prosesTransaksi({
 				},
 			})
 
-			// 4. Kurangi stok dari StokBarang
+			
 			let qtyToDeduct = item.quantity
 			const stokList = await tx.stokBarang.findMany({
 				where: { id_barang: item.id, jumlah: { gt: 0 } },

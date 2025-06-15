@@ -11,6 +11,7 @@ import { UploadDropzone } from '@/utils/uploadthing'
 import Image from 'next/image'
 import { CartItem } from '@/app/kasir/page'
 import MemberVerification from './MemberVerification'
+import { VerifiedMember } from '@/action/kasir/user.action'
 import Portal from "../Portal"
 
 interface Props {
@@ -31,6 +32,7 @@ export default function Keranjang({
 	const [showConfirm, setShowConfirm] = useState(false)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [resepImage, setResepImage] = useState<string | null>(null)
+	const [verifiedMemberId, setVerifiedMemberId] = useState<string | null>(null)
 
 	const formRef = useRef<HTMLFormElement>(null)
 
@@ -41,6 +43,10 @@ export default function Keranjang({
 
 	const change = amountPaid - total
 	const anyResep = items.some(item => resepChecked[item.id])
+
+	const handleMemberVerification = (member: VerifiedMember | null) => {
+		setVerifiedMemberId(member?.id || null)
+	} 
 
 	const handleSubmit = async () => {
 		if (!formRef.current) return
@@ -53,6 +59,7 @@ export default function Keranjang({
 		setIsSubmitting(true)
 		try {
 			await prosesTransaksi({
+				id_customer: verifiedMemberId,
 				items,
 				bayar: Number(formData.get('amountPaid')),
 				paymentMethod: String(formData.get('paymentMethod')),
@@ -193,7 +200,7 @@ export default function Keranjang({
 			{items.length > 0 && (
 				<>
 					<div id="tour-kasir-member-input">
-						<MemberVerification />
+						<MemberVerification onVerify={handleMemberVerification} />
 					</div>
 					<div id="tour-kasir-payment-input">
 						<Label htmlFor="amountPaid" className="text-sm">Jumlah Bayar</Label>
@@ -216,10 +223,6 @@ export default function Keranjang({
 						<label className="flex items-center space-x-2">
 							<input type="radio" name="paymentMethod" value="tunai" defaultChecked />
 							<span className="text-sm">Tunai</span>
-						</label>
-						<label className="flex items-center space-x-2">
-							<input type="radio" name="paymentMethod" value="qris" />
-							<span className="text-sm">QRIS</span>
 						</label>
 					</div>
 
