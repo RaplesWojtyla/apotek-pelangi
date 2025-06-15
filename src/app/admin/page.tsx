@@ -47,7 +47,7 @@ export default async function DashboardAdmin() {
 
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 				<div className="lg:col-span-2 bg-white p-4 rounded-xl shadow border">
-					<h3 className="font-semibold mb-4">Penjualan 7 Hari Terakhir</h3>
+					<h3 className="font-semibold mb-4">Laporan Pemasukan & Pengeluaran (1 Tahun)</h3>
 					<AnnualChart data={annualData} />
 				</div>
 				<div className="bg-white p-4 rounded-xl shadow border">
