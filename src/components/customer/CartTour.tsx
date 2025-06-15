@@ -1,33 +1,44 @@
-
 'use client'
 
 import { useState, useEffect } from 'react';
 import Joyride, { Step, CallBackProps, TooltipRenderProps } from 'react-joyride';
-import { Button } from '@/components/ui/button'; 
+import { Button } from '@/components/ui/button';
 
 const tourSteps: Step[] = [
     {
-        title: 'Selamat Datang di Apotek Pelangi!',
-        content: 'Kami akan memandu Anda melihat fitur-fitur utama di halaman ini.',
+        title: 'Selamat Datang di Keranjang Belanja',
+        content: 'Di sini Anda dapat melihat semua produk yang telah Anda tambahkan. Mari kita lihat fitur-fitur yang ada.',
         placement: 'center',
         target: 'body',
     },
     {
-        target: '#tour-kategori',
-        content: 'Jelajahi produk kami berdasarkan kategori untuk pencarian yang lebih mudah.',
+        target: '#tour-cart-tabs', 
+        content: 'Anda dapat memfilter tampilan keranjang untuk melihat semua item, hanya obat satuan, atau hanya obat resep.',
         disableBeacon: true,
     },
     {
-        target: '#tour-all-kategori',
-        content: 'Klik di sini untuk melihat semua kategori yang tersedia.',
+        target: '#tour-item-list',
+        content: 'Ini adalah daftar produk di keranjang Anda. Mari kita lihat aksi yang bisa Anda lakukan pada setiap item.',
+        disableBeacon: true,
     },
     {
-        target: '#tour-latest',
-        content: 'Ini adalah daftar produk kami. Jika Anda pernah berbelanja, kami akan menampilkan produk yang terakhir Anda beli.',
+        target: '#tour-quantity-controls', 
+        content: 'Gunakan tombol plus (+) dan minus (-) ini untuk mengubah jumlah produk yang ingin Anda beli.',
+        disableBeacon: true,
+        placement: 'right',
     },
     {
-        target: '#tour-tebus',
-        content: 'Punya resep dari dokter? Unggah resep Anda di sini dan biarkan kami yang siapkan obatnya.',
+        target: '#tour-delete-item-button',
+        content: 'Gunakan tombol ini jika Anda ingin menghapus produk dari keranjang.',
+        disableBeacon: true,
+    },
+    {
+        target: '#tour-summary-card',
+        content: 'Ringkasan pesanan Anda, termasuk total harga, akan ditampilkan di sini.',
+    },
+    {
+        target: '#tour-checkout-button-cart',
+        content: 'Jika semua sudah sesuai, klik tombol ini untuk melanjutkan ke halaman pembayaran.',
     }
 ];
 
@@ -48,7 +59,7 @@ const CustomTooltip = ({
           Kembali
         </Button>
       )}
-      <div className='flex-grow' /> 
+      <div className='flex-grow' />
       <Button {...primaryProps}>
         {isLastStep ? "Selesai" : "Lanjut"}
       </Button>
@@ -56,8 +67,7 @@ const CustomTooltip = ({
   </div>
 );
 
-
-export default function CustomerTour() {
+export default function CartTour() {
     const [run, setRun] = useState(false);
     const [isClient, setIsClient] = useState(false);
 
@@ -67,7 +77,7 @@ export default function CustomerTour() {
 
     useEffect(() => {
         if (isClient) {
-            const hasViewedTour = localStorage.getItem('hasViewedHomepageTour');
+            const hasViewedTour = localStorage.getItem('hasViewedCartTour');
             if (!hasViewedTour) {
                 const timer = setTimeout(() => {
                     setRun(true);
@@ -82,7 +92,7 @@ export default function CustomerTour() {
         const finishedStatuses: string[] = ['finished', 'skipped'];
 
         if (finishedStatuses.includes(status)) {
-            localStorage.setItem('hasViewedHomepageTour', 'true');
+            localStorage.setItem('hasViewedCartTour', 'true');
             setRun(false);
         }
     };

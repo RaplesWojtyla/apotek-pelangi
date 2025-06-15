@@ -15,6 +15,7 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CheckoutPayload, processCheckout } from "@/action/customer/transaction.action";
+import CheckoutTour from "@/components/customer/CheckoutTour";
 
 interface CheckoutFormData {
 	namaPenerima: string
@@ -46,7 +47,7 @@ export default function CheckoutPage() {
 		if (isLoaded && !isSignedIn) {
 			redirect('/unauthorized')
 		}
-		
+
 		const fetchDbUser = async () => {
 			if (isSignedIn && clerkUser) {
 				setIsLoadingUser(true)
@@ -209,6 +210,7 @@ export default function CheckoutPage() {
 
 	return (
 		<div className="min-h-screen bg-gray-100 p-4 md:p-10">
+			<CheckoutTour />
 			<h1 className="text-3xl font-bold mb-6">Pembayaran</h1>
 
 			{checkoutItems.length > 0 ? (
@@ -216,7 +218,7 @@ export default function CheckoutPage() {
 					{/* Form: Info Penerima + Metode Pembayaran */}
 					<div className="lg:col-span-2 space-y-6">
 						<Card className="p-6 space-y-6">
-							<div>
+							<div id="tour-info-penerima">
 								<h2 className="text-xl font-bold mb-4">Informasi Penerima</h2>
 								<div className="space-y-4">
 									<div>
@@ -260,7 +262,7 @@ export default function CheckoutPage() {
 							</div>
 
 							{/* Metode Pembayaran */}
-							<div>
+							<div id="tour-metode-pembayaran">
 								<h2 className="text-xl font-bold mb-4">Pilih Metode Pembayaran</h2>
 								<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 									{[
@@ -289,7 +291,7 @@ export default function CheckoutPage() {
 
 					{/* Ringkasan Order */}
 					<div className="space-y-4">
-						<Card className="p-6">
+						<Card id="tour-ringkasan-order" className="p-6">
 							<h2 className="text-xl font-bold">Order</h2>
 							<div>
 								<ScrollArea className="h-72 pr-4">
@@ -331,6 +333,7 @@ export default function CheckoutPage() {
 						</Card>
 
 						<Button
+							id="tour-checkout-button"
 							className="w-full text-white font-semibold text-lg py-4 cursor-pointer"
 							onClick={handleBooking}
 							disabled={isSubmitting || checkoutItems.length === 0}

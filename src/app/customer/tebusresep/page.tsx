@@ -1,3 +1,4 @@
+import TebusResepTour from "@/components/customer/TebusResepTour";
 import UploadResepForm from "@/components/customer/UploadResepForm";
 import TutorTebus from "@/components/TutorTebus";
 import Link from "next/link";
@@ -6,6 +7,7 @@ export default function TebusResep() {
 
 	return (
 		<div className="min-h-screen bg-white p-4 md:p-8 max-w-3xl mx-auto">
+			<TebusResepTour />
 			<div className="pt-10" />
 			<h1 className="text-2xl font-bold mb-2 text-cyan-700">Tebus Resep</h1>
 
@@ -16,10 +18,11 @@ export default function TebusResep() {
 			<UploadResepForm />
 
 			{/* Directions / Next steps */}
-			<div className="mb-6 text-center text-sm text-gray-700">
+			<div className="my-6 text-center text-sm text-gray-700">
 				<p>
 					Setelah mengupload resep, kamu bisa cek status penebusan di halaman{" "}
 					<Link
+						id="tour-cek-status-link"
 						href="/customer/tebusresep/list"
 						className="text-cyan-600 font-semibold underline"
 					>
@@ -29,7 +32,9 @@ export default function TebusResep() {
 				</p>
 			</div>
 
-			<TutorTebus />
+			<div id="tour-tutorial-accordion"> 
+				<TutorTebus />
+			</div>
 		</div>
 	);
 }

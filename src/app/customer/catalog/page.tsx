@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { getCatalogTotalPages } from "@/action/customer/product.action";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import CustomerCatalogTour from "@/components/customer/CustomerCatalogTour";
 
 export default function page() {
 	const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -42,6 +43,7 @@ export default function page() {
 
 	return (
 		<div className="flex bg-gray-100 min-h-screen">
+			<CustomerCatalogTour />
 			<CatalogSidebar />
 			<div className="p-4 flex-1">
 				<SearchBar />

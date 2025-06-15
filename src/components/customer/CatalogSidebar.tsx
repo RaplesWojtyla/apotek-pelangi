@@ -55,7 +55,7 @@ export const CatalogSidebar = () => {
 
 			{/* Desktop Sidebar - below navbar */}
 			<div className="hidden lg:block p-4 w-64 lg:flex-shrink-0">
-				<Card className="w-full overflow-hidden shadow-lg rounded-xl">
+				<Card id="tour-catalog-sidebar" className="w-full overflow-hidden shadow-lg rounded-xl">
 					<CardContent className="p-4 h-full overflow-y-auto max-h-[80vh]">
 						<SidebarContent
 							categories={categories}

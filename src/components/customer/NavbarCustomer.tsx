@@ -3,7 +3,7 @@
 import { UserButton, useUser } from '@clerk/nextjs';
 import { Separator } from '../ui/separator';
 import { Sheet } from '../ui/sheet';
-import { ShoppingCart, Bell, MapPinned, LayoutDashboard, PackageSearch, Menu, History } from 'lucide-react';
+import { ShoppingCart, Bell, LayoutDashboard, PackageSearch, Menu, History } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { SheetContent, SheetTrigger } from '../ui/sheet';
@@ -55,7 +55,7 @@ export const NavbarCustomer = () => {
 					</nav>
 					<nav className="hidden md:flex space-x-4 items-center">
 						<div className="relative">
-							<Link href="/customer/cart" aria-label="Keranjang">
+							<Link id="tour-cart-icon"  href="/customer/cart" aria-label="Keranjang">
 								<ShoppingCart className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
 							</Link>
 							{!isLoadingCartCount && isSignedIn && cartItemsCount > 0 && (

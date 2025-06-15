@@ -1,33 +1,33 @@
-
 'use client'
 
 import { useState, useEffect } from 'react';
 import Joyride, { Step, CallBackProps, TooltipRenderProps } from 'react-joyride';
-import { Button } from '@/components/ui/button'; 
+import { Button } from '@/components/ui/button';
 
 const tourSteps: Step[] = [
     {
-        title: 'Selamat Datang di Apotek Pelangi!',
-        content: 'Kami akan memandu Anda melihat fitur-fitur utama di halaman ini.',
+        title: 'Langkah Terakhir!',
+        content: 'Selamat datang di halaman pembayaran. Pastikan semua informasi sudah benar sebelum melanjutkan.',
         placement: 'center',
         target: 'body',
     },
     {
-        target: '#tour-kategori',
-        content: 'Jelajahi produk kami berdasarkan kategori untuk pencarian yang lebih mudah.',
+        target: '#tour-info-penerima',
+        content: 'Harap periksa kembali nama dan nomor telepon penerima. Pastikan data ini sudah benar untuk kami hubungi jika diperlukan.',
         disableBeacon: true,
     },
     {
-        target: '#tour-all-kategori',
-        content: 'Klik di sini untuk melihat semua kategori yang tersedia.',
+        target: '#tour-metode-pembayaran',
+        content: 'Pilih salah satu metode pembayaran yang Anda inginkan.',
+        disableBeacon: true,
     },
     {
-        target: '#tour-latest',
-        content: 'Ini adalah daftar produk kami. Jika Anda pernah berbelanja, kami akan menampilkan produk yang terakhir Anda beli.',
+        target: '#tour-ringkasan-order',
+        content: 'Di sini Anda dapat melihat ringkasan pesanan Anda. Pastikan semua item dan total harga sudah sesuai.',
     },
     {
-        target: '#tour-tebus',
-        content: 'Punya resep dari dokter? Unggah resep Anda di sini dan biarkan kami yang siapkan obatnya.',
+        target: '#tour-checkout-button',
+        content: 'Jika semua sudah benar, klik tombol ini untuk melanjutkan ke gerbang pembayaran dan menyelesaikan transaksi Anda.',
     }
 ];
 
@@ -48,7 +48,7 @@ const CustomTooltip = ({
           Kembali
         </Button>
       )}
-      <div className='flex-grow' /> 
+      <div className='flex-grow' />
       <Button {...primaryProps}>
         {isLastStep ? "Selesai" : "Lanjut"}
       </Button>
@@ -56,8 +56,7 @@ const CustomTooltip = ({
   </div>
 );
 
-
-export default function CustomerTour() {
+export default function CheckoutTour() {
     const [run, setRun] = useState(false);
     const [isClient, setIsClient] = useState(false);
 
@@ -67,7 +66,7 @@ export default function CustomerTour() {
 
     useEffect(() => {
         if (isClient) {
-            const hasViewedTour = localStorage.getItem('hasViewedHomepageTour');
+            const hasViewedTour = localStorage.getItem('hasViewedCheckoutTour');
             if (!hasViewedTour) {
                 const timer = setTimeout(() => {
                     setRun(true);
@@ -82,7 +81,7 @@ export default function CustomerTour() {
         const finishedStatuses: string[] = ['finished', 'skipped'];
 
         if (finishedStatuses.includes(status)) {
-            localStorage.setItem('hasViewedHomepageTour', 'true');
+            localStorage.setItem('hasViewedCheckoutTour', 'true');
             setRun(false);
         }
     };
