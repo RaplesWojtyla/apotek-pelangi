@@ -1,6 +1,6 @@
 'use client'
 
-import { UserButton, useUser } from '@clerk/nextjs';
+import { SignedOut, SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
 import { Separator } from '../ui/separator';
 import { Sheet } from '../ui/sheet';
 import { ShoppingCart, Bell, MapPinned, LayoutDashboard, PackageSearch, Menu, History } from 'lucide-react';
@@ -69,18 +69,39 @@ export const NavbarCustomer = () => {
 								</span>
 							)}
 						</div>
-						<Link 
-							href={'/customer/notification'}
-							aria-label="Notifikasi"
-							className='text-primary hover:text-cyan-700'
-						>
-							<Bell className="w-6 h-6" />
-						</Link>
+						{isLoaded && isSignedIn && (
+							<Link
+								href={'/customer/notification'}
+								aria-label="Notifikasi"
+								className='text-primary hover:text-cyan-700'
+							>
+								<Bell className="w-6 h-6" />
+							</Link>
+						)}
 						{isLoaded ? (
 							<UserButton />
 						) : (
 							<Skeleton className='size-8 rounded-full bg-gray-200' />
 						)}
+
+						<SignedOut>
+							<Separator orientation="vertical" className="w-px h-5 bg-gray-300 mr-4" />
+							<Button
+								className="hidden md:flex text-sm text-cyan-500 font-medium mr-0 cursor-pointer"
+								variant="link"
+								asChild
+							>
+								<SignInButton mode="modal" fallbackRedirectUrl="/sign-in/callback">
+									Masuk
+								</SignInButton>
+							</Button>
+
+							<Button className="hidden md:flex text-sm bg-cyan-500 text-white rounded-full hover:bg-cyan-600 transition cursor-pointer" asChild>
+								<SignUpButton mode="modal" fallbackRedirectUrl="/sign-in/callback">
+									<span>Daftar</span>
+								</SignUpButton>
+							</Button>
+						</SignedOut>
 					</nav>
 				</div>
 
