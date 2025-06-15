@@ -39,7 +39,7 @@ const SidebarContent = ({
 			</div>
 
 			{/* Scrollable Nav */}
-			<div className="flex-1 overflow-y-auto max-h-screen pr-1">
+			<div id="tour-kasir-sidebar" className="flex-1 overflow-y-auto max-h-screen pr-1">
 				<p className="text-xs uppercase text-gray-400 mb-2">Kategori</p>
 				{/* Link untuk kembali menampilkan semua produk */}
 				<Link
@@ -82,6 +82,7 @@ const SidebarContent = ({
 				<hr className="my-4 border-gray-200" />
 
 				<Link
+				id="tour-kasir-daftar" 
 					href="/kasir/daftar_transaksi"
 					className="flex items-center space-x-2 text-gray-800 font-semibold hover:text-cyan-600 text-sm mb-4"
 				>
@@ -89,6 +90,7 @@ const SidebarContent = ({
 					<span>Daftar Transaksi</span>
 				</Link>
 				<Link
+				id="tour-kasir-history" 
 					href="/kasir/history_transaksi"
 					className="flex items-center space-x-2 text-gray-800 font-semibold hover:text-cyan-600 text-sm mb-4"
 				>

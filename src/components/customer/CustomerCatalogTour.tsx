@@ -12,6 +12,11 @@ const tourSteps: Step[] = [
         target: 'body',
     },
     {
+        target: '#tour-search',
+        content: 'Anda dapat menjelajahi berbagai macam produk kami di sini.',
+        disableBeacon: true,
+    },
+    {
         target: '#tour-catalog-sidebar',
         content: 'Gunakan sidebar ini untuk memfilter produk berdasarkan kategori yang Anda inginkan.',
         disableBeacon: true,

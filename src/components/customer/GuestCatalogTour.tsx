@@ -1,20 +1,23 @@
-// src/components/customer/GuestCatalogTour.tsx
 'use client'
 
 import { useState, useEffect } from 'react';
 import Joyride, { Step, CallBackProps, TooltipRenderProps } from 'react-joyride';
 import { Button } from '@/components/ui/button';
 
-// Definisikan langkah-langkah tur untuk tamu
 const tourSteps: Step[] = [
     {
         target: 'body',
         content: 'Selamat datang di katalog kami! Anda bisa melihat semua produk yang kami tawarkan.',
         placement: 'center',
     },
-    {
-        target: '#tour-catalog-heading',
+   {
+        target: '#tour-search',
         content: 'Anda dapat menjelajahi berbagai macam produk kami di sini.',
+        disableBeacon: true,
+    },
+    {
+        target: '#tour-catalog-sidebar',
+        content: 'Anda juga dapat memfilter produk berdasarkan kategori dan jenis.',
         disableBeacon: true,
     },
     {
@@ -24,7 +27,6 @@ const tourSteps: Step[] = [
     }
 ];
 
-// Komponen Tooltip Kustom (sama seperti sebelumnya)
 const CustomTooltip = ({
   index,
   isLastStep,
