@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({ product, isFirst }: { product: Product; isFirst?: boolean }) {
 	const router = useRouter()
 	const { isSignedIn, isLoaded } = useUser()
 	const { fetchAndUpdateCartCount, setCheckoutItemsHandler } = useCartContext()
@@ -163,6 +163,7 @@ export default function ProductCard({ product }: { product: Product }) {
 			<div className="flex w-full gap-2">
 				{/* Tombol Beli Sekarang */}
 				<Button
+					id={isFirst ? "tour-buy-now-button" : undefined}
 					className="flex-1 bg-cyan-500 text-white text-xs md:text-sm rounded-lg hover:bg-cyan-600 transition-all disabled:opacity-50 px-2 py-2 whitespace-nowrap overflow-hidden text-ellipsis cursor-pointer"
 					onClick={handleBuyNow}
 					disabled={isDisabled}
@@ -180,6 +181,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
 				{/* Tombol Keranjang */}
 				<Button
+					id={isFirst ? "tour-add-to-cart-button" : undefined}
 					className="w-10 h-10 bg-white border border-cyan-500 rounded-lg hover:bg-cyan-50 text-cyan-600 flex items-center justify-center transition disabled:opacity-50 cursor-pointer"
 					onClick={handleAddToCart}
 					disabled={isDisabled}

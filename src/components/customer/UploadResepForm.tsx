@@ -45,12 +45,12 @@ export default function UploadResepForm() {
 		<>
 			{imgUrl ? (
 				<div className="p-4 border rounded-lg text-center bg-gray-50">
-					<Image 
-						src={imgUrl} 
-						alt="Preview Resep" 
-						width={200} 
-						height={200} 
-						className="mx-auto rounded-md mb-4" 
+					<Image
+						src={imgUrl}
+						alt="Preview Resep"
+						width={200}
+						height={200}
+						className="mx-auto rounded-md mb-4"
 					/>
 					<p className="text-sm text-gray-600 mb-4">Upload berhasil!</p>
 					<Button
@@ -63,25 +63,28 @@ export default function UploadResepForm() {
 					</Button>
 				</div>
 			) : (
-				<UploadDropzone
-					className="cursor-pointer hover:bg-gray-200 transition ease-linear duration-300"
-					endpoint={'resepImgUploader'}
-					onClientUploadComplete={(res) => {
-						if (res && res.length > 0) {
-							setImgUrl(res[0].ufsUrl)
-							toast.success("Foto resep berhasil diunggah!")
-						}
-					}}
-					onUploadError={(error: Error) => {
-						toast.error(`Gagal upload foto resep: ${error.message}`, { duration: 6500 })
-					}}
-					config={{
-						mode: "auto"
-					}}
-				/>
+				<div id="tour-upload-resep">
+					<UploadDropzone
+						className="cursor-pointer hover:bg-gray-200 transition ease-linear duration-300"
+						endpoint={'resepImgUploader'}
+						onClientUploadComplete={(res) => {
+							if (res && res.length > 0) {
+								setImgUrl(res[0].ufsUrl)
+								toast.success("Foto resep berhasil diunggah!")
+							}
+						}}
+						onUploadError={(error: Error) => {
+							toast.error(`Gagal upload foto resep: ${error.message}`, { duration: 6500 })
+						}}
+						config={{
+							mode: "auto"
+						}}
+					/>
+				</div>
 			)}
 
 			<Textarea
+				id="tour-catatan-resep"
 				placeholder="Tambahkan Catatan (Opsional)..."
 				className="w-full border-gray-300 rounded-md p-2 mt-4 resize-none"
 				rows={3}
@@ -91,6 +94,7 @@ export default function UploadResepForm() {
 			/>
 			<div className="text-center mt-4">
 				<Button
+					id="tour-kirim-resep-button"
 					onClick={handleSubmit}
 					disabled={!imgUrl || isSubmitting}
 					className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-md transition-all gap-2"

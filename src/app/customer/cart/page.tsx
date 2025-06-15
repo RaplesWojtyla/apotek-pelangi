@@ -14,6 +14,7 @@ import { ItemForCheckout, useCartContext } from "@/context/CartContext";
 import { SkeletonCart } from "@/components/skeleton/SkeletonCart";
 import { SumberCart } from "@prisma/client";
 import { SignInButton, useAuth, useUser } from "@clerk/nextjs";
+import CartTour from "@/components/customer/CartTour";
 
 export default function CartPage() {
 	const [cartItems, setCartItems] = useState<CartItem[]>([])
@@ -361,9 +362,10 @@ export default function CartPage() {
 
 	// if (isLoading) return <p className="flex min-h-screen justify-center items-center gap-3"><Loader2 className="animate-spin size-5" /> Loading...</p>
 
-	const renderCartItem = (item: CartItem) => (
+	const renderCartItem = (item: CartItem, index: number) => (
 		<div
 			key={item.id}
+			id={index === 0 ? "tour-item-list" : undefined}
 			className={`
 				relative flex flex-col sm:flex-row justify-between sm:items-center p-4 sm:p-6 rounded-2xl border shadow-sm 
 				${item.totalStock < 1 ? "bg-red-200 border-red-300" : "bg-white border-gray-300"}
@@ -374,6 +376,7 @@ export default function CartPage() {
 			<AlertDialog>
 				<AlertDialogTrigger asChild>
 					<Button
+						id={index === 0 ? "tour-delete-item-button" : undefined}
 						variant={'link'}
 						className="absolute top-1 right-1 text-red-500 hover:text-red-700 cursor-pointer"
 					>
@@ -428,7 +431,7 @@ export default function CartPage() {
 			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-2 mt-4 sm:mt-0 w-full sm:w-auto">
 				<div className="flex justify-between items-center w-full sm:w-auto">
 					{/* kontrol jumlah */}
-					<div className="flex items-center gap-2">
+					<div id={index === 0 ? "tour-quantity-controls" : undefined} className="flex items-center gap-2">
 						<Button
 							variant="outline"
 							size="sm"
@@ -462,10 +465,11 @@ export default function CartPage() {
 
 	return (
 		<div className="bg-white min-h-screen pt-12">
+			{ isSignedIn? <CartTour /> : null }
 			<div className="max-w-7xl mx-auto px-6 py-4">
 				<h1 className="text-3xl font-bold mb-6">Keranjang</h1>
 				<Tabs defaultValue="semua" className="mb-6" onValueChange={setActiveTab}>
-					<TabsList className="flex flex-wrap gap-2 w-full sm:w-[805px]">
+					<TabsList id="tour-cart-tabs" className="flex flex-wrap gap-2 w-full sm:w-[805px]">
 						<TabsTrigger value="semua" className="flex-1 h-10 rounded-xl border border-gray-300 text-lg font-semibold data-[state=active]:bg-primary data-[state=active]:text-white cursor-pointer">
 							Semua
 						</TabsTrigger>
@@ -554,7 +558,7 @@ export default function CartPage() {
 											</div>
 										) : (
 											cartItems && cartItems.length > 0 ? (
-												cartItems.map(item => renderCartItem(item))
+												cartItems.map((item, index) => renderCartItem(item, index))
 											) : (
 												<div className="h-full flex items-center justify-center">
 													<p className="text-2xl">Keranjang anda masih kosong</p>
@@ -564,7 +568,7 @@ export default function CartPage() {
 									</div>
 
 									{/* Subtotal */}
-									<div className="bg-white border border-gray-300 shadow-sm rounded-2xl p-4 sm:p-6 h-fit">
+									<div id="tour-summary-card" className="bg-white border border-gray-300 shadow-sm rounded-2xl p-4 sm:p-6 h-fit">
 										<h4 className="font-semibold text-base">
 											Sub Total ({productsToPayCount} Produk akan dibayar)
 										</h4>
@@ -587,6 +591,7 @@ export default function CartPage() {
 											<span className="font-bold">Rp {currGrandTotal.toLocaleString("id-ID")}</span>
 										</div>
 										<Button
+											id="tour-checkout-button-cart"
 											className="w-full text-white text-sm font-semibold h-10 rounded-full cursor-pointer"
 											onClick={handleProceedToChecout}
 											disabled={currGrandTotal === 0 || isCheckoutLoading}
@@ -619,7 +624,7 @@ export default function CartPage() {
 											</div>
 										) : (
 											manualProducts.length > 0 ? (
-												manualProducts.map(item => renderCartItem(item))
+												manualProducts.map((item, index) => renderCartItem(item, index))
 											) : (
 												<div className="h-full flex items-center justify-center">
 													<p className="text-2xl">Keranjang anda masih kosong</p>
@@ -672,7 +677,7 @@ export default function CartPage() {
 											</div>
 										) : (
 											resepProducts.length > 0 ? (
-												resepProducts.map(item => renderCartItem(item))
+												resepProducts.map((item, index) => renderCartItem(item, index))
 											) : (
 												<div className="h-full flex items-center justify-center">
 													<p className="text-2xl">Keranjang anda masih kosong</p>

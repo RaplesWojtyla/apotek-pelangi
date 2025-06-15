@@ -9,8 +9,12 @@ import { useEffect, useState } from "react";
 import { getCatalogTotalPages } from "@/action/customer/product.action";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import CustomerCatalogTour from "@/components/customer/CustomerCatalogTour";
+import { useUser } from "@clerk/nextjs";
+import GuestCatalogTour from "@/components/customer/GuestCatalogTour";
 
 export default function page() {
+	const { isSignedIn } = useUser();
 	const [isLoading, setIsLoading] = useState<boolean>(true)
 	const [totalPages, setTotalPages] = useState<number>(1)
 	const searchParams = useSearchParams()
@@ -42,6 +46,7 @@ export default function page() {
 
 	return (
 		<div className="flex bg-gray-100 min-h-screen">
+            {isSignedIn ? <CustomerCatalogTour /> : <GuestCatalogTour />}
 			<CatalogSidebar />
 			<div className="p-4 flex-1">
 				<SearchBar />
@@ -59,7 +64,7 @@ export default function page() {
 						<span className="text-primary">{jenisNama}</span>
 					</h1>
 				) : (
-					<h1 className="text-2xl font-bold mb-6 text-gray-800">Semua Kategori</h1>
+					<h1 id="tour-catalog-heading" className="text-2xl font-bold mb-6 text-gray-800">Semua Kategori</h1>
 				)}
 				<CatalogProducts
 					search={search}

@@ -1,33 +1,37 @@
-
 'use client'
 
 import { useState, useEffect } from 'react';
 import Joyride, { Step, CallBackProps, TooltipRenderProps } from 'react-joyride';
-import { Button } from '@/components/ui/button'; 
+import { Button } from '@/components/ui/button';
 
 const tourSteps: Step[] = [
     {
-        title: 'Selamat Datang di Apotek Pelangi!',
-        content: 'Kami akan memandu Anda melihat fitur-fitur utama di halaman ini.',
+        title: 'Selamat Datang di Halaman Tebus Resep',
+        content: 'Di sini Anda dapat dengan mudah mengunggah resep dari dokter untuk kami proses. Mari kita mulai!',
         placement: 'center',
         target: 'body',
     },
     {
-        target: '#tour-kategori',
-        content: 'Jelajahi produk kami berdasarkan kategori untuk pencarian yang lebih mudah.',
+        target: '#tour-upload-resep',
+        content: 'Klik atau seret file gambar resep Anda ke area ini untuk mengunggahnya.',
         disableBeacon: true,
     },
     {
-        target: '#tour-all-kategori',
-        content: 'Klik di sini untuk melihat semua kategori yang tersedia.',
+        target: '#tour-catatan-resep',
+        content: 'Anda bisa menambahkan catatan untuk apoteker jika ada informasi tambahan (opsional).',
+        disableBeacon: true,
     },
     {
-        target: '#tour-latest',
-        content: 'Ini adalah daftar produk kami. Jika Anda pernah berbelanja, kami akan menampilkan produk yang terakhir Anda beli.',
+        target: '#tour-kirim-resep-button',
+        content: 'Setelah foto resep diunggah, klik tombol ini untuk mengirimkan pengajuan Anda.',
     },
     {
-        target: '#tour-tebus',
-        content: 'Punya resep dari dokter? Unggah resep Anda di sini dan biarkan kami yang siapkan obatnya.',
+        target: '#tour-cek-status-link',
+        content: 'Anda dapat memantau status semua pengajuan resep Anda di halaman ini.',
+    },
+    {
+        target: '#tour-tutorial-accordion',
+        content: 'Jika butuh panduan lebih detail, Anda selalu bisa melihatnya kembali di sini.',
     }
 ];
 
@@ -48,7 +52,7 @@ const CustomTooltip = ({
           Kembali
         </Button>
       )}
-      <div className='flex-grow' /> 
+      <div className='flex-grow' />
       <Button {...primaryProps}>
         {isLastStep ? "Selesai" : "Lanjut"}
       </Button>
@@ -56,8 +60,7 @@ const CustomTooltip = ({
   </div>
 );
 
-
-export default function CustomerTour() {
+export default function TebusResepTour() {
     const [run, setRun] = useState(false);
     const [isClient, setIsClient] = useState(false);
 
@@ -67,7 +70,7 @@ export default function CustomerTour() {
 
     useEffect(() => {
         if (isClient) {
-            const hasViewedTour = localStorage.getItem('hasViewedHomepageTour');
+            const hasViewedTour = localStorage.getItem('hasViewedTebusResepTour');
             if (!hasViewedTour) {
                 const timer = setTimeout(() => {
                     setRun(true);
@@ -82,7 +85,7 @@ export default function CustomerTour() {
         const finishedStatuses: string[] = ['finished', 'skipped'];
 
         if (finishedStatuses.includes(status)) {
-            localStorage.setItem('hasViewedHomepageTour', 'true');
+            localStorage.setItem('hasViewedTebusResepTour', 'true');
             setRun(false);
         }
     };

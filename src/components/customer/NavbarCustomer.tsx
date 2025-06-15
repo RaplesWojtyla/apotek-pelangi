@@ -3,7 +3,7 @@
 import { SignedOut, SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
 import { Separator } from '../ui/separator';
 import { Sheet } from '../ui/sheet';
-import { ShoppingCart, Bell, MapPinned, LayoutDashboard, PackageSearch, Menu, History } from 'lucide-react';
+import { ShoppingCart, Bell, LayoutDashboard, PackageSearch, Menu, History, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { SheetContent, SheetTrigger } from '../ui/sheet';
@@ -47,7 +47,7 @@ export const NavbarCustomer = () => {
 								Katalog
 							</Link>
 							<Separator orientation="vertical" className="w-px h-5 bg-gray-300 mr-4" />
-							<Link href="/customer/history" className="hover:text-cyan-500">
+							<Link id="tour-history" href="/customer/history" className="hover:text-cyan-500">
 								Riwayat Transaksi
 							</Link>
 							<Separator orientation="vertical" className="w-px h-5 bg-gray-300 mr-4" />
@@ -55,7 +55,7 @@ export const NavbarCustomer = () => {
 					</nav>
 					<nav className="hidden md:flex space-x-4 items-center">
 						<div className="relative">
-							<Link href="/customer/cart" aria-label="Keranjang">
+							<Link id="tour-cart-icon" href="/customer/cart" aria-label="Keranjang">
 								<ShoppingCart className="w-6 h-6 text-cyan-500 cursor-pointer hover:text-cyan-700" />
 							</Link>
 							{!isLoadingCartCount && isSignedIn && cartItemsCount > 0 && (
@@ -71,6 +71,7 @@ export const NavbarCustomer = () => {
 						</div>
 						{isLoaded && isSignedIn && (
 							<Link
+								id="tour-notification"
 								href={'/customer/notification'}
 								aria-label="Notifikasi"
 								className='text-primary hover:text-cyan-700'
@@ -86,21 +87,23 @@ export const NavbarCustomer = () => {
 
 						<SignedOut>
 							<Separator orientation="vertical" className="w-px h-5 bg-gray-300 mr-4" />
-							<Button
-								className="hidden md:flex text-sm text-cyan-500 font-medium mr-0 cursor-pointer"
-								variant="link"
-								asChild
-							>
-								<SignInButton mode="modal" fallbackRedirectUrl="/sign-in/callback">
-									Masuk
-								</SignInButton>
-							</Button>
+							<div id="tour-guest-signup-button" className="flex items-center space-x-2">
+								<Button
+									className="hidden md:flex text-sm text-cyan-500 font-medium mr-0 cursor-pointer"
+									variant="link"
+									asChild
+								>
+									<SignInButton mode="modal" fallbackRedirectUrl="/sign-in/callback">
+										Masuk
+									</SignInButton>
+								</Button>
 
-							<Button className="hidden md:flex text-sm bg-cyan-500 text-white rounded-full hover:bg-cyan-600 transition cursor-pointer" asChild>
-								<SignUpButton mode="modal" fallbackRedirectUrl="/sign-in/callback">
-									<span>Daftar</span>
-								</SignUpButton>
-							</Button>
+								<Button className="hidden md:flex text-sm bg-cyan-500 text-white rounded-full hover:bg-cyan-600 transition cursor-pointer" asChild>
+									<SignUpButton mode="modal" fallbackRedirectUrl="/sign-in/callback">
+										<span>Daftar</span>
+									</SignUpButton>
+								</Button>
+							</div>
 						</SignedOut>
 					</nav>
 				</div>
@@ -130,6 +133,8 @@ export const NavbarCustomer = () => {
 							<div className="space-y-6">
 								{/* Menu Utama */}
 								<div className="space-y-4">
+									<UserButton showName />
+									<Separator />
 									<div className="space-y-2">
 										<Link href="/customer" onClick={() => setIsOpen(false)} className="flex items-center space-x-2 text-gray-700 hover:text-cyan-600">
 											<LayoutDashboard size={18} />
@@ -149,7 +154,13 @@ export const NavbarCustomer = () => {
 										</Link>
 									</div>
 									<Separator />
-									<UserButton />
+									<Link
+										href="/logout"
+										className="flex items-center space-x-2 text-gray-700 hover:text-red-600 text-sm transition-colors duration-200"
+									>
+										<LogOut size={16} />
+										<span>Keluar</span>
+									</Link>
 								</div>
 							</div>
 						</SheetContent>

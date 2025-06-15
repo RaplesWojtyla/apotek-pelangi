@@ -1,36 +1,30 @@
-
+// src/components/customer/GuestCatalogTour.tsx
 'use client'
 
 import { useState, useEffect } from 'react';
 import Joyride, { Step, CallBackProps, TooltipRenderProps } from 'react-joyride';
-import { Button } from '@/components/ui/button'; 
+import { Button } from '@/components/ui/button';
 
+// Definisikan langkah-langkah tur untuk tamu
 const tourSteps: Step[] = [
     {
-        title: 'Selamat Datang di Apotek Pelangi!',
-        content: 'Kami akan memandu Anda melihat fitur-fitur utama di halaman ini.',
-        placement: 'center',
         target: 'body',
+        content: 'Selamat datang di katalog kami! Anda bisa melihat semua produk yang kami tawarkan.',
+        placement: 'center',
     },
     {
-        target: '#tour-kategori',
-        content: 'Jelajahi produk kami berdasarkan kategori untuk pencarian yang lebih mudah.',
+        target: '#tour-catalog-heading',
+        content: 'Anda dapat menjelajahi berbagai macam produk kami di sini.',
         disableBeacon: true,
     },
     {
-        target: '#tour-all-kategori',
-        content: 'Klik di sini untuk melihat semua kategori yang tersedia.',
-    },
-    {
-        target: '#tour-latest',
-        content: 'Ini adalah daftar produk kami. Jika Anda pernah berbelanja, kami akan menampilkan produk yang terakhir Anda beli.',
-    },
-    {
-        target: '#tour-tebus',
-        content: 'Punya resep dari dokter? Unggah resep Anda di sini dan biarkan kami yang siapkan obatnya.',
+        target: '#tour-guest-signup-button',
+        content: 'Untuk mulai berbelanja yuk daftar atau masuk terlebih dahulu!',
+        disableBeacon: true,
     }
 ];
 
+// Komponen Tooltip Kustom (sama seperti sebelumnya)
 const CustomTooltip = ({
   index,
   isLastStep,
@@ -48,16 +42,15 @@ const CustomTooltip = ({
           Kembali
         </Button>
       )}
-      <div className='flex-grow' /> 
+      <div className='flex-grow' />
       <Button {...primaryProps}>
-        {isLastStep ? "Selesai" : "Lanjut"}
+        {isLastStep ? "Mulai Belanja!" : "Lanjut"}
       </Button>
     </div>
   </div>
 );
 
-
-export default function CustomerTour() {
+export default function GuestCatalogTour() {
     const [run, setRun] = useState(false);
     const [isClient, setIsClient] = useState(false);
 
@@ -67,7 +60,7 @@ export default function CustomerTour() {
 
     useEffect(() => {
         if (isClient) {
-            const hasViewedTour = localStorage.getItem('hasViewedHomepageTour');
+            const hasViewedTour = localStorage.getItem('hasViewedGuestCatalogTour');
             if (!hasViewedTour) {
                 const timer = setTimeout(() => {
                     setRun(true);
@@ -82,7 +75,7 @@ export default function CustomerTour() {
         const finishedStatuses: string[] = ['finished', 'skipped'];
 
         if (finishedStatuses.includes(status)) {
-            localStorage.setItem('hasViewedHomepageTour', 'true');
+            localStorage.setItem('hasViewedGuestCatalogTour', 'true');
             setRun(false);
         }
     };
