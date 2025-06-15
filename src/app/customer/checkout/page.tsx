@@ -301,7 +301,7 @@ export default function CheckoutPage() {
 												className="flex items-center gap-3"
 											>
 												<Image
-													src={`/${item.fotoBarang}`}
+													src={ item.fotoBarang?.includes('https') ? item.fotoBarang : '/logo.png' }
 													alt={`Img: ${item.namaBarang}`}
 													width={40}
 													height={40}

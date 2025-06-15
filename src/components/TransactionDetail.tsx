@@ -88,7 +88,7 @@ export default function TransaksiDetailDialog({ transaction }: { transaction: De
                     {transaction.detail_faktur_penjualan.map(dtx => (
                         <div key={dtx.id} className="flex gap-4 mt-4">
                             <Image
-                                src={`/${dtx.barang.foto_barang}`}
+                                src={dtx.barang.foto_barang.includes('https') ? dtx.barang.foto_barang : `/${dtx.barang.foto_barang}`}
                                 alt={dtx.barang.nama_barang}
                                 width={100}
                                 height={100}

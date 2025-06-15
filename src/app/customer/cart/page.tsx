@@ -411,7 +411,7 @@ export default function CartPage() {
 					disabled={item.totalStock < 1 || item.sumber === 'RESEP'}
 				/>
 				<Image
-					src={`/${item.barang.foto_barang}`}
+					src={item.barang.foto_barang.includes('https') ? item.barang.foto_barang : `/${item.barang.foto_barang}`}
 					alt={item.barang.nama_barang}
 					width={70}
 					height={70}

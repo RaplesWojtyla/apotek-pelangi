@@ -5,7 +5,6 @@ import ProductCard from "@/components/customer/ProductCard";
 import ProductUnavailable from "@/components/customer/ProductUnavailable";
 import ProductDetailSkeleton from "@/components/skeleton/ProductDetailSkeleton";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { ItemForCheckout, useCartContext } from "@/context/CartContext";
 import { useUser } from "@clerk/nextjs";
 import { Loader2, ShoppingBag, ShoppingCart } from "lucide-react";
@@ -161,7 +160,7 @@ export default function page() {
                                         </div>
                                     )}
                                     <img
-                                        src="/logo.png"
+                                        src={productDetail.foto_barang.includes('https') ? productDetail.foto_barang : `/${productDetail.foto_barang}`}
                                         alt={productDetail.nama_barang}
                                         className="w-64 h-64 rounded-lg"
                                     />
