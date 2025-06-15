@@ -50,7 +50,7 @@ export default async function RootLayout({
 								},
 								style: {
 									background: '#E2F9F3',
-									color: '#047857',     
+									color: '#047857',
 									border: '1px solid #10B981',
 									padding: '16px',
 								},
@@ -70,6 +70,7 @@ export default async function RootLayout({
 							},
 						}}
 					/>
+					<div id="modal-root" />
 				</body>
 			</html>
 		</ClerkProvider>

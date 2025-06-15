@@ -11,6 +11,7 @@ import { UploadDropzone } from '@/utils/uploadthing'
 import Image from 'next/image'
 import { CartItem } from '@/app/kasir/page'
 import MemberVerification from './MemberVerification'
+import Portal from "../Portal"
 
 interface Props {
 	items: CartItem[]
@@ -235,25 +236,27 @@ export default function Keranjang({
 			)}
 
 			{showConfirm && (
-				<div className="fixed inset-0 flex justify-center items-center z-50">
-					<div className="bg-white p-6 rounded-md shadow-md w-[90%] max-w-md space-y-4">
-						<h2 className="text-lg font-semibold">Konfirmasi Transaksi</h2>
-						<p>Apakah Anda yakin ingin menyimpan transaksi ini?</p>
-						<div className="flex justify-end gap-2">
-							<Button type="button" variant="outline" onClick={() => setShowConfirm(false)}>
-								Batal
-							</Button>
-							<Button
-								type="button"
-								className="bg-cyan-600 text-white hover:bg-cyan-700"
-								onClick={handleSubmit}
-								disabled={isSubmitting}
-							>
-								{isSubmitting ? 'Menyimpan...' : 'Ya, Simpan'}
-							</Button>
-						</div>
-					</div>
-				</div>
+				<Portal> {/* <-- 2. BUNGKUS DIALOG DENGAN PORTAL */}
+                    <div className="fixed inset-0 flex justify-center items-center z-[100]">
+                        <div className="bg-white p-6 rounded-lg shadow-xl w-[90%] max-w-md space-y-4">
+                            <h2 className="text-lg font-semibold">Konfirmasi Transaksi</h2>
+                            <p>Apakah Anda yakin ingin menyimpan transaksi ini?</p>
+                            <div className="flex justify-end gap-2">
+                                <Button type="button" variant="outline" onClick={() => setShowConfirm(false)}>
+                                    Batal
+                                </Button>
+                                <Button
+                                    type="button"
+                                    className="bg-cyan-600 text-white hover:bg-cyan-700"
+                                    onClick={handleSubmit}
+                                    disabled={isSubmitting}
+                                >
+                                    {isSubmitting ? 'Menyimpan...' : 'Ya, Simpan'}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </Portal>
 			)}
 		</form>
 	)
