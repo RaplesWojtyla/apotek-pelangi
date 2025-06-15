@@ -7,6 +7,7 @@ import ProductDetailSkeleton from "@/components/skeleton/ProductDetailSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ItemForCheckout, useCartContext } from "@/context/CartContext";
+import { useUser } from "@clerk/nextjs";
 import { Loader2, ShoppingBag, ShoppingCart } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -25,6 +26,7 @@ export default function page() {
     const params = useParams()
     const { id } = params
     const router = useRouter()
+    const { isLoaded, isSignedIn } = useUser()
 
     useEffect(() => {
         const fetchAllData = async () => {
@@ -56,6 +58,11 @@ export default function page() {
     if (isLoading) return <ProductDetailSkeleton />
 
     const handleAddToCart = async () => {
+        if (!isLoaded || (isLoaded && !isSignedIn)) {
+            toast.error("Silakan login terlebih dahulu untuk menambahkan produk ke keranjang.")
+            return
+        }
+
         if (!productDetail?.detail_barang) return
 
         setIsAddingToCart(true)
@@ -111,6 +118,11 @@ export default function page() {
     }
 
     const handleBuyNow = () => {
+        if (!isLoaded || (isLoaded && !isSignedIn)) {
+            toast.error("Anda harus login untuk membeli produk ini.")
+            return
+        }
+        
         if (!productDetail?.totalStock || productDetail.totalStock < 1) {
             toast.error("Stok produk telah habis.")
             return

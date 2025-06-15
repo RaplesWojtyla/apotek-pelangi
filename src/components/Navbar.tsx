@@ -50,7 +50,10 @@ export const Navbar = () => {
 								</SignInButton>
 							</Button>
 
-							<Button className="hidden md:flex text-sm bg-cyan-500 text-white rounded-full hover:bg-cyan-600 transition cursor-pointer">
+							<Button
+								className="hidden md:flex text-sm bg-cyan-500 text-white rounded-full hover:bg-cyan-600 transition cursor-pointer"
+								asChild
+							>
 								<SignUpButton mode="modal" fallbackRedirectUrl="/sign-in/callback">
 									<span>Daftar</span>
 								</SignUpButton>
@@ -88,12 +91,19 @@ export const Navbar = () => {
 									</div>
 								) : (
 									<div className="space-y-4">
-										<Button variant="link" className="text-cyan-500 w-full justify-start">
+										<Button
+											variant="link"
+											className="text-cyan-500 w-full justify-start"
+											asChild
+										>
 											<SignInButton mode="modal" fallbackRedirectUrl="/sign-in/callback">
 												Masuk
 											</SignInButton>
 										</Button>
-										<Button className="w-full bg-cyan-500 hover:bg-cyan-600 text-white">
+										<Button
+											className="w-full bg-cyan-500 hover:bg-cyan-600 text-white"
+											asChild
+										>
 											<SignUpButton mode="modal" fallbackRedirectUrl="/sign-in/callback">
 												Daftar
 											</SignUpButton>

@@ -1,47 +1,30 @@
+// src/components/customer/GuestCatalogTour.tsx
 'use client'
 
 import { useState, useEffect } from 'react';
 import Joyride, { Step, CallBackProps, TooltipRenderProps } from 'react-joyride';
 import { Button } from '@/components/ui/button';
 
+// Definisikan langkah-langkah tur untuk tamu
 const tourSteps: Step[] = [
     {
-        title: 'Selamat Datang di Katalog Produk!',
-        content: 'Ini adalah halaman katalog kami. Mari kita lihat cara berbelanja.',
-        placement: 'center',
         target: 'body',
+        content: 'Selamat datang di katalog kami! Anda bisa melihat semua produk yang kami tawarkan.',
+        placement: 'center',
     },
     {
-        target: '#tour-catalog-sidebar',
-        content: 'Gunakan sidebar ini untuk memfilter produk berdasarkan kategori yang Anda inginkan.',
+        target: '#tour-catalog-heading',
+        content: 'Anda dapat menjelajahi berbagai macam produk kami di sini.',
         disableBeacon: true,
     },
     {
-        target: '#tour-buy-now-button',
-        content: 'Klik tombol ini untuk langsung mebeli produk.',
-        disableBeacon: true,
-    },
-    {
-        target: '#tour-add-to-cart-button',
-        content: 'Klik tombol ini untuk menambahkan produk ke keranjang belanja Anda.',
-        disableBeacon: true,
-    },
-    {
-        target: '#tour-cart-icon',
-        content: 'Setelah ditambahkan, Anda dapat melihat semua item di keranjang Anda di sini dan melanjutkan ke pembayaran.',
-    },
-    {
-        target: '#tour-history',
-        content: 'Tombol ini berfungsi untuk melihat riwayat transaksi anda.',
-        disableBeacon: true,
-    },
-    {
-        target: '#tour-notification',
-        content: 'Anda dapat melihat notifikasi dengan mengklik tombol ini.',
+        target: '#tour-guest-signup-button',
+        content: 'Untuk mulai berbelanja yuk daftar atau masuk terlebih dahulu!',
         disableBeacon: true,
     }
 ];
 
+// Komponen Tooltip Kustom (sama seperti sebelumnya)
 const CustomTooltip = ({
   index,
   isLastStep,
@@ -61,14 +44,13 @@ const CustomTooltip = ({
       )}
       <div className='flex-grow' />
       <Button {...primaryProps}>
-        {isLastStep ? "Selesai" : "Lanjut"}
+        {isLastStep ? "Mulai Belanja!" : "Lanjut"}
       </Button>
     </div>
   </div>
 );
 
-
-export default function CustomerCatalogTour() {
+export default function GuestCatalogTour() {
     const [run, setRun] = useState(false);
     const [isClient, setIsClient] = useState(false);
 
@@ -78,11 +60,11 @@ export default function CustomerCatalogTour() {
 
     useEffect(() => {
         if (isClient) {
-            const hasViewedTour = localStorage.getItem('hasViewedCatalogTour');
+            const hasViewedTour = localStorage.getItem('hasViewedGuestCatalogTour');
             if (!hasViewedTour) {
                 const timer = setTimeout(() => {
                     setRun(true);
-                }, 1000); 
+                }, 1000);
                 return () => clearTimeout(timer);
             }
         }
@@ -93,7 +75,7 @@ export default function CustomerCatalogTour() {
         const finishedStatuses: string[] = ['finished', 'skipped'];
 
         if (finishedStatuses.includes(status)) {
-            localStorage.setItem('hasViewedCatalogTour', 'true');
+            localStorage.setItem('hasViewedGuestCatalogTour', 'true');
             setRun(false);
         }
     };

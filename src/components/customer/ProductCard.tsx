@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { ItemForCheckout, useCartContext } from "@/context/CartContext";
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import Image from "next/image";
 
 export default function ProductCard({ product, isFirst }: { product: Product; isFirst?: boolean }) {
 	const router = useRouter()
@@ -23,7 +24,7 @@ export default function ProductCard({ product, isFirst }: { product: Product; is
 
 	const handleAddToCart = async () => {
 		if (!isLoaded || (isLoaded && !isSignedIn)) {
-			toast.error("Harap login terlebih dahulu!")
+			toast.error("Silakan login terlebih dahulu untuk menambahkan produk ke keranjang.")
 			return
 		}
 
@@ -82,7 +83,7 @@ export default function ProductCard({ product, isFirst }: { product: Product; is
 
 	const handleBuyNow = () => {
 		if (!isLoaded || (isLoaded && !isSignedIn)) {
-			toast.error("Harap login terlebih dahulu!")
+			toast.error("Anda harus login untuk membeli produk ini.")
 			return
 		}
 
@@ -109,7 +110,7 @@ export default function ProductCard({ product, isFirst }: { product: Product; is
 		router.push('/customer/checkout')
 	}
 
-	const isDisabled = isAddingToCart || isBuyingNow || product.totalStock < 1
+	const isDisabled = isAddingToCart || isBuyingNow || product.totalStock < 1 || !isLoaded
 
 	return (
 		<div className="bg-white rounded-2xl shadow-md p-5 flex flex-col items-center justify-between cursor-pointer hover:shadow-lg transition-all w-full min-h-[320px] relative group">
@@ -121,11 +122,13 @@ export default function ProductCard({ product, isFirst }: { product: Product; is
 				</div>
 			)}
 
-			<img
-				src={`/${product.foto_barang}`}
+			<Image
+				src={product.foto_barang.includes('https') ? product.foto_barang : `/${product.foto_barang}`}
 				alt={product.nama_barang}
-				className="w-28 h-28 object-contain mb-4 transition-transform group-hover:scale-105"
+				className="object-contain mb-4 transition-transform group-hover:scale-105"
 				onClick={() => handleDetail(product.id)}
+				width={112}
+				height={112}
 			/>
 
 			{/* Info Produk */}

@@ -15,12 +15,14 @@ export const syncUser = async () => {
 		const role = user.publicMetadata?.metadata?.role || "CUSTOMER";
 
 		const dbUser = await prisma.user.upsert({
-			where: { clerkId: user.id },
+			where: {
+				email: user.emailAddresses[0].emailAddress
+			},
 			update: {
+				clerkId: user.id,
 				nama: user.fullName,
 				email: user.emailAddresses[0].emailAddress,
 				foto_profil: user.imageUrl,
-				role: role
 			},
 			create: {
 				clerkId: user.id,
