@@ -1,47 +1,60 @@
-import {
-	BarChart,
-	Users,
-	ShoppingCart,
-	ClipboardList,
-} from "lucide-react";
-import StatCard from "@/components/StatCard";
-import BarGraph from "@/components/BarGraph";
-import TableTransaction from "@/components/TableTransaction";
+import { currentUser } from "@clerk/nextjs/server"
+import { BarChart, Users, ShoppingCart, FileText } from "lucide-react"
+import StatCard from "@/components/StatCard"
+import { getDashboardStats, getRecentTransactions, getMonthlyRevenueAndExpense } from "@/action/admin/dashboard.action"
+import RecentTransactions from "@/components/admin/RecentTransactions"
+import AnnualChart from "@/components/AnnualChart"
 
-export default function DashboardAdmin() {
+export default async function DashboardAdmin() {
+	const user = await currentUser()
+
+	const { totalRevenue, totalSales, totalUsers, pendingPrescriptions } = await getDashboardStats()
+	const annualData = await getMonthlyRevenueAndExpense()
+	const recentTransactions = await getRecentTransactions()
+
 	return (
-		<div className="p-4 max-w-screen mt-4">
-			<h1 className="text-2xl font-bold mb-4">Dashboard Admin</h1>
+		<div className="p-4 sm:p-6 lg:p-8 space-y-6">
+			<div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+				<h1 className="text-2xl font-bold">Dashboard</h1>
+				<h2 className="text-lg text-muted-foreground">
+					Selamat Datang, {user?.firstName || "Admin"}!
+				</h2>
+			</div>
 
-			{/* Stat Cards */}
+			{/* Kartu Statistik */}
 			<div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
 				<StatCard
-					icon={<Users className="text-blue-500 w-6 h-6" />}
-					title="Pengguna"
-					value="124"
+					icon={<BarChart className="text-green-500 w-6 h-6" />}
+					title="Total Pendapatan"
+					value={`Rp${totalRevenue.toLocaleString('id-ID')}`}
 				/>
 				<StatCard
-					icon={<ShoppingCart className="text-green-500 w-6 h-6" />}
-					title="Transaksi"
-					value="82"
+					icon={<ShoppingCart className="text-blue-500 w-6 h-6" />}
+					title="Total Penjualan"
+					value={totalSales.toLocaleString('id-ID')}
 				/>
 				<StatCard
-					icon={<ClipboardList className="text-yellow-500 w-6 h-6" />}
-					title="Resep Masuk"
-					value="45"
+					icon={<Users className="text-yellow-500 w-6 h-6" />}
+					title="Total Pengguna"
+					value={totalUsers.toLocaleString('id-ID')}
 				/>
 				<StatCard
-					icon={<BarChart className="text-purple-500 w-6 h-6" />}
-					title="Pendapatan"
-					value="Rp12.000.000"
+					icon={<FileText className="text-purple-500 w-6 h-6" />}
+					title="Resep Menunggu"
+					value={pendingPrescriptions.toLocaleString('id-ID')}
 				/>
 			</div>
 
-			{/* Graph & Table Section */}
-			<div className="flex flex-col lg:flex-row gap-6 w-full mt-6">
-				<BarGraph />
-				<TableTransaction />
+			<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+				<div className="lg:col-span-2 bg-white p-4 rounded-xl shadow border">
+					<h3 className="font-semibold mb-4">Penjualan 7 Hari Terakhir</h3>
+					<AnnualChart data={annualData} />
+				</div>
+				<div className="bg-white p-4 rounded-xl shadow border">
+					<h3 className="font-semibold mb-4">Transaksi Terbaru</h3>
+					<RecentTransactions transactions={recentTransactions} />
+				</div>
 			</div>
 		</div>
-	);
+	)
 }
