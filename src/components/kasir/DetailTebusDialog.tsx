@@ -13,7 +13,6 @@ import { getProducts, Product } from "@/action/kasir/product.action"
 import { processPrescription } from "@/action/kasir/tebusResep.action"
 import { Loader2, PackageOpen, Search, Trash2 } from "lucide-react"
 import Link from "next/link"
-import { HoverCard, HoverCardTrigger } from "../ui/hover-card"
 import { StatusResep } from "@prisma/client"
 
 type PengajuanResep = {

@@ -9,9 +9,10 @@ interface ProductCardProps {
   product: Product & { stok_barang: number }
   onAddToCart: (product: Product) => void
   cartQty?: number
+  isFirst?: boolean
 }
 
-export default function ProductCard({ product, onAddToCart, cartQty = 0 }: ProductCardProps) {
+export default function ProductCard({ product, onAddToCart, cartQty = 0, isFirst }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false)
 
   const isOutOfStock = product.stok_barang === 0 || cartQty >= product.stok_barang
@@ -65,9 +66,10 @@ export default function ProductCard({ product, onAddToCart, cartQty = 0 }: Produ
 
         <div className="mt-auto">
           <Button
+            id={isFirst ? 'tour-kasir-add-to-cart' : undefined}
             className={`w-full flex items-center justify-center py-2 rounded-md space-x-2 
-              ${isDisabled ? 'bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none' 
-                           : 'bg-cyan-500 hover:bg-cyan-600 text-white'}
+              ${isDisabled ? 'w-full justify-center flex items-center bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none'
+                : 'bg-cyan-500 hover:bg-cyan-600 text-white'}
             `}
             onClick={handleAdd}
             disabled={isDisabled}

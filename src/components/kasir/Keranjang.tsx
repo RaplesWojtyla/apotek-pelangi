@@ -74,14 +74,14 @@ export default function Keranjang({
 	}
 
 	return (
-		<form ref={formRef} className="p-4 space-y-4">
+		<form id="tour-kasir-side-cart" ref={formRef} className="p-4 space-y-4">
 			{items.length === 0 && (
 				<p className="text-sm text-gray-500">Keranjang masih kosong</p>
 			)}
 
 			{items.length > 0 && (
 				<div className="max-h-[300px] overflow-y-auto space-y-4 pr-2">
-					{items.map(item => (
+					{items.map((item, index) => (
 						<div key={item.id} className="border-b pb-3 space-y-1">
 							{/* Baris 1: Nama + Checkbox */}
 							<div className="flex justify-between items-start">
@@ -89,6 +89,7 @@ export default function Keranjang({
 								<label className="flex items-center space-x-1 text-sm text-gray-700">
 									<span>Resep</span>
 									<input
+										id={index === 0 ? 'tour-kasir-resep-check' : undefined}
 										type="checkbox"
 										checked={!!resepChecked[item.id]}
 										onChange={e =>
@@ -190,8 +191,10 @@ export default function Keranjang({
 
 			{items.length > 0 && (
 				<>
-					<MemberVerification />
-					<div>
+					<div id="tour-kasir-member-input">
+						<MemberVerification />
+					</div>
+					<div id="tour-kasir-payment-input">
 						<Label htmlFor="amountPaid" className="text-sm">Jumlah Bayar</Label>
 						<Input
 							id="amountPaid"
@@ -220,6 +223,7 @@ export default function Keranjang({
 					</div>
 
 					<Button
+						id="tour-kasir-save-button"
 						type="button"
 						onClick={() => setShowConfirm(true)}
 						disabled={amountPaid < total || isSubmitting}

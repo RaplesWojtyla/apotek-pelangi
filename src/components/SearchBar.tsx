@@ -21,7 +21,7 @@ export default function SearchBar({ placeholder = "Cari produk..." }) {
 	}, 500)
 
 	return (
-		<div className="relative w-full mb-4">
+		<div id="tour-search" className="relative w-full mb-4">
 			<Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
 			<input
 				type="text"
