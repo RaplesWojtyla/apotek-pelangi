@@ -13,6 +13,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { ItemForCheckout, useCartContext } from "@/context/CartContext";
 import { SkeletonCart } from "@/components/skeleton/SkeletonCart";
 import { SumberCart } from "@prisma/client";
+import { SignInButton, useAuth, useUser } from "@clerk/nextjs";
 
 export default function CartPage() {
 	const [cartItems, setCartItems] = useState<CartItem[]>([])
@@ -22,7 +23,9 @@ export default function CartPage() {
 	const [activeTab, setActiveTab] = useState<string>("semua")
 	const [isCheckoutLoading, setIsCheckoutLoading] = useState<boolean>(false)
 	const { fetchAndUpdateCartCount, setCheckoutItemsHandler } = useCartContext()
+
 	const router = useRouter()
+	const { isLoaded, isSignedIn } = useAuth()
 
 	const isCartItems = cartItems && cartItems.length > 0
 
@@ -531,12 +534,32 @@ export default function CartPage() {
 							<TabsContent value="semua">
 								<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 									<div className="lg:col-span-2 space-y-4">
-										{cartItems && cartItems.length > 0 ? (
-											cartItems.map(item => renderCartItem(item))
-										) : (
+										{isLoaded && !isSignedIn ? (
 											<div className="h-full flex items-center justify-center">
-												<p className="text-2xl">Keranjang anda masih kosong</p>
+												<p className="text-2xl">
+													Harap
+												</p>
+												<Button
+													variant="link"
+													className="text-cyan-500 justify-center items-center text-2xl cursor-pointer"
+													asChild
+												>
+													<SignInButton mode="modal" fallbackRedirectUrl="/sign-in/callback">
+														Masuk
+													</SignInButton>
+												</Button>
+												<p className="text-2xl">
+													terlebih dahulu untuk dapat melihat keranjang anda
+												</p>
 											</div>
+										) : (
+											cartItems && cartItems.length > 0 ? (
+												cartItems.map(item => renderCartItem(item))
+											) : (
+												<div className="h-full flex items-center justify-center">
+													<p className="text-2xl">Keranjang anda masih kosong</p>
+												</div>
+											)
 										)}
 									</div>
 
@@ -576,12 +599,32 @@ export default function CartPage() {
 							<TabsContent value="obat-satuan">
 								<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 									<div className="lg:col-span-2 space-y-4">
-										{manualProducts.length > 0 ? (
-											manualProducts.map(item => renderCartItem(item))
-										) : (
+										{isLoaded && !isSignedIn ? (
 											<div className="h-full flex items-center justify-center">
-												<p className="text-2xl">Keranjang anda masih kosong</p>
+												<p className="text-2xl">
+													Harap
+												</p>
+												<Button
+													variant="link"
+													className="text-cyan-500 justify-center items-center text-2xl cursor-pointer"
+													asChild
+												>
+													<SignInButton mode="modal" fallbackRedirectUrl="/sign-in/callback">
+														Masuk
+													</SignInButton>
+												</Button>
+												<p className="text-2xl">
+													terlebih dahulu untuk dapat melihat keranjang anda
+												</p>
 											</div>
+										) : (
+											manualProducts.length > 0 ? (
+												manualProducts.map(item => renderCartItem(item))
+											) : (
+												<div className="h-full flex items-center justify-center">
+													<p className="text-2xl">Keranjang anda masih kosong</p>
+												</div>
+											)
 										)}
 									</div>
 
@@ -609,12 +652,32 @@ export default function CartPage() {
 							<TabsContent value="obat-resep">
 								<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 									<div className="lg:col-span-2 space-y-4">
-										{resepProducts.length > 0 ? (
-											resepProducts.map(item => renderCartItem(item))
-										) : (
+										{isLoaded && !isSignedIn ? (
 											<div className="h-full flex items-center justify-center">
-												<p className="text-2xl">Keranjang anda masih kosong</p>
+												<p className="text-2xl">
+													Harap
+												</p>
+												<Button
+													variant="link"
+													className="text-cyan-500 justify-center items-center text-2xl cursor-pointer"
+													asChild
+												>
+													<SignInButton mode="modal" fallbackRedirectUrl="/sign-in/callback">
+														Masuk
+													</SignInButton>
+												</Button>
+												<p className="text-2xl">
+													terlebih dahulu untuk dapat melihat keranjang anda
+												</p>
 											</div>
+										) : (
+											resepProducts.length > 0 ? (
+												resepProducts.map(item => renderCartItem(item))
+											) : (
+												<div className="h-full flex items-center justify-center">
+													<p className="text-2xl">Keranjang anda masih kosong</p>
+												</div>
+											)
 										)}
 									</div>
 
