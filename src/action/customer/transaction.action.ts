@@ -357,7 +357,7 @@ export const failedTransaction = async (order_id: string) => {
 				return {
 					success: false,
 					message: "Faktur tidak ditemukan!",
-					data: {}
+					data: null
 				}
 			}
 			const updatedFakturPenjualan = await tx.fakturPenjualan.update({
@@ -418,7 +418,7 @@ export const failedTransaction = async (order_id: string) => {
 			return {
 				success: true,
 				message: "Pembayaran Gagal!",
-				data: updatedFakturPenjualan
+				data: null
 			}
 		})
 
@@ -438,7 +438,7 @@ export const failedTransaction = async (order_id: string) => {
 		return {
 			success: false,
 			message: error.message || "Terjadi kesalahan pada server.",
-			data: {}
+			data: null
 		}
 	}
 }
