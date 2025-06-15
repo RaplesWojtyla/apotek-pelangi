@@ -221,19 +221,19 @@ export default function VendorClientPage({ vendors, totalVendors, totalPages }: 
 						<form action={handleSubmit}>
 							<div className="space-y-4 py-4">
 								<div>
-									<Label htmlFor="nama_vendor">Nama Vendor</Label>
+									<Label htmlFor="nama_vendor" className="mb-2">Nama Vendor</Label>
 									<Input id="nama_vendor" name="nama_vendor" defaultValue={selectedVendor?.nama_vendor || ''} required />
 								</div>
 								<div>
-									<Label htmlFor="email">Email</Label>
+									<Label htmlFor="email" className="mb-2">Email</Label>
 									<Input id="email" name="email" type="email" defaultValue={selectedVendor?.email || ''} />
 								</div>
 								<div>
-									<Label htmlFor="no_hp">No. HP</Label>
+									<Label htmlFor="no_hp" className="mb-2" >No. HP</Label>
 									<Input id="no_hp" name="no_hp" defaultValue={selectedVendor?.no_hp || ''} />
 								</div>
 								<div>
-									<Label htmlFor="alamat">Alamat</Label>
+									<Label htmlFor="alamat" className="mb-2">Alamat</Label>
 									<Input id="alamat" name="alamat" defaultValue={selectedVendor?.alamat || ''} />
 								</div>
 							</div>
