@@ -6,13 +6,14 @@ import LogPembelianClient from '@/components/admin/LogPembelianClient'
 export default async function LogPembelianPage({
     searchParams
 }: {
-    searchParams?: {
+    searchParams?: Promise<{
         query?: string
         page?: string
-    }
+    }>
 }) {
-    const query = searchParams?.query || ""
-    const currentPage = Number(searchParams?.page) || 1
+	const sParams = await searchParams
+    const query = sParams?.query || ""
+    const currentPage = Number(sParams?.page) || 1
     
     const result = await getLogPembelian({ query, page: currentPage })
 
