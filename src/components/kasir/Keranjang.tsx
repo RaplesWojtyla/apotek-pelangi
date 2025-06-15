@@ -13,6 +13,7 @@ import { CartItem } from '@/app/kasir/page'
 import MemberVerification from './MemberVerification'
 import { createPortal } from 'react-dom'
 import { VerifiedMember } from '@/action/kasir/user.action'
+import Portal from "../Portal"
 
 interface Props {
 	items: CartItem[]
@@ -82,14 +83,14 @@ export default function Keranjang({
 	}
 
 	return (
-		<form ref={formRef} className="p-4 space-y-4">
+		<form id="tour-kasir-side-cart" ref={formRef} className="p-4 space-y-4">
 			{items.length === 0 && (
 				<p className="text-sm text-gray-500">Keranjang masih kosong</p>
 			)}
 
 			{items.length > 0 && (
 				<div className="max-h-[300px] overflow-y-auto space-y-4 pr-2">
-					{items.map(item => (
+					{items.map((item, index) => (
 						<div key={item.id} className="border-b pb-3 space-y-1">
 							{/* Baris 1: Nama + Checkbox */}
 							<div className="flex justify-between items-start">
@@ -97,6 +98,7 @@ export default function Keranjang({
 								<label className="flex items-center space-x-1 text-sm text-gray-700">
 									<span>Resep</span>
 									<input
+										id={index === 0 ? 'tour-kasir-resep-check' : undefined}
 										type="checkbox"
 										checked={!!resepChecked[item.id]}
 										onChange={e =>
@@ -198,8 +200,10 @@ export default function Keranjang({
 
 			{items.length > 0 && (
 				<>
-					<MemberVerification onVerify={handleMemberVerification} />
-					<div>
+					<div id="tour-kasir-member-input">
+						<MemberVerification onVerify={handleMemberVerification} />
+					</div>
+					<div id="tour-kasir-payment-input">
 						<Label htmlFor="amountPaid" className="text-sm">Jumlah Bayar</Label>
 						<Input
 							id="amountPaid"
@@ -224,6 +228,7 @@ export default function Keranjang({
 					</div>
 
 					<Button
+						id="tour-kasir-save-button"
 						type="button"
 						onClick={() => setShowConfirm(true)}
 						disabled={amountPaid < total || isSubmitting}
@@ -234,29 +239,29 @@ export default function Keranjang({
 				</>
 			)}
 
-			{showConfirm &&
-				createPortal(
-					<div className="fixed inset-0 flex justify-center items-center z-[100] bg-black/50">
-						<div className="bg-white p-6 rounded-md shadow-lg w-[90%] max-w-md space-y-4">
-							<h2 className="text-lg font-semibold">Konfirmasi Transaksi</h2>
-							<p>Apakah Anda yakin ingin menyimpan transaksi ini?</p>
-							<div className="flex justify-end gap-2">
-								<Button type="button" variant="outline" onClick={() => setShowConfirm(false)}>
-									Batal
-								</Button>
-								<Button
-									type="button"
-									className="bg-cyan-600 text-white hover:bg-cyan-700"
-									onClick={handleSubmit}
-									disabled={isSubmitting}
-								>
-									{isSubmitting ? 'Menyimpan...' : 'Ya, Simpan'}
-								</Button>
-							</div>
-						</div>
-					</div>,
-					document.body
-				)}
+			{showConfirm && (
+				<Portal> {/* <-- 2. BUNGKUS DIALOG DENGAN PORTAL */}
+                    <div className="fixed inset-0 flex justify-center items-center z-[100]">
+                        <div className="bg-white p-6 rounded-lg shadow-xl w-[90%] max-w-md space-y-4">
+                            <h2 className="text-lg font-semibold">Konfirmasi Transaksi</h2>
+                            <p>Apakah Anda yakin ingin menyimpan transaksi ini?</p>
+                            <div className="flex justify-end gap-2">
+                                <Button type="button" variant="outline" onClick={() => setShowConfirm(false)}>
+                                    Batal
+                                </Button>
+                                <Button
+                                    type="button"
+                                    className="bg-cyan-600 text-white hover:bg-cyan-700"
+                                    onClick={handleSubmit}
+                                    disabled={isSubmitting}
+                                >
+                                    {isSubmitting ? 'Menyimpan...' : 'Ya, Simpan'}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </Portal>
+			)}
 		</form>
 	)
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import toast, { Toaster } from 'react-hot-toast'
 import Link from 'next/link' // DITAMBAH
@@ -13,6 +13,8 @@ import SideCart from '@/components/kasir/SideCart'
 import ProductPagination from '@/components/Pagination'
 
 import { getCatalogTotalPages, Product } from '@/action/kasir/product.action'
+import KasirCartTour from '@/components/kasir/KasirCartTour'
+import KasirIntroTour from '@/components/kasir/KasirIntroTour'
 
 export type CartItem = {
 	id: string
@@ -35,6 +37,31 @@ export default function DashboardKasirPage() {
 
 	const [cartItems, setCartItems] = useState<CartItem[]>([])
 	const [totalPages, setTotalPages] = useState<number>(1)
+	// State untuk mengontrol kedua tur
+	const [runIntroTour, setRunIntroTour] = useState(false)
+	const [runCartTour, setRunCartTour] = useState(false)
+
+	// Ref untuk melacak jumlah keranjang sebelumnya
+	const prevCartLengthRef = useRef(0);
+
+	// Efek untuk memulai tur pengenalan
+	useEffect(() => {
+		const hasViewedTour = localStorage.getItem('hasViewedKasirIntroTour');
+		if (!hasViewedTour) {
+			setTimeout(() => setRunIntroTour(true), 1500);
+		}
+	}, []);
+
+	// Efek untuk memulai tur keranjang
+	useEffect(() => {
+		const hasViewedCartTour = localStorage.getItem('hasViewedKasirCartTour');
+		// Hanya jalankan jika keranjang berubah dari 0 ke 1
+		if (!hasViewedCartTour && cartItems.length === 1 && prevCartLengthRef.current === 0) {
+			setRunCartTour(true);
+		}
+		// Perbarui nilai ref untuk render selanjutnya
+		prevCartLengthRef.current = cartItems.length;
+	}, [cartItems]);
 
 	const handleAddToCart = useCallback((product: Product & { stok_barang: number }) => {
 		setCartItems(prev => {
@@ -96,7 +123,8 @@ export default function DashboardKasirPage() {
 	return (
 		<>
 			<Toaster position="top-right" />
-			<div className="flex flex-col lg:flex-row gap-4 lg:gap-6 overflow-x-hidden">
+			<KasirIntroTour run={runIntroTour} setRun={setRunIntroTour} />
+			<KasirCartTour run={runCartTour} setRun={setRunCartTour} />			<div className="flex flex-col lg:flex-row gap-4 lg:gap-6 overflow-x-hidden">
 				<CatalogSidebar />
 
 				<div className="flex-1 lg:pl-64 p-4">

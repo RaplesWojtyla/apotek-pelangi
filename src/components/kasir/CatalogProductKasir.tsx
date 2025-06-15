@@ -63,12 +63,13 @@ export default function CatalogProductKasir({
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
       {products.length > 0 ? (
-        products.map((product) => (
+        products.map((product, index) => ( // <-- Tambahkan 'index'
           <ProductCard
             key={product.id}
             product={product as Product & { stok_barang: number }}
             onAddToCart={onAddToCart}
             cartQty={getCartQty(product.id)}
+            isFirst={index === 0}
           />
         ))
       ) : (
