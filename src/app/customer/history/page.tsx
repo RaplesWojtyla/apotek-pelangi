@@ -135,7 +135,7 @@ export default function RiwayatTransaksiPage() {
 									<div className="text-sm text-gray-600 font-medium">Kode Invoice : {trx.id}</div>
 									<div className="flex items-start gap-4">
 										<Image
-											src={`/${trx.detail_faktur_penjualan[0].barang.foto_barang}`}
+											src={trx.detail_faktur_penjualan[0].barang.foto_barang.includes('https') ? trx.detail_faktur_penjualan[0].barang.foto_barang : `/${trx.detail_faktur_penjualan[0].barang.foto_barang}`}
 											alt={trx.detail_faktur_penjualan[0].barang.nama_barang}
 											width={100}
 											height={100}
