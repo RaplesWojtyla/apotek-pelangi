@@ -349,8 +349,19 @@ export const failedTransaction = async (order_id: string) => {
 
 	try {
 		const res = await prisma.$transaction(async tx => {
+			const fakturPenjualan = await tx.fakturPenjualan.findUnique({
+				where: { id: order_id }
+			})
+
+			if (!fakturPenjualan) {
+				return {
+					success: false,
+					message: "Faktur tidak ditemukan!",
+					data: {}
+				}
+			}
 			const updatedFakturPenjualan = await tx.fakturPenjualan.update({
-				where: { id: order_id },
+				where: { id: fakturPenjualan.id },
 				data: {
 					status: 'PEMBAYARAN_GAGAL'
 				},
@@ -392,17 +403,23 @@ export const failedTransaction = async (order_id: string) => {
 
 			await Promise.all(stocksUpdatePromise)
 
-			await tx.notifikasi.create({
-				data: {
-					id_user: updatedFakturPenjualan.id_user,
-					id_sumber: order_id,
-					tipe_sumber: 'FAKTUR_PENJUALAN',
-					judul: "Pembayaran Gagal!",
-					pesan: `Pembayaran untuk pesanan #${order_id} Gagal. Pesanan anda dibatalkan!`
-				}
-			})
+			if (updatedFakturPenjualan.id_user) {
+				await tx.notifikasi.create({
+					data: {
+						id_user: updatedFakturPenjualan.id_user,
+						id_sumber: order_id,
+						tipe_sumber: 'FAKTUR_PENJUALAN',
+						judul: "Pembayaran Gagal!",
+						pesan: `Pembayaran untuk pesanan #${order_id} Gagal. Pesanan anda dibatalkan!`
+					}
+				})
+			}
 
-			return updatedFakturPenjualan
+			return {
+				success: true,
+				message: "Pembayaran Gagal!",
+				data: updatedFakturPenjualan
+			}
 		})
 
 		revalidatePath('/admin/logpenjualan')
@@ -411,17 +428,17 @@ export const failedTransaction = async (order_id: string) => {
 		revalidatePath('/customer/history')
 
 		return {
-			success: true,
-			message: "Pembayaran Gagal",
-			data: res
+			success: res.success,
+			message: res.message,
+			data: res.data
 		}
 	} catch (error: any) {
 		console.error(`[failedTransaction] Error: ${error.message || error}`)
 
 		return {
 			success: false,
-			message: error.message || "Gagal memperbarui status transaksi.",
-			data: null
+			message: error.message || "Terjadi kesalahan pada server.",
+			data: {}
 		}
 	}
 }
